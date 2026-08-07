@@ -64,9 +64,9 @@ class EntityBuilder implements \Stringable {
     /**
      * a cached instance of the used Identifier.
      * 
-     * @var Identifier
+     * @var Identifier|null
      */
-    protected $identifier;
+    protected ?Identifier $identifier = null;
 
     /**
      * Gets an application domain specific model of choice, as implemented by a
@@ -97,7 +97,7 @@ class EntityBuilder implements \Stringable {
      * @see Context::getEntity()
      * @throws Exception
      */
-    final public function getEntity(Identifier $identifier, $createFreshEntity = false)
+    final public function getEntity(Identifier $identifier, bool $createFreshEntity = false)
     {
         try {
             // lazy loading with caching.
@@ -148,7 +148,7 @@ class EntityBuilder implements \Stringable {
      * 
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return static::class;
     }
