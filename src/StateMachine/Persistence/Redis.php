@@ -110,16 +110,16 @@ class Redis extends Adapter implements Loader {
     
     
     
-    private $host;
-    private $port;
-    private $timeout;
-    private $reserved;
-    private $retry;
-    private $socket;
-    private $password;
-    private $database;
-    private $prefix;
-    private $configurationKey;
+    private ?string $host;
+    private ?int $port;
+    private ?float $timeout;
+    private ?string $reserved;
+    private ?int $retry;
+    private ?string $socket;
+    private ?string $password = null;
+    private int $database;
+    private string $prefix;
+    private string $configurationKey;
 
     /**
      * connected and optionally authenticated redis connection.
@@ -144,7 +144,7 @@ class Redis extends Adapter implements Loader {
      * @param string $reserved should be NULL if $retry is specified
      * @param int $retry value in milliseconds
      */
-    public function __construct($host = '127.0.0.1', $port = 6379, $timeout = 0, $reserved = null, $retry = null)
+    public function __construct(?string $host = '127.0.0.1', ?int $port = 6379, ?float $timeout = 0, ?string $reserved = null, ?int $retry = null)
     {
 
         $this->host = $host;
@@ -160,7 +160,7 @@ class Redis extends Adapter implements Loader {
 
     }
 
-    public function setUnixDomainSocket($socket)
+    public function setUnixDomainSocket(string $socket): void
     {
         $this->socket = $socket;
         $this->host = null;
@@ -175,15 +175,15 @@ class Redis extends Adapter implements Loader {
      * set password to authenticate to the redis server
      * @param string $password
      */
-    public function setPassword($password) {
+    public function setPassword(string $password): void {
         $this->password = $password;
     }
-    
+
     /**
      * set the redis database. in case there is an active connection, it switches the database.
      * @param int $database a redis database is an integer starting from 0 (the default)
      */
-    public function setDatabase($database) {
+    public function setDatabase(int $database): void {
         if($this->redis) {
             $this->redis->select($database);
         }
@@ -195,7 +195,7 @@ class Redis extends Adapter implements Loader {
      * redis instance when it is created outside this class.
      * @param \Redis $redis a connected (and authenticated) redis instance
      */
-    public function setConnection(\Redis $redis)
+    public function setConnection(\Redis $redis): void
     {
         $this->redis = $redis;
     }
@@ -204,26 +204,26 @@ class Redis extends Adapter implements Loader {
      * set the key prefix to be used for all redis keys
      * @param string $prefix
      */
-    final public function setPrefix($prefix) {
+    final public function setPrefix(string $prefix): void {
         if($this->redis) {
             $this->redis->setOption(\Redis::OPT_PREFIX, $prefix);
         }
         $this->prefix = $prefix;
     }
-    
+
     /**
      * set the configuration key to be used for storing a json string of machine configurations.
      * @param string $key
      */
-    final public function setConfigurationKey($key) {
+    final public function setConfigurationKey(string $key): void {
         $this->configurationKey = $key;
     }
-    
+
     /**
      * get the configuration key used for storing a json string of machine configurations.
      * @return string $key
      */
-    final public function getConfigurationKey() {
+    final public function getConfigurationKey(): string {
         return $this->configurationKey;
     }
 
@@ -231,7 +231,7 @@ class Redis extends Adapter implements Loader {
      * get the prefix for all keys used
      * @return string
      */
-    final public function getPrefix()
+    final public function getPrefix(): string
     {
         return $this->prefix;
     }
@@ -242,7 +242,7 @@ class Redis extends Adapter implements Loader {
      * @throws Exception
      * @return \Redis
      */
-    public function getRedis() {
+    public function getRedis(): \Redis {
         //lazy loaded connection
         try {
             if($this->redis === null) {
@@ -292,14 +292,14 @@ class Redis extends Adapter implements Loader {
      * A hook to use in a subclass.
      * you can do you initial setup here if you like.
      */
-    protected function onConnect() {
+    protected function onConnect(): void {
         //override if necessary
     }
 
     /**
      * {@inheritDoc}
      */
-    public function processGetState(Identifier $identifier) {
+    public function processGetState(Identifier $identifier): string {
         $redis = $this->getRedis();
         try {
             //get state from key
@@ -322,7 +322,7 @@ class Redis extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
-    public function isPersisted(Identifier $identifier) {
+    public function isPersisted(Identifier $identifier): bool {
         try {
             $redis = $this->getRedis();
             //get key from known entity ids set
@@ -340,7 +340,7 @@ class Redis extends Adapter implements Loader {
      * {@inheritDoc}
      */
     #[\Override]
-    public function insertState(Identifier $identifier, $state, $message = null)
+    public function insertState(Identifier $identifier, string $state, $message = null): void
     {
         $redis = $this->getRedis();
         try {
@@ -370,7 +370,7 @@ class Redis extends Adapter implements Loader {
      * {@inheritDoc}
      */
     #[\Override]
-    public function updateState(Identifier $identifier, $state, $message = null)
+    public function updateState(Identifier $identifier, string $state, $message = null): void
     {
 
         $redis = $this->getRedis();
@@ -406,7 +406,7 @@ class Redis extends Adapter implements Loader {
      * {@inheritDoc}
      */
     #[\Override]
-    public function addHistory(Identifier $identifier, $state, $message = null, $isException = false)
+    public function addHistory(Identifier $identifier, string $state, $message = null, bool $isException = false): void
     {
         $redis = $this->getRedis();
         try {
@@ -491,7 +491,7 @@ class Redis extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
-    public function getEntityIds($machine, $state = null) {
+    public function getEntityIds(string $machine, ?string $state = null): array {
         $output = [];
         try {
             $redis = $this->getRedis();
@@ -563,10 +563,10 @@ class Redis extends Adapter implements Loader {
      * This makes it useful to test the redis commands or just use this class as an interface to redis.
      * 
      * @param string $name name of the method to route to the active redis connection
-     * @param mixed $arguments
+     * @param mixed[] $arguments
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         //call the method with $name on the \Redis instance
         return call_user_func_array([$this->getRedis(), $name], $arguments);

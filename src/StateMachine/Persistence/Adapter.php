@@ -62,7 +62,7 @@ abstract class Adapter implements \Stringable {
      *            optional: if provided, only those entities in the specific state
      * @return string[] an array of entity_id's
      */
-    abstract public function getEntityIds($machine, $state = null);
+    abstract public function getEntityIds(string $machine, ?string $state = null): array;
 
     /**
      * A template method to be able to process the setting of the current state.
@@ -75,11 +75,11 @@ abstract class Adapter implements \Stringable {
      * 
      * this method is public to be able to call it via the ReaderWriterDelegator
      *
-     * @param Identifier $identifier            
-     * @param string $state            
+     * @param Identifier $identifier
+     * @param string $state
      * @return boolean true if just added to storage, false if stored before
      */
-    public function processSetState(Identifier $identifier, $state, $message = null) 
+    public function processSetState(Identifier $identifier, string $state, $message = null)
     {
         if ($this->isPersisted($identifier)) {
             $this->addHistory($identifier, $state, $message);
@@ -107,29 +107,29 @@ abstract class Adapter implements \Stringable {
      *            for regular transitions and failed transitions
      * @throws Exception
      */
-    protected function addHistory(Identifier $identifier, $state, $message = null, $isException = false)
+    protected function addHistory(Identifier $identifier, string $state, $message = null, bool $isException = false): void
     {
         //override in subclasses if needed
     }
-    
+
     /**
      * insert state for Identifier into persistance layer.
-     * 
-     * @param Identifier $identifier            
-     * @param string $state            
+     *
+     * @param Identifier $identifier
+     * @param string $state
      */
-    protected function insertState(Identifier $identifier, $state, $message = null)
+    protected function insertState(Identifier $identifier, string $state, $message = null): void
     {
         //override in subclasses
     }
-    
+
     /**
      * update state for statemachine/entity into persistance layer
      * @param Identifier $identifier
      * @param string $state
      * @throws Exception
      */
-     protected function updateState(Identifier $identifier, $state, $message = null)
+     protected function updateState(Identifier $identifier, string $state, $message = null): void
      {
          //override in subclasses
      }
@@ -144,16 +144,16 @@ abstract class Adapter implements \Stringable {
      * @param Identifier $identifier            
      * @return string the current state of the entity represented in the context
      */
-    abstract public function processGetState(Identifier $identifier);
-    
+    abstract public function processGetState(Identifier $identifier): string;
+
     /**
      * is the state information already persisted?
-     * 
-     * @param Identifier $identifier            
+     *
+     * @param Identifier $identifier
      * @return boolean
      * @throws Exception
      */
-    abstract public function isPersisted(Identifier $identifier);
+    abstract public function isPersisted(Identifier $identifier): bool;
 
     /**
      * Adds state information to the persistence layer so
@@ -181,7 +181,7 @@ abstract class Adapter implements \Stringable {
      * @return boolean true if it was added, false if it was already there.
      * @throws Exception
      */
-    public function add(Identifier $identifier, $state, $message = null)
+    public function add(Identifier $identifier, string $state, $message = null): bool
     {
         if ($this->isPersisted($identifier)) {
             return false;
@@ -200,7 +200,7 @@ abstract class Adapter implements \Stringable {
      * @return string the state
      * @throw Exception
      */
-    public function getState(Identifier $identifier)
+    public function getState(Identifier $identifier): string
     {
         try {
             // execute a hook that should be implemented in a subclass.
@@ -229,7 +229,7 @@ abstract class Adapter implements \Stringable {
      * @return bool false if already stored before, true if just added
      * @throws Exception
      */
-    public function setState(Identifier $identifier, $state, $message = null)
+    public function setState(Identifier $identifier, string $state, $message = null)
     {
         try {
             // a subclass could map a state to
@@ -251,7 +251,7 @@ abstract class Adapter implements \Stringable {
      * @param Transition $transition            
      * @param \Exception $e            
      */
-    public function setFailedTransition(Identifier $identifier, Transition $transition, \Exception $e)
+    public function setFailedTransition(Identifier $identifier, Transition $transition, \Exception $e): void
     {
         // check if it is persisted, otherwise we cannot get the current state
         $message = new \stdClass();

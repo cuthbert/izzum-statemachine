@@ -32,7 +32,7 @@ class Session extends Adapter {
     public function __construct(/**
      * the namespace of the session
      */
-    private $namespace = 'izzum', $sessionId = null)
+    private string $namespace = 'izzum', ?string $sessionId = null)
     {
         if (session_status() === PHP_SESSION_NONE) {
             if ($sessionId !== null) {
@@ -52,7 +52,7 @@ class Session extends Adapter {
     /**
      * {@inheritDoc}
      */
-    public function processGetState(Identifier $identifier)
+    public function processGetState(Identifier $identifier): string
     {
         $key = $identifier->getId();
         if (isset($_SESSION [$this->namespace] [$key])) {
@@ -63,24 +63,12 @@ class Session extends Adapter {
         return $state;
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
     #[\Override]
-    protected function insertState(Identifier $identifier, $state, $message = null)
-    {
-        // set object on the session
-        $data = new StorageData($identifier, $state, $message);
-        $key = $identifier->getId();
-        $_SESSION [$this->namespace] [$key] = $data;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    #[\Override]
-    protected function updateState(Identifier $identifier, $state, $message = null)
+    protected function insertState(Identifier $identifier, string $state, $message = null): void
     {
         // set object on the session
         $data = new StorageData($identifier, $state, $message);
@@ -91,7 +79,19 @@ class Session extends Adapter {
     /**
      * {@inheritDoc}
      */
-    public function isPersisted(Identifier $identifier)
+    #[\Override]
+    protected function updateState(Identifier $identifier, string $state, $message = null): void
+    {
+        // set object on the session
+        $data = new StorageData($identifier, $state, $message);
+        $key = $identifier->getId();
+        $_SESSION [$this->namespace] [$key] = $data;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isPersisted(Identifier $identifier): bool
     {
         $key = $identifier->getId();
         if (!isset($_SESSION [$this->namespace] [$key])) {
@@ -103,7 +103,7 @@ class Session extends Adapter {
     /**
      * {@inheritDoc}
      */
-    public function getEntityIds($machine, $state = null)
+    public function getEntityIds(string $machine, ?string $state = null): array
     {
         $ids = [];
         foreach ($_SESSION [$this->namespace] as $key => $storage) {

@@ -452,12 +452,12 @@ class MemoryEntityConcatenator extends Memory {
     }
 
     #[\Override]
-    public function processGetState(Identifier $identifier) {
+    public function processGetState(Identifier $identifier): string {
         return $identifier->getMachine() .  "_" . $identifier->getEntityId();
     }
 }
 class MemoryException extends Memory {
-    public function __construct(private $bool)
+    public function __construct(private bool $bool)
     {
     }
     #[\Override]
@@ -470,7 +470,7 @@ class MemoryException extends Memory {
     }
 
     #[\Override]
-    public function processGetState(Identifier $identifier) {
+    public function processGetState(Identifier $identifier): never {
        if($this->bool) {
             throw new \Exception('processing setstate exception');
         } else {

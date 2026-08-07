@@ -76,13 +76,13 @@ class PDO extends Adapter implements Loader {
         /**
          * the pdo connection string
          */
-        private $dsn,
-        private $user = null,
-        private $password = null,
+        private string $dsn,
+        private ?string $user = null,
+        private ?string $password = null,
         /**
          * pdo options
          */
-        private $options = []
+        private array $options = []
     )
     {
     }
@@ -94,7 +94,7 @@ class PDO extends Adapter implements Loader {
      * @return \PDO
      * @throws Exception
      */
-    public function getConnection()
+    public function getConnection(): \PDO
     {
         try {
             if ($this->connection === null) {
@@ -112,12 +112,12 @@ class PDO extends Adapter implements Loader {
      * PDO instance when it is created outside this class. 
      * @param \PDO $connection
      */
-    public function setConnection(\PDO $connection) 
+    public function setConnection(\PDO $connection): void
     {
         $this->connection = $connection;
     }
 
-    protected function setupConnection(\PDO $connection)
+    protected function setupConnection(\PDO $connection): void
     {
     /**
      * hook, override to:
@@ -135,7 +135,7 @@ class PDO extends Adapter implements Loader {
      *
      * @return string the type of backend we connect to
      */
-    public function getType()
+    public function getType(): string
     {
         $index = strpos($this->dsn, ":");
         return $index ? substr($this->dsn, 0, $index) : $this->dsn;
@@ -143,20 +143,20 @@ class PDO extends Adapter implements Loader {
 
     /**
      * set the table prefix to be used
-     * 
-     * @param string $prefix            
+     *
+     * @param string $prefix
      */
-    final public function setPrefix($prefix)
+    final public function setPrefix(string $prefix): void
     {
         $this->prefix = $prefix;
     }
 
     /**
      * get the table prefix
-     * 
+     *
      * @return string
      */
-    final public function getPrefix()
+    final public function getPrefix(): string
     {
         return $this->prefix;
     }
@@ -178,7 +178,7 @@ class PDO extends Adapter implements Loader {
     /**
      * {@inheritDoc}            
      */
-    public function processGetState(Identifier $identifier)
+    public function processGetState(Identifier $identifier): string
     {
         $connection = $this->getConnection();
         $prefix = $this->getPrefix();
@@ -209,7 +209,7 @@ class PDO extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
-    public function getEntityIds($machine, $state = null)
+    public function getEntityIds(string $machine, ?string $state = null): array
     {
         $connection = $this->getConnection();
         $prefix = $this->getPrefix();
@@ -250,7 +250,7 @@ class PDO extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
-    public function isPersisted(Identifier $identifier)
+    public function isPersisted(Identifier $identifier): bool
     {
         $connection = $this->getConnection();
         $prefix = $this->getPrefix();
@@ -281,9 +281,9 @@ class PDO extends Adapter implements Loader {
      * {@inheritDoc}           
      */
     #[\Override]
-    protected function insertState(Identifier $identifier, $state, $message = null)
+    protected function insertState(Identifier $identifier, string $state, $message = null): void
     {
-        
+
         $connection = $this->getConnection();
         $prefix = $this->getPrefix();
         try {
@@ -313,7 +313,7 @@ class PDO extends Adapter implements Loader {
      * @param \PDOStatement $statement
      * @return string
      */
-    protected function getErrorInfo(\PDOStatement $statement)
+    protected function getErrorInfo(\PDOStatement $statement): string
     {
         $info = $statement->errorInfo();
         $output = sprintf("%s - message: '%s'", $info [0], $info [2]);
@@ -323,9 +323,9 @@ class PDO extends Adapter implements Loader {
     /**
      * hook method
      * 
-     * @return number|string
+     * @return int|string
      */
-    protected function getTimestampForDriver()
+    protected function getTimestampForDriver(): int|string
     {
         // yuk, seems postgres and sqlite need some different input.
         // maybe other drivers too. so therefore this hook method.
@@ -340,10 +340,10 @@ class PDO extends Adapter implements Loader {
      * hook method.
      * not all drivers have the same boolean datatype. convert here.
      * 
-     * @param boolean $boolean            
-     * @return boolean|int|string
+     * @param boolean $boolean
+     * @return boolean|int
      */
-    protected function getBooleanForDriver($boolean)
+    protected function getBooleanForDriver(bool $boolean): bool|int
     {
         if (strstr($this->dsn, 'sqlite:') || strstr($this->dsn, 'mysql:')) {
             return $boolean ? 1 : 0;
@@ -356,9 +356,9 @@ class PDO extends Adapter implements Loader {
      * {@inheritDoc}
      */
     #[\Override]
-    protected function updateState(Identifier $identifier, $state, $message = null)
+    protected function updateState(Identifier $identifier, string $state, $message = null): void
     {
-        
+
         $connection = $this->getConnection();
         $prefix = $this->getPrefix();
         try {
@@ -386,7 +386,7 @@ class PDO extends Adapter implements Loader {
      *{@inheritDoc}
      */
     #[\Override]
-    public function addHistory(Identifier $identifier, $state, $message = null, $isException = false)
+    public function addHistory(Identifier $identifier, string $state, $message = null, bool $isException = false): void
     {
         $connection = $this->getConnection();
         $prefix = $this->getPrefix();
@@ -433,7 +433,7 @@ class PDO extends Adapter implements Loader {
      * @return mixed[][] resultset from postgres
      * @throws Exception
      */
-    public function getTransitions($machine)
+    public function getTransitions(string $machine): array
     {
         $connection = $this->getConnection();
         $prefix = $this->getPrefix();
@@ -486,7 +486,7 @@ class PDO extends Adapter implements Loader {
      *            the machine name
      * @return Transition[]
      */
-    public function getLoaderData($machine)
+    public function getLoaderData(string $machine): array
     {
         $rows = $this->getTransitions($machine);
         

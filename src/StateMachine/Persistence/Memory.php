@@ -22,12 +22,12 @@ class Memory extends Adapter {
      *
      * @var StorageData[]
      */
-    private static $registry = [];
+    private static array $registry = [];
 
     /**
      * {@inheritDoc}
      */
-    public function processGetState(Identifier $identifier)
+    public function processGetState(Identifier $identifier): string
     {
         return $this->getStateFromRegistry($identifier);
     }
@@ -36,35 +36,35 @@ class Memory extends Adapter {
      * {@inheritDoc}
      */
     #[\Override]
-    protected function insertState(Identifier $identifier, $state, $message = null)
+    protected function insertState(Identifier $identifier, string $state, $message = null): void
     {
         $this->setStateInRegistry($identifier, $state, $message);
     }
-    
+
     /**
      * {@inheritDoc}
      */
     #[\Override]
-    protected function updateState(Identifier $identifier, $state, $message = null)
+    protected function updateState(Identifier $identifier, string $state, $message = null): void
     {
         $this->setStateInRegistry($identifier, $state, $message);
     }
-    
+
     /**
      *
      * @param Identifier $identifier
      * @param string $state
      */
-    protected function setStateInRegistry(Identifier $identifier, $state, $message = null)
+    protected function setStateInRegistry(Identifier $identifier, string $state, $message = null): void
     {
         $data = new StorageData($identifier, $state, $message);
         $this->writeRegistry($identifier->getId(), $data);
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    public function isPersisted(Identifier $identifier)
+    public function isPersisted(Identifier $identifier): bool
     {
         $persisted = false;
         $storage = $this->getStorageFromRegistry($identifier);
@@ -77,7 +77,7 @@ class Memory extends Adapter {
     /**
      * {@inheritDoc}
      */
-    public function getEntityIds($machine, $state = null)
+    public function getEntityIds(string $machine, ?string $state = null): array
     {
         $ids = [];
         foreach ($this->getRegistry() as $key => $storage) {
@@ -94,7 +94,7 @@ class Memory extends Adapter {
         return $ids;
     }
 
-    protected function getStateFromRegistry(Identifier $identifier)
+    protected function getStateFromRegistry(Identifier $identifier): string
     {
         $storage = $this->getStorageFromRegistry($identifier);
         if (!$storage) {
@@ -109,7 +109,7 @@ class Memory extends Adapter {
      * {@inheritDoc}
      */
     #[\Override]
-    protected function addHistory(Identifier $identifier, $state, $message = null, $isException = false)
+    protected function addHistory(Identifier $identifier, $state, $message = null, $isException = false): void
     {
         //don't store history in memory, this is a simple adapter and we don't want a memory increase
         //for a long running process
@@ -117,10 +117,10 @@ class Memory extends Adapter {
 
     /**
      *
-     * @param string $key            
-     * @param StorageData $value            
+     * @param string $key
+     * @param StorageData $value
      */
-    protected function writeRegistry($key, $value)
+    protected function writeRegistry(string $key, StorageData $value): void
     {
         self::$registry [$key] = $value;
     }
@@ -129,12 +129,12 @@ class Memory extends Adapter {
      *
      * @return StorageData[]
      */
-    protected function getRegistry()
+    protected function getRegistry(): array
     {
         return self::$registry;
     }
 
-    public function getStorageFromRegistry(Identifier $identifier)
+    public function getStorageFromRegistry(Identifier $identifier): ?StorageData
     {
         $registry = $this->getRegistry();
         if (!isset($registry [$identifier->getId()])) {
@@ -150,12 +150,12 @@ class Memory extends Adapter {
      * Not a method we want to have on the Adapter interface.
      * this method is useful for testing.
      */
-    public static function clear()
+    public static function clear(): void
     {
         self::$registry = [];
     }
 
-    public static function get()
+    public static function get(): array
     {
         return self::$registry;
     }

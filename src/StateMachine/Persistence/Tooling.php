@@ -27,7 +27,7 @@ Interface Tooling {
      * @param string $machine optional the machine to get the info for
      * @return array an array containing machine names and fully qualifed factory classes and description
      */
-    public function getMachineInformation($machine = null);
+    public function getMachineInformation(?string $machine = null): array;
     
     /**
      * returns state information for machines.
@@ -44,7 +44,7 @@ Interface Tooling {
      * @param string $machine optional the machine to get the info for
      * @return array an array containing state names, exit and entry logic, machine name etc)
      */
-    public function getStateInformation($machine = null);
+    public function getStateInformation(?string $machine = null): array;
     
     /**
      * returns transition information for machines.
@@ -63,7 +63,7 @@ Interface Tooling {
      * @param string $machine optional the machine to get the info for
      * @return array an array containing transition info (guards, logic, source and sink states, event names etc)
      */
-    public function getTransitionInformation($machine = null);
+    public function getTransitionInformation(?string $machine = null): array;
     
     /**
      * returns transition history information.
@@ -75,6 +75,6 @@ Interface Tooling {
      * @param $entityId optional the entity id to get the history info for
      * @return array an array containing transition history info (machine, entity_id, timestamp, message etc)
      */
-    public function getTransitionHistoryInformation($machine = null, $entityId = null);
+    public function getTransitionHistoryInformation(?string $machine = null, ?string $entityId = null): array;
     
 }

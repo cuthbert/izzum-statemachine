@@ -51,14 +51,14 @@ class ReaderWriterDelegator extends Adapter implements Loader {
      * gets the reader/Loader
      * @return Loader
      */
-    public function getReader() {
+    public function getReader(): Loader {
         return $this->reader;
     }
     /**
      * gets the writer/Adapter
      * @return Adapter
      */
-    public function getWriter() {
+    public function getWriter(): Adapter {
         return $this->writer;
     }
 
@@ -67,34 +67,34 @@ class ReaderWriterDelegator extends Adapter implements Loader {
         return $this->reader->load($stateMachine);
     }
 
-    public function getEntityIds($machine, $state = null)
+    public function getEntityIds(string $machine, ?string $state = null): array
     {
         return $this->writer->getEntityIds($machine, $state);
     }
-    public function isPersisted(Identifier $identifier)
+    public function isPersisted(Identifier $identifier): bool
     {
         return $this->writer->isPersisted($identifier);
     }
 
     #[\Override]
-    public function processSetState(Identifier $identifier, $state, $message = null)
+    public function processSetState(Identifier $identifier, string $state, $message = null)
     {
         return $this->writer->processSetState($identifier, $state, $message);
     }
 
-    public function processGetState(Identifier $identifier)
+    public function processGetState(Identifier $identifier): string
     {
         return $this->writer->processGetState($identifier);
     }
 
     #[\Override]
-    public function add(Identifier $identifier, $state, $message = null)
+    public function add(Identifier $identifier, string $state, $message = null): bool
     {
         return $this->writer->add($identifier, $state, $message);
     }
-    
+
     #[\Override]
-    public function setFailedTransition(Identifier $identifier, Transition $transition, \Exception $e)
+    public function setFailedTransition(Identifier $identifier, Transition $transition, \Exception $e): void
     {
         $this->writer->setFailedTransition($identifier, $transition, $e);
     }

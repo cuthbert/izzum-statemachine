@@ -16,30 +16,30 @@ class StorageData {
      * 
      * @var string
      */
-    public $id;
-    
+    public string $id;
+
     /**
      * the statemachine name
-     * 
+     *
      * @var string
      */
-    public $machine;
+    public string $machine;
     /**
      * the timestamp when the storagedata was created, ideally at storage time.
-     * 
+     *
      * @var int
      */
-    public $timestamp;
+    public int $timestamp;
 
     /**
      *
-     * @param Identifier $identifier          
-     * @param string $state            
+     * @param Identifier $identifier
+     * @param string $state
      */
     public function __construct(Identifier $identifier, /**
      * the state the transition was made to (the current state)
      */
-    public $state, public $message = null)
+    public string $state, public $message = null)
     {
         $this->id = $identifier->getEntityId();
         $this->machine = $identifier->getMachine();
