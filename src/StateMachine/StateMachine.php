@@ -361,7 +361,6 @@ class StateMachine implements \Stringable {
      *
      * @param string $transitionName
      *            convention: <state-from>_to_<state-to>
-     * @return boolean
      */
     public function canTransition(string $transitionName): bool
     {
@@ -373,7 +372,6 @@ class StateMachine implements \Stringable {
      * checks if one or more transitions are possible and/or allowed for the
      * current state when triggered by an event
      *
-     * @param string $event            
      * @return boolean false if no transitions possible or existing
      */
     public function canHandle(?string $event): bool
@@ -390,9 +388,6 @@ class StateMachine implements \Stringable {
     /**
      * check if the current state has one or more transitions that can be
      * triggered by an event
-     *
-     * @param string $event            
-     * @return boolean
      */
     public function hasEvent(?string $event): bool
     {
@@ -410,7 +405,6 @@ class StateMachine implements \Stringable {
      * Perform a transition by specifiying the transitions' name from a state
      * that the transition is allowed to run.
      *
-     * @param Transition $transition            
      * @param string $message optional message. this can be used by the persistence adapter
      *          to be part of the transition history to provide extra information about the transition.  
      * @return boolean true if the transition was succesful
@@ -445,7 +439,6 @@ class StateMachine implements \Stringable {
      * Template method to call a hook and to call a possible method
      * defined on the domain object/contextual entity
      *
-     * @param Transition $transition            
      * @return boolean if false, the transition and its' associated logic will
      *         not take place
      * @throws Exception in case something went horribly wrong
@@ -480,11 +473,6 @@ class StateMachine implements \Stringable {
         return true;
     }
 
-    /**
-     * the exit state action method
-     *
-     * @param Transition $transition            
-     */
     private function doExitState(Transition $transition): void
     {
         // hook for subclasses to implement
@@ -496,11 +484,8 @@ class StateMachine implements \Stringable {
     }
 
     /**
-     * the transition action method
-     *
-     * @param Transition $transition            
      * @param string $message optional message. this can be used by the persistence adapter
-     *          to be part of the transition history to provide extra information about the transition.          
+     *          to be part of the transition history to provide extra information about the transition.
      */
     private function doTransition(Transition $transition, ?string $message = null): void
     {
@@ -517,11 +502,6 @@ class StateMachine implements \Stringable {
         $this->setState($transition->getStateTo(), $message);
     }
 
-    /**
-     * the enter state action method
-     *
-     * @param Transition $transition            
-     */
     private function doEnterState(Transition $transition): void
     {
         // an event handler that is possibly defined on the domain model: onEnterState
@@ -547,9 +527,6 @@ class StateMachine implements \Stringable {
 
     /**
      * get a state by name.
-     *
-     * @param string $name
-     * @return State|null
      */
     public function getState(string $name): ?State
     {
@@ -569,8 +546,7 @@ class StateMachine implements \Stringable {
      * in case a State is not used in a Transition, it will be orphaned and not 
      * reachable via other states.
      *
-     * @param State $state 
-     * @return boolean true if the state was not know to the machine or wasn't added, false otherwise.           
+     * @return boolean true if the state was not know to the machine or wasn't added, false otherwise.
      */
     public function addState(State $state): bool
     {
@@ -597,7 +573,6 @@ class StateMachine implements \Stringable {
      * This method allows you to bypass the transition guards and the transition
      * logic. no exit/entry/transition logic will be performed
      *
-     * @param State $state 
      * @param string $message optional message. this can be used by the persistence adapter
      *          to be part of the transition history to provide extra information about the transition.  
      * @throws Exception in case the state is not valid/known for this machine          
@@ -647,7 +622,6 @@ class StateMachine implements \Stringable {
      * - the initial state. if we haven't had a transition yet and no current
      * state has been set, the initial state will be retrieved (the state with State::TYPE_INITIAL)
      *
-     * @return State
      * @throws Exception in case there is no valid current state found
      */
     public function getCurrentState(): State
@@ -674,8 +648,6 @@ class StateMachine implements \Stringable {
      * the context/persistence adapter when a machine has been initialized for
      * the first time.
      *
-     * @param boolean $allowNull optional
-     * @return State|null
      * @throws Exception if $allowNull is false an no inital state was found
      */
     public function getInitialState(bool $allowNull = false): ?State
@@ -707,7 +679,6 @@ class StateMachine implements \Stringable {
      *
      * @param string $name
      *            convention: <state_from>_to_<state_to>
-     * @return Transition|null
      */
     public function getTransition(string $name): ?Transition
     {
@@ -741,7 +712,6 @@ class StateMachine implements \Stringable {
      * a loader). Make sure that transitions that share a common State use the same
      * instance of that State object and vice versa.
      *
-     * @param Transition $transition  
      * @param boolean $allowSelfTransitionByRegex optional: to allow regexes to set a self transition.
      * @return int a count of how many transitions were added. In case of a regex transition this might be
      *              multiple and in case a transition already exists it might be 0.
@@ -788,8 +758,7 @@ class StateMachine implements \Stringable {
      * Add the transition, after it has previously been checked that is did not
      * contain states with a regex.
      *
-     * @param Transition $transition   
-     * @return boolean true in case it was added. false otherwise         
+     * @return boolean true in case it was added. false otherwise
      */
     protected function addTransitionWithoutRegex(Transition $transition): bool
     {
@@ -830,11 +799,6 @@ class StateMachine implements \Stringable {
         return true;
     }
 
-    /**
-     * Get the current context
-     *
-     * @return Context
-     */
     public function getContext(): Context
     {
         return $this->context;
@@ -858,7 +822,6 @@ class StateMachine implements \Stringable {
      * - reuse the statemachine for a different entity so we do not
      * have to load the statemachine with the same transition definitions
      *
-     * @param Context $context            
      * @throws Exception
      */
     public function setContext(Context $context): void
@@ -882,9 +845,6 @@ class StateMachine implements \Stringable {
     /**
      * called whenever an exception occurs from inside 'performTransition()'
      * can be used for logging etc. in some sort of history structure in the persistence layer
-     *
-     * @param Transition $transition            
-     * @param Exception $e            
      */
     protected function handleTransitionException(Transition $transition, Exception $e): void
     {
@@ -899,7 +859,6 @@ class StateMachine implements \Stringable {
      * Always throws an izzum exception (converts a non-izzum exception to an
      * izzum exception)
      *
-     * @param \Exception $e            
      * @param int $code
      *            if the exception is not of type Exception, wrap it and use
      *            this code.
@@ -962,10 +921,6 @@ class StateMachine implements \Stringable {
      * method exists.Any arguments passed to this method will be passed on to the method
      * called on the entity.
      *
-     * @param mixed $object
-     *            the object on which we want to call the method
-     * @param string $method
-     *            the method to call on the object
      * @return boolean|mixed
      */
     protected function callEventHandler($object, string $method)
@@ -992,7 +947,6 @@ class StateMachine implements \Stringable {
      *
      * @param string $name
      *            convention: <state_from>_to_<state_to>
-     * @return Transition
      * @throws Exception
      */
     private function getTransitionWithNullCheck(string $name): Transition
@@ -1033,7 +987,6 @@ class StateMachine implements \Stringable {
      * In an overriden implementation of this method you can stop the transition
      * by returning false from this method.
      *
-     * @param Transition $transition            
      * @return boolean if false, the transition and it's associated logic will
      *         not take place
      */
@@ -1052,8 +1005,6 @@ class StateMachine implements \Stringable {
      * dispatching events, locking an entity, logging, begin transaction via
      * persistence
      * layer etc.
-     *
-     * @param Transition $transition            
      */
     protected function _onExitState(Transition $transition): void
     {}
@@ -1061,8 +1012,6 @@ class StateMachine implements \Stringable {
     /**
      * hook method.
      * override in subclass if necessary.
-     *
-     * @param Transition $transition            
      */
     protected function _onTransition(Transition $transition): void
     {}
@@ -1076,8 +1025,6 @@ class StateMachine implements \Stringable {
      * dispatching events, unlocking an entity, logging, cleanup, commit
      * transaction via
      * the persistence layer etc.
-     *
-     * @param Transition $transition            
      */
     protected function _onEnterState(Transition $transition): void
     {}

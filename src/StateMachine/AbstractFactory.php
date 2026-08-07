@@ -43,25 +43,13 @@ abstract class AbstractFactory {
      */
     abstract protected function createLoader(): Loader;
 
-    /**
-     * Returns an implementation of an Adapter class for the persistence layer
-     *
-     * @return Adapter
-     */
     abstract protected function createAdapter(): Adapter;
 
-    /**
-     * Get a builder to build your domain objects
-     *
-     * @return EntityBuilder
-     */
     abstract protected function createBuilder(): EntityBuilder;
 
     /**
      * get the machine name for the machines that are produced by this factory.
      * will be used by the Identifier and Context
-     *
-     * @return string
      */
     abstract protected function getMachineName(): string;
 
@@ -91,7 +79,6 @@ abstract class AbstractFactory {
      *
      * @param mixed $id
      *            the entity id for the Identifier (converted internally to a string)
-     * @return StateMachine a statemachine ready to go
      * @throws Exception
      * @link https://en.wikipedia.org/wiki/Abstract_factory_pattern
      * @link https://en.wikipedia.org/wiki/Template_method_pattern
@@ -105,12 +92,6 @@ abstract class AbstractFactory {
         return $machine;
     }
 
-    /**
-     * create a statemachine
-     *
-     * @param Context $context            
-     * @return StateMachine
-     */
     protected function createMachine(Context $context): StateMachine
     {
         return new StateMachine($context);
@@ -120,9 +101,6 @@ abstract class AbstractFactory {
      * Factory method to get a configured Context with the default Builder
      * and persistence adapter for a concrete statemachine type.
      *
-     *
-     * @param Identifier $identifier            
-     * @return Context
      * @throws Exception
      * @link https://en.wikipedia.org/wiki/Abstract_factory_pattern
      * @link https://en.wikipedia.org/wiki/Template_method_pattern

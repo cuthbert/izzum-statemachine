@@ -57,10 +57,6 @@ class Context implements \Stringable {
     protected ?StateMachine $statemachine = null;
 
     /**
-     * Constructor
-     *
-     * @param Identifier $identifier
-     *            the identifier for the statemachine
      * @param EntityBuilder $entityBuilder
      *            optional: A specific builder class to create a reference to
      *            the entity we wish to manipulate/have access to.
@@ -68,13 +64,7 @@ class Context implements \Stringable {
      *            optional: A specific reader/writer class can be used to
      *            generate different 'read/write' behaviour
      */
-    public function __construct(Identifier $identifier, /**
-     * the builder to get the reference to the entity.
-     */
-    protected ?EntityBuilder $entityBuilder = null, /**
-     * the instance for getting to the persistence layer
-     */
-    protected ?Adapter $persistenceAdapter = null)
+    public function __construct(Identifier $identifier, protected ?EntityBuilder $entityBuilder = null, protected ?Adapter $persistenceAdapter = null)
     {
         $this->identifier = $identifier;
     }
@@ -82,19 +72,12 @@ class Context implements \Stringable {
     /**
      * Provides a bidirectional association with the statemachine.
      * This method should be called only by the StateMachine itself.
-     *
-     * @param StateMachine $statemachine            
      */
     public function setStateMachine(StateMachine $statemachine): void
     {
         $this->statemachine = $statemachine;
     }
 
-    /**
-     * gets the associated statemachine (if a statemachine is associated)
-     *
-     * @return StateMachine|null
-     */
     public function getStateMachine(): ?StateMachine
     {
         return $this->statemachine;
@@ -105,9 +88,6 @@ class Context implements \Stringable {
      * for example an 'Order' or 'Customer' that transitions through states in
      * it's lifecycle.
      *
-     *
-     * @param boolean $createFreshEntity
-     *            optional
      * @return mixed
      */
     public function getEntity(bool $createFreshEntity = false)
@@ -120,8 +100,6 @@ class Context implements \Stringable {
      * gets the state.
      * first try the backend storage facility. If not found, then try the
      * configured statemachine itself for the initial state.
-     *
-     * @return string
      */
     public function getState(): string
     {
@@ -147,11 +125,8 @@ class Context implements \Stringable {
     }
 
     /**
-     * Sets the state
-     *
-     * @param string $state 
      * @param string $message optional message. this can be used by the persistence adapter
-     *          to be part of the transition history to provide extra information about the transition.            
+     *          to be part of the transition history to provide extra information about the transition.
      * @return bool true if there was never any state persisted for this
      *         machine before (just added for the
      *         first time), false otherwise
@@ -168,9 +143,8 @@ class Context implements \Stringable {
      * point in time. subsequent calls to 'add' will not have any effect if it
      * has already been persisted.
      *
-     * @param string $state
      * @param string $message optional message. this can be used by the persistence adapter
-     *          to be part of the transition history to provide extra information about the transition.            
+     *          to be part of the transition history to provide extra information about the transition.
      * @return boolean true if it was added, false if it was already there
      */
     public function add(string $state, ?string $message = null): bool
@@ -178,11 +152,6 @@ class Context implements \Stringable {
         return $this->getPersistenceAdapter()->add($this->getIdentifier(), $state, $message);
     }
 
-    /**
-     * returns the builder used to get the application domain specific model.
-     *
-     * @return EntityBuilder
-     */
     public function getBuilder(): EntityBuilder
     {
         if ($this->entityBuilder === null) {
@@ -194,8 +163,6 @@ class Context implements \Stringable {
 
     /**
      * gets the Context state reader/writer.
-     *
-     * @return Adapter a concrete persistence adapter
      */
     public function getPersistenceAdapter(): Adapter
     {
@@ -209,19 +176,12 @@ class Context implements \Stringable {
     /**
      * gets the entity id that represents the unique identifier for the
      * application domain specific model.
-     *
-     * @return string
      */
     public function getEntityId(): string
     {
         return $this->getIdentifier()->getEntityId();
     }
 
-    /**
-     * get the Identifier
-     *
-     * @return Identifier
-     */
     public function getIdentifier(): Identifier
     {
         return $this->identifier;
@@ -229,19 +189,12 @@ class Context implements \Stringable {
 
     /**
      * gets the statemachine name that handles the entity
-     *
-     * @return string
      */
     public function getMachine(): string
     {
         return $this->getIdentifier()->getMachine();
     }
 
-    /**
-     * get the toString representation
-     *
-     * @return string
-     */
     public function toString(): string
     {
         return static::class . "(" . $this->getId(true) . ")";
@@ -250,12 +203,6 @@ class Context implements \Stringable {
     /**
      * get the unique identifier for an Context, which consists of the machine
      * name and the entity_id in parseable form, with an optional state
-     *
-     * @param boolean $readable
-     *            human readable or not. defaults to false
-     * @param boolean $withState
-     *            append current state. defaults to false
-     * @return string
      */
     public function getId(bool $readable = false, bool $withState = false): string
     {
@@ -284,9 +231,6 @@ class Context implements \Stringable {
      * - was not allowed
      * - where an exception was thrown from a rule or command
      * - etc. any general transition failure
-     *
-     * @param Transition $transition            
-     * @param Exception $e            
      */
     public function setFailedTransition(Transition $transition, Exception $e): void
     {
