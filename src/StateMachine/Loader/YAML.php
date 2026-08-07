@@ -23,15 +23,9 @@ use Izzum\StateMachine\Exception;
  */
 class YAML implements Loader, \Stringable {
     /**
-     *
      * @param string $yaml optional a valid yaml string as specified in assets/yaml/example.yaml
      */
-    public function __construct(
-        /**
-         * an undecoded yaml string
-         */
-        private string $yaml
-    )
+    public function __construct(private string $yaml)
     {
     }
 

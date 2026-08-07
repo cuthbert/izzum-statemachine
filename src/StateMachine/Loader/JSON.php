@@ -27,15 +27,9 @@ use Izzum\StateMachine\Exception;
  */
 class JSON implements Loader, \Stringable {
     /**
-     * 
      * @param string $json optional a valid json string according to the schema
      */
-    public function __construct(
-        /**
-         * an undecoded json string
-         */
-        private string $json
-    )
+    public function __construct(private string $json)
     {
     }
 
@@ -64,7 +58,6 @@ class JSON implements Loader, \Stringable {
 
     /**
      * gets the json schema used for the datastructure of the statemachine definitions
-     * @return string
      */
     public function getJSONSchema(): string
     {

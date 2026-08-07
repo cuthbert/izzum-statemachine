@@ -72,7 +72,6 @@ class EntityBuilder implements \Stringable {
      * Gets an application domain specific model of choice, as implemented by a
      * subclass.
      *
-     * @param Identifier $identifier            
      * @param boolean $createFreshEntity
      *            optional. if true, then a new instance is always created,
      *            else it might be cached if used for the same Identifier
@@ -130,7 +129,6 @@ class EntityBuilder implements \Stringable {
      * construction time, so we have additional information on how to build the
      * domain object.
      *
-     * @param Identifier $identifier            
      * @return Object an object of any type defined by the subclass
      */
     protected function build(Identifier $identifier)
@@ -143,21 +141,11 @@ class EntityBuilder implements \Stringable {
         return $identifier;
     }
 
-    /**
-     * returns the string representation
-     * 
-     * @return string
-     */
     public function toString(): string
     {
         return static::class;
     }
 
-    /**
-     * returns the string representation
-     * 
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->toString();

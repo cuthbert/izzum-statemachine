@@ -100,8 +100,6 @@ class LoaderArray implements Loader, \Stringable {
 
     /**
      * add/overwrite a transition
-     *
-     * @param Transition $transition            
      */
     public function add(Transition $transition): void
     {
@@ -122,8 +120,6 @@ class LoaderArray implements Loader, \Stringable {
     /**
      * counts the number of contained transitions.
      * this is not the same as the possible amount of transitions added (because of regex transitions)
-     *
-     * @return int
      */
     public function count(): int
     {

@@ -41,13 +41,9 @@ interface Loader {
     /**
      * Loads a state machine with the correct transitions and state data
      *
-     * @param StateMachine $stateMachine
-     * @return int the number of transitions actually loaded on the machine            
+     * @return int the number of transitions actually loaded on the machine
      */
     public function load(StateMachine $stateMachine): int;
 
-    /**
-     * @return string
-     */
     public function toString(): string;
 }

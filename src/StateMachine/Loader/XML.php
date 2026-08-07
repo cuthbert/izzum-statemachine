@@ -19,15 +19,9 @@ use Izzum\StateMachine\Exception;
  */
 class XML implements Loader, \Stringable {
     /**
-     * 
      * @param string $xml optional a valid xml string according to the schema
      */
-    public function __construct(
-        /**
-         * an xml string
-         */
-        private string $xml
-    )
+    public function __construct(private string $xml)
     {
     }
 
@@ -57,7 +51,6 @@ class XML implements Loader, \Stringable {
 
     /**
      * gets the xsd used for the datastructure of the statemachine definitions
-     * @return string
      */
     public function getXSD(): string
     {

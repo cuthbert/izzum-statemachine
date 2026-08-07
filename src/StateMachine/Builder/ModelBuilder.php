@@ -36,16 +36,10 @@ use Izzum\StateMachine\Identifier;
  */
 class ModelBuilder extends EntityBuilder {
     /**
-     *
      * @param mixed $model
      *            the domain model you want to have returned from this class.
      */
-    public function __construct(
-        /**
-         * the model to be returned by the Context
-         */
-        private $model
-    )
+    public function __construct(private $model)
     {
     }
 
