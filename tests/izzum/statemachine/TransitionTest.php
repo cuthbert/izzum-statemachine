@@ -526,7 +526,7 @@ namespace Izzum\Command;
 
 class SimpleCommand extends \Izzum\Command\Command {
 
-    protected function _execute()
+    protected function _execute(): void
     {
         // nothing
     }
@@ -540,7 +540,7 @@ class ExceptionOnConstructionCommand extends \Izzum\Command\Command {
         throw new Exception('construction failed');
     }
 
-    protected function _execute()
+    protected function _execute(): void
     {
         // nothing
     }

@@ -15,7 +15,7 @@ class Composite extends Command implements IComposite {
      * 
      * @var ICommand[]
      */
-    private $commands;
+    private array $commands;
 
     public function __construct()
     {
@@ -25,10 +25,10 @@ class Composite extends Command implements IComposite {
     /**
      * this method will call all commands added to this class in order of
      * addition
-     * 
+     *
      * @throws Exception
      */
-    protected function _execute()
+    protected function _execute(): void
     {
         foreach ($this->commands as $command) {
             $command->execute();
@@ -38,23 +38,23 @@ class Composite extends Command implements IComposite {
     /**
      * this method can be used to add multiple commands that will be used in the
      * execute() method
-     * 
+     *
      * @param ICommand $command
      *            a concrete command that implements the ICommand
      *            interface
      */
-    public function add(ICommand $command)
+    public function add(ICommand $command): void
     {
         $this->commands [] = $command;
     }
 
     /**
      * Removes a command if it is part of the composite (based on identity ===)
-     * 
-     * @param ICommand $command            
+     *
+     * @param ICommand $command
      * @return boolean
      */
-    public function remove(ICommand $command)
+    public function remove(ICommand $command): bool
     {
         $total = count($this->commands);
         $removed = false;
@@ -74,7 +74,7 @@ class Composite extends Command implements IComposite {
      * @param ICommand $command            
      * @return boolean
      */
-    public function contains(ICommand $command)
+    public function contains(ICommand $command): bool
     {
         $contains = false;
         foreach ($this->commands as $current) {
@@ -91,13 +91,13 @@ class Composite extends Command implements IComposite {
      * 
      * @see \Izzum\Command\IComposite::count()
      */
-    public function count()
+    public function count(): int
     {
         return count($this->commands);
     }
 
     #[\Override]
-    public function toString()
+    public function toString(): string
     {
         $composition = [];
         $children = '';

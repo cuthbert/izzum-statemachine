@@ -309,7 +309,7 @@ class IncreaseId extends Command {
     }
 
 	
-	protected function _execute()
+	protected function _execute(): void
 	{
 		//proof that we can manipulate the entity
 		$this->entity->id += 1;
@@ -323,6 +323,6 @@ class CannotCreate extends Command {
 		throw new Exception("cannot create");
 	}
 
-	protected function _execute(){}
+	protected function _execute(): void {}
 }
 

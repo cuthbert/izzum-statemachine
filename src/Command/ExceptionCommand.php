@@ -8,11 +8,11 @@ namespace Izzum\Command;
  *        
  */
 class ExceptionCommand extends Command {
-    private $exception;
+    private \Exception $exception;
     const NULL_MESSAGE = 'null exception';
-    const NULL_CODE = '1234567890';
+    const NULL_CODE = 1234567890;
 
-    public function __construct($message = self::NULL_MESSAGE, $code = self::NULL_CODE, $previous = null)
+    public function __construct(string $message = self::NULL_MESSAGE, int $code = self::NULL_CODE, ?\Throwable $previous = null)
     {
         $this->exception = new \Exception($message, $code, $previous);
     }

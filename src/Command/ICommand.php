@@ -26,10 +26,10 @@ interface ICommand {
      * 
      * @throws \Izzum\Command\Exception
      */
-    public function execute();
+    public function execute(): void;
 
     /**
      * gives a string representation of the instance
      */
-    public function toString();
+    public function toString(): string;
 }

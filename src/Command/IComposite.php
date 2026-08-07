@@ -17,7 +17,7 @@ interface IComposite extends ICommand {
      * @param ICommand $command
      *            the ICommand to add
      */
-    public function add(ICommand $command);
+    public function add(ICommand $command): void;
 
     /**
      * remove a command from the composite
@@ -26,7 +26,7 @@ interface IComposite extends ICommand {
      *            the ICommand to remove
      * @return bool whether or not the removal was succesful
      */
-    public function remove(ICommand $command);
+    public function remove(ICommand $command): bool;
 
     /**
      * checks if a certain command is present.
@@ -35,12 +35,12 @@ interface IComposite extends ICommand {
      *            The Icommand to check for.
      * @return bool true if the command is in the composite.
      */
-    public function contains(ICommand $command);
+    public function contains(ICommand $command): bool;
 
     /**
      * how many commands does this composite contain?\
      * 
      * @return int
      */
-    public function count();
+    public function count(): int;
 }

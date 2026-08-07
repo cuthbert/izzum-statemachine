@@ -218,7 +218,7 @@ class AddToListCommand extends Command {
         $this->list = &$list;
     }
 
-    protected function _execute()
+    protected function _execute(): void
     {
         //add an incrementing counter to the list reference
         $this->list[] = self::$ID++;
@@ -231,7 +231,7 @@ class throwsExceptionCommand extends Command {
     {
     }
 
-    protected function _execute()
+    protected function _execute(): void
     {
         if($this->bool) {
             throw new  Exception('oops');

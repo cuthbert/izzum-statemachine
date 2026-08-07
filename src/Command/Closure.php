@@ -27,12 +27,12 @@ class Closure extends Command {
         /**
          * an array of arguments to pass as parameters to the closure
          */
-        private $arguments = []
+        private array $arguments = []
     )
     {
     }
 
-    protected function _execute()
+    protected function _execute(): void
     {
         call_user_func_array($this->closure, $this->arguments);
     }

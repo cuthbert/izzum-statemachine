@@ -10,6 +10,6 @@ namespace Izzum\Command;
  */
 class NullCommand extends Command {
 
-    protected function _execute()
+    protected function _execute(): void
     {}
 }

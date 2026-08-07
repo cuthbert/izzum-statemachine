@@ -24,7 +24,7 @@ abstract class Command implements ICommand, \Stringable {
      * @see \Izzum\Command\ICommand::execute()
      * @throws Exception https://en.wikipedia.org/wiki/Template_method_pattern
      */
-    final public function execute()
+    final public function execute(): void
     {
         try {
             $this->_execute();
@@ -41,10 +41,10 @@ abstract class Command implements ICommand, \Stringable {
 
     /**
      * hook method for logging etc.
-     * 
-     * @param Exception $e            
+     *
+     * @param Exception $e
      */
-    protected function handleException($e)
+    protected function handleException(Exception $e): void
     {
         // implement in subclass if needed
     }
@@ -53,13 +53,13 @@ abstract class Command implements ICommand, \Stringable {
      *
      * @throws \Exception
      */
-    abstract protected function _execute();
+    abstract protected function _execute(): void;
 
     /**
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         // includes the namespace
         return static::class;

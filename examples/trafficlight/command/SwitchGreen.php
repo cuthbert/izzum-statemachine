@@ -6,7 +6,7 @@ namespace izzum\examples\trafficlight\command;
  * like manipulating the model, setting data etc.
  */
 class SwitchGreen extends Switcher{
-    protected function _execute() {
+    protected function _execute(): void {
         $this->light->setGreen();
     }
 }
