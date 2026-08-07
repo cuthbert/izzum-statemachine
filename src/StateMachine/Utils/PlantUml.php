@@ -27,7 +27,7 @@ class PlantUml {
      * @param string $original            
      * @return string
      */
-    private function plantUmlStateAlias($original)
+    private function plantUmlStateAlias(string $original): string
     {
         $alias = ucfirst(implode("", array_map(ucfirst(...), explode("-", $original))));
         return $alias;
@@ -40,7 +40,7 @@ class PlantUml {
      * @link http://plantuml.sourceforge.net/skinparam.html
      * @link http://plantuml.com/classes.html#Skinparam
      */
-    private function getPlantUmlSkins()
+    private function getPlantUmlSkins(): string
     {
         $output = <<<SKINS
 skinparam state {
@@ -68,7 +68,7 @@ SKINS;
         return $output;
     }
 
-    private static function escape($string)
+    private static function escape(string $string): string
     {
         $string = addslashes($string);
         return $string;
@@ -83,7 +83,7 @@ SKINS;
      * @link http://plantuml.sourceforge.net/state.html
      * @throws Exception
      */
-    public function createStateDiagram(StateMachine $machine)
+    public function createStateDiagram(StateMachine $machine): string
     {
         $transitions = $machine->getTransitions();
         

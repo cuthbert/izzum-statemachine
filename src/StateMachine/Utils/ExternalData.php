@@ -91,7 +91,7 @@ class ExternalData {
      *
      * @return boolean
      */
-    static public function has()
+    static public function has(): bool
     {
         return self::$data !== null;
     }
@@ -99,7 +99,7 @@ class ExternalData {
     /**
      * clear the external context
      */
-    static public function clear()
+    static public function clear(): void
     {
         self::set(null);
     }
@@ -107,9 +107,9 @@ class ExternalData {
     /**
      * set the external data
      *
-     * @param mixed $data            
+     * @param mixed $data
      */
-    static public function set($data = null)
+    static public function set($data = null): void
     {
         self::$data = $data;
     }

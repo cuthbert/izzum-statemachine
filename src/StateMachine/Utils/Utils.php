@@ -32,7 +32,7 @@ class Utils {
      * @param StateMachine $machine
      * @return Exception[] an array of exceptions if anything is wrong with the configuration
      */
-    public static function checkConfiguration(StateMachine $machine)
+    public static function checkConfiguration(StateMachine $machine): array
     {
 
         //TODO: also check the rules and commands
@@ -67,11 +67,11 @@ class Utils {
      *        statically guaranteed to be callable, since that is exactly what
      *        this method validates
      * @param string $type a type description of the callable eg: State::CALLABLE_ENTRY
-     * @param string $info extra info for exception message purposes
+     * @param string|\Stringable $info extra info for exception message purposes
      * @param Context $context optional: the context the callable is called in
      * @return Exception|null the exception if the callable does not pass the check, null otherwise
      */
-    private static function getExceptionForCheckingCallable($callable, $type, $info, $context = null)
+    private static function getExceptionForCheckingCallable($callable, string $type, string|\Stringable $info, ?Context $context = null): ?Exception
     {
         try {
             self::checkCallable($callable, $type, $info, $context);
@@ -87,12 +87,12 @@ class Utils {
      *        statically guaranteed to be callable, since that is exactly what
      *        this method validates
      * @param string $type a type description of the callable eg: State::CALLABLE_ENTRY
-     * @param string $info extra info for exception message purposes
+     * @param string|\Stringable $info extra info for exception message purposes
      * @param Context $context optional: the context the callable is called in
      * @return bool
      * @throws Exception if the callable does not pass the check
      */
-    public static function checkCallable($callable, $type, $info, $context = null)
+    public static function checkCallable($callable, string $type, string|\Stringable $info, ?Context $context = null): bool
     {
         if($callable !== null && !is_callable($callable)) {
             throw new Exception(sprintf("not a valid '%s' callable for '%s'. %s",
@@ -114,7 +114,7 @@ class Utils {
      *            the state to which the transition will be made
      * @return string a string formatted as "state_from_to_state_to"
      */
-    public static function getTransitionName($from, $to)
+    public static function getTransitionName(string $from, string $to): string
     {
         return $from . self::STATE_CONCATENATOR . $to;
     }
@@ -134,7 +134,7 @@ class Utils {
      * @return ICommand
      * @throws Exception
      */
-    public static function getCommand($commandName, Context $context)
+    public static function getCommand(?string $commandName, Context $context): ICommand
     {
         // it's oke to have no command, as there might be 'marker' states, where
         // we just need to transition something to a next state (according to a
@@ -182,7 +182,7 @@ class Utils {
      * @return Exception
      * @throws Exception
      */
-    public static function wrapToStateMachineException(\Exception $e, $code, $throw = false)
+    public static function wrapToStateMachineException(\Exception $e, int $code, bool $throw = false): Exception
     {
         if (!is_a($e, 'Izzum\StateMachine\Exception')) {
             // wrap the exception and use the code provided.
@@ -208,7 +208,7 @@ class Utils {
      * @link https://php.net/manual/en/function.preg-match.php
      * @link http://regexr.com/ for trying out regular expressions
      */
-    public static function getAllRegexMatchingStates(State $regex, $targets)
+    public static function getAllRegexMatchingStates(State $regex, array $targets): array
     {
         $all = [];
         if ($regex->isRegex()) {
@@ -235,7 +235,7 @@ class Utils {
      * @link https://php.net/manual/en/function.preg-match.php
      * @link http://regexr.com/ for trying out regular expressions
      */
-    public static function matchesRegex(State $regex, State $target)
+    public static function matchesRegex(State $regex, State $target): bool
     {
         $matches = false;
         if ($regex->isNormalRegex()) {
