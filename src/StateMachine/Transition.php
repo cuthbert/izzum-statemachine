@@ -446,6 +446,7 @@ class Transition implements \Stringable {
      */
     public function getCopy(State $from, State $to)
     {
+        // @phpstan-ignore new.static (intentional late static binding so subclasses are copied as their own type, per docblock above)
         $copy = new static($from, $to, $this->getEvent(), $this->getRuleName(), $this->getCommandName(), $this->getGuardCallable(), $this->getTransitionCallable());
         $copy->setDescription($this->getDescription());
         return $copy;

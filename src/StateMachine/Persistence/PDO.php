@@ -233,6 +233,7 @@ class PDO extends Adapter implements Loader {
             }
     
             $rows = $statement->fetchAll();
+            // @phpstan-ignore identical.alwaysFalse (PHPStan's PDO stub omits the false-on-failure case that the real PDOStatement::fetchAll() can return)
             if ($rows === false) {
                 throw new Exception("failed getting rows: " . $this->getErrorInfo($statement));
             }

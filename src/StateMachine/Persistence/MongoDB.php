@@ -111,11 +111,13 @@ class MongoDB extends Adapter implements Loader {
         //db.history.createIndex({entity_id: 1, machine: 1}, {background: true});
         $index = ["entity_id" => 1, "machine" => 1];
         $options =  ["background" => true];
+        // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
         $this->getClient()->izzum->history->createIndex($index, $options);
         //getting the state for an entity_id/machine should be fast
         //db.states.createIndex({entity_id: 1, machine: 1}, {background: true});
         $index = ["entity_id" => 1, "machine" => 1];
         $options =  ["background" => true];
+        // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
         $this->getClient()->izzum->states->createIndex($index, $options);
 
         //show the existing indexes
@@ -158,6 +160,7 @@ class MongoDB extends Adapter implements Loader {
             $data->datetime = date('Y-m-d H:i:s', $timestamp);//ISO_8601
             $data->is_exception = $isException;
             //insert into the 'history' collection
+            // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
             $this->getClient()->izzum->history->insert($data);
         } catch (\Exception $e) {
             throw new Exception(sprintf('adding history failed: [%s]',
@@ -180,6 +183,7 @@ class MongoDB extends Adapter implements Loader {
             $data->machine = $identifier->getMachine();
             //insert into the 'states' collection
             //https://php.net/manual/en/mongocollection.insert.php
+            // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
             $this->getClient()->izzum->states->insert($data);
         } catch (\Exception $e) {
             throw new Exception(sprintf('query for inserting state failed: [%s]',
@@ -199,6 +203,7 @@ class MongoDB extends Adapter implements Loader {
             //find the state
             //https://php.net/manual/en/mongocollection.findone.php
             $query = ["machine" => $identifier->getMachine(), "entity_id" => $identifier->getEntityId()];
+            // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
             $data = $client->izzum->states->findOne($query);
             if($data) {
                 //update the state and timestamp
@@ -207,6 +212,7 @@ class MongoDB extends Adapter implements Loader {
                 $data['state'] = $state;
                 //save into the 'states' collection
                 //https://php.net/manual/en/mongocollection.save.php
+                // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
                 $client->izzum->states->save($data);
             } else {
                 throw new Exception(sprintf('no state found for [%s]. Did you "$machine->add()" it to the persistence layer?',
@@ -233,6 +239,7 @@ class MongoDB extends Adapter implements Loader {
              //find the state
              //https://php.net/manual/en/mongocollection.findone.php
              $query = ["entity_id" => $identifier->getEntityId(), "machine" => $identifier->getMachine()];
+             // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
              $data = $this->getClient()->izzum->states->findOne($query);
              if($data) {
                 $state = $data['state'];
@@ -258,6 +265,7 @@ class MongoDB extends Adapter implements Loader {
         try {
             //https://php.net/manual/en/mongocollection.findone.php
             $query = ["entity_id" => $identifier->getEntityId(), "machine" => $identifier->getMachine()];
+            // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
             $data = $this->getClient()->izzum->states->findOne($query);
             if($data) {
                 $isPersisted = true;
@@ -284,6 +292,7 @@ class MongoDB extends Adapter implements Loader {
             }
             $projection = ["entity_id" => 1];
             //find all in the 'states' collection
+            // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
             $found = $client->izzum->states->find($query, $projection);
             foreach($found as $data) {
                 $output[] = $data['entity_id'];
@@ -317,6 +326,7 @@ class MongoDB extends Adapter implements Loader {
         //alternatively, we could write a PHP Loader, but the assumption is that the speed gain is not worth it.
         $loader = new JSON(
                     json_encode(
+                        // @phpstan-ignore property.notFound (MongoClient exposes databases as dynamic properties in the legacy ext-mongo driver; not modeled by the stub)
                         $this->getClient()->izzum->configuration->findOne(
                                 ["machines.name" => $statemachine->getContext()->getMachine()]
                                 )
