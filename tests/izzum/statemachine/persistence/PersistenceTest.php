@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Persistence;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -16,9 +18,8 @@ use Izzum\StateMachine\Utils\PlantUml;
  *
  */
 #[Group('persistence', 'pdo', 'session')]
-class PersistenceTest extends TestCase {
-
-
+class PersistenceTest extends TestCase
+{
     public function testStorageData()
     {
         $machine = 'test';
@@ -42,7 +43,7 @@ class PersistenceTest extends TestCase {
 
         $io = new Memory();
         $state = $io->getState($object);
-        $this->assertEquals(State::STATE_UNKNOWN, $state,'default reader should return unknown if not present');
+        $this->assertEquals(State::STATE_UNKNOWN, $state, 'default reader should return unknown if not present');
         $this->assertEquals('Izzum\StateMachine\Persistence\Memory', $io->toString());
 
 
@@ -74,12 +75,13 @@ class PersistenceTest extends TestCase {
         //scenario
         $this->assertAddGetEntityIdsSet($io);
 
-        $this->assertStringContainsString('Memory' , $io . '', '__toString()');
+        $this->assertStringContainsString('Memory', $io . '', '__toString()');
 
 
     }
 
-    protected function assertAddGetEntityIdsSet(Adapter $io) {
+    protected function assertAddGetEntityIdsSet(Adapter $io)
+    {
         $machine = 'a-machine';
         $id1 = '555';
         $id2 = '666';
@@ -92,16 +94,16 @@ class PersistenceTest extends TestCase {
         $state = $io->getState($object1);
         $this->assertEquals($state, State::STATE_UNKNOWN);
         $this->assertCount(0, $io->getEntityIds($machine));
-        $this->assertTrue($io->setState($object1, State::STATE_NEW),'first time added');
-        $this->assertFalse($io->setState($object1, State::STATE_NEW),'already present');
+        $this->assertTrue($io->setState($object1, State::STATE_NEW), 'first time added');
+        $this->assertFalse($io->setState($object1, State::STATE_NEW), 'already present');
 
         $this->assertCount(1, $io->getEntityIds($machine));
         $this->assertTrue(in_array($id1, $io->getEntityIds($machine)));
         $this->assertFalse(in_array($id2, $io->getEntityIds($machine)));
         $this->assertCount(0, $io->getEntityIds('bogus'));
 
-        $this->assertTrue($io->setState($object2, State::STATE_NEW),'first time added');
-        $this->assertFalse($io->setState($object2, State::STATE_NEW),'already present');
+        $this->assertTrue($io->setState($object2, State::STATE_NEW), 'first time added');
+        $this->assertFalse($io->setState($object2, State::STATE_NEW), 'already present');
         $this->assertCount(2, $io->getEntityIds($machine));
         $this->assertCount(0, $io->getEntityIds('bogus'));
         $this->assertTrue(in_array($id1, $io->getEntityIds($machine)));
@@ -118,8 +120,8 @@ class PersistenceTest extends TestCase {
         //adding
         $state = $io->getState($object3);
         $this->assertEquals($state, State::STATE_UNKNOWN);
-        $this->assertTrue($io->add($object3, State::STATE_NEW),'first time added');
-        $this->assertFalse($io->add($object3, State::STATE_NEW),'already present');
+        $this->assertTrue($io->add($object3, State::STATE_NEW), 'first time added');
+        $this->assertFalse($io->add($object3, State::STATE_NEW), 'already present');
 
     }
 
@@ -170,7 +172,8 @@ class PersistenceTest extends TestCase {
     }
 
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         parent::tearDownAfterClass();
     }
 
@@ -217,7 +220,8 @@ class PersistenceTest extends TestCase {
      * helper method for different backend adapters
      * that use a database (postgres, pdo)
      */
-    protected function assertPersistenceAdapterPDO(PDO $adapter, string $machine, bool $outputPlant = false): void {
+    protected function assertPersistenceAdapterPDO(PDO $adapter, string $machine, bool $outputPlant = false): void
+    {
 
         $type = $adapter->getType();
         echo PHP_EOL;
@@ -225,7 +229,7 @@ class PersistenceTest extends TestCase {
         echo "Please check the following: php drivers present? database and tables created?" . PHP_EOL;
         echo "correct permissions set? dns correct for the PDO driver?" . PHP_EOL;
 
-         //transitions
+        //transitions
         $this->assertCount(9, $adapter->getTransitions($machine));
         $this->assertCount(9, $adapter->getLoaderData($machine));
 
@@ -245,7 +249,7 @@ class PersistenceTest extends TestCase {
         $this->assertGreaterThanOrEqual(5, $ids);
         $ids = $adapter->getEntityIds($machine, 'done');
         $this->assertGreaterThanOrEqual(2, $ids);
-        $ids = $adapter->getEntityIds($machine,'bad');
+        $ids = $adapter->getEntityIds($machine, 'bad');
         $this->assertGreaterThanOrEqual(2, $ids);
         $ids = $adapter->getEntityIds($machine, 'fine');
         $this->assertGreaterThanOrEqual(1, $ids);
@@ -257,13 +261,13 @@ class PersistenceTest extends TestCase {
         $this->assertCount(0, $ids);
 
         //diverse tests for the persistance of a non existing fully random id
-        $randomId = random_int(1,999999999) . "-" . microtime();
+        $randomId = random_int(1, 999999999) . "-" . microtime();
         $identifier = new Identifier($randomId, $machine);
         $context = new Context($identifier, null, $adapter);
         try {
             $this->assertEquals(State::STATE_UNKNOWN, $context->getState());
             $this->fail('should not come here');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->assertEquals(Exception::PERSISTENCE_LAYER_EXCEPTION, $e->getCode());
         }
         $this->assertFalse($adapter->isPersisted($identifier), 'not persisted yet');
@@ -287,20 +291,20 @@ class PersistenceTest extends TestCase {
         $this->assertCount(0, $sm->getTransitions());
         $this->assertCount(0, $sm->getStates());
         $adapter->load($sm);
-        if($outputPlant) {
-        	$plant = new PlantUml();
-        	$output = $plant->createStateDiagram($sm);
-        	echo PHP_EOL;
-        	echo PHP_EOL;
-        	echo "**** generating plantuml in persistence test for type " . $type . PHP_EOL;
-        	echo PHP_EOL;
-        	echo PHP_EOL;
-        	echo $output;
-        	echo PHP_EOL;
-        	echo PHP_EOL;
-        	echo "**** end generating plantuml in persistence test for type " . $type . PHP_EOL;
-        	echo PHP_EOL;
-        	echo PHP_EOL;
+        if ($outputPlant) {
+            $plant = new PlantUml();
+            $output = $plant->createStateDiagram($sm);
+            echo PHP_EOL;
+            echo PHP_EOL;
+            echo "**** generating plantuml in persistence test for type " . $type . PHP_EOL;
+            echo PHP_EOL;
+            echo PHP_EOL;
+            echo $output;
+            echo PHP_EOL;
+            echo PHP_EOL;
+            echo "**** end generating plantuml in persistence test for type " . $type . PHP_EOL;
+            echo PHP_EOL;
+            echo PHP_EOL;
         }
         $this->assertCount(9, $sm->getTransitions());
         $this->assertCount(6, $sm->getStates());
@@ -406,9 +410,9 @@ class PersistenceTest extends TestCase {
         $adapter = new PDO($dsn);
         $this->assertPersistenceAdapterPDO($adapter, $machine, false);
 
-        $machine = new StateMachine(new Context(new Identifier('test-addition' . microtime() . random_int(1,99999), 'izzum'), null, $adapter));
+        $machine = new StateMachine(new Context(new Identifier('test-addition' . microtime() . random_int(1, 99999), 'izzum'), null, $adapter));
         $adapter->load($machine);
-        $this->assertTrue($machine->getContext()->add($machine->getInitialState(), 'another info message for addition to persistence layer' ));
+        $this->assertTrue($machine->getContext()->add($machine->getInitialState(), 'another info message for addition to persistence layer'));
         $this->assertFalse($machine->getContext()->add($machine->getInitialState()));
         $machine->runToCompletion('running this machine to completion from ' . __METHOD__);
         $this->assertTrue($machine->getCurrentState()->isFinal());
@@ -436,7 +440,8 @@ class PersistenceTest extends TestCase {
     }
 }
 
-class MemoryEntityConcatenator extends Memory {
+class MemoryEntityConcatenator extends Memory
+{
     /**
      * overriden implementation
      *
@@ -445,24 +450,26 @@ class MemoryEntityConcatenator extends Memory {
      */
 
     #[\Override]
-    public function processSetState(Identifier $identifier, $state, $message = null) {
+    public function processSetState(Identifier $identifier, $state, $message = null)
+    {
         return $identifier->getMachine() . "_" .
         $identifier->getEntityId() . "_" .
         $state;
     }
 
     #[\Override]
-    public function processGetState(Identifier $identifier): string {
-        return $identifier->getMachine() .  "_" . $identifier->getEntityId();
+    public function processGetState(Identifier $identifier): string
+    {
+        return $identifier->getMachine() . "_" . $identifier->getEntityId();
     }
 }
-class MemoryException extends Memory {
-    public function __construct(private bool $bool)
-    {
-    }
+class MemoryException extends Memory
+{
+    public function __construct(private bool $bool) {}
     #[\Override]
-    public function processSetState(Identifier $identifier, $state, $message = null){
-        if($this->bool) {
+    public function processSetState(Identifier $identifier, $state, $message = null)
+    {
+        if ($this->bool) {
             throw new \Exception('processing setstate exception');
         } else {
             throw new Exception('processing setstate exception', 123);
@@ -470,8 +477,9 @@ class MemoryException extends Memory {
     }
 
     #[\Override]
-    public function processGetState(Identifier $identifier): never {
-       if($this->bool) {
+    public function processGetState(Identifier $identifier): never
+    {
+        if ($this->bool) {
             throw new \Exception('processing setstate exception');
         } else {
             throw new Exception('processing setstate exception', 345);

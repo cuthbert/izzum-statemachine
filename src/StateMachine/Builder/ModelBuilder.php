@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Builder;
+
 use Izzum\StateMachine\EntityBuilder;
 use Izzum\StateMachine\Identifier;
 
@@ -30,18 +32,17 @@ use Izzum\StateMachine\Identifier;
  * parent::__construct($context)
  *
  * @link https://en.wikipedia.org/wiki/Object_composition
- *      
+ *
  * @author Rolf Vreijdenberger
- *        
+ *
  */
-class ModelBuilder extends EntityBuilder {
+class ModelBuilder extends EntityBuilder
+{
     /**
      * @param mixed $model
      *            the domain model you want to have returned from this class.
      */
-    public function __construct(private $model)
-    {
-    }
+    public function __construct(private $model) {}
 
     /**
      * {@inheritDoc}

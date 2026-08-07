@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Utils;
+
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\Exception;
 
@@ -19,8 +21,8 @@ use Izzum\StateMachine\Exception;
  * @link http://www.plantuml.com/plantuml/ for the generation of the diagram
  *       after the output is created from createStateDiagram
  */
-class PlantUml {
-
+class PlantUml
+{
     /**
      * create an alias for a state that has a valid plantuml syntax
      */
@@ -81,22 +83,22 @@ SKINS;
     public function createStateDiagram(StateMachine $machine): string
     {
         $transitions = $machine->getTransitions();
-        
+
         // all states are aliased so the plantuml parser can handle the names
         $aliases = [];
         $endStates = [];
         $EOL = "\\n\\" . PHP_EOL; /* for multiline stuff in plantuml */
         $NEWLINE = PHP_EOL;
-        
+
         // start with declaration
         $uml = "@startuml" . PHP_EOL;
-        
+
         // skins for colors etc.
         $uml .= $this->getPlantUmlSkins() . PHP_EOL;
-        
+
         // the order in which transitions are executed
         $order = [];
-        
+
         // create the diagram by drawing all transitions
         foreach ($transitions as $t) {
             // get states and state aliases (plantuml cannot work with certain
@@ -105,7 +107,7 @@ SKINS;
             $fromAlias = $this->plantUmlStateAlias($from->getName());
             $to = $t->getStateTo();
             $toAlias = $this->plantUmlStateAlias($to->getName());
-            
+
             // get some names to display
             $command = $t->getCommandName();
             $rule = self::escape($t->getRuleName());
@@ -118,7 +120,7 @@ SKINS;
             $fEntry = $from->getEntryCommandName();
             $tExit = $to->getExitCommandName();
             $tEntry = $to->getEntryCommandName();
-            
+
             // only write aliases if not done before
             if (!isset($aliases [$fromAlias])) {
                 $uml .= 'state "' . $from . '" as ' . $fromAlias . PHP_EOL;
@@ -127,14 +129,14 @@ SKINS;
                 $uml .= "$fromAlias: exit / '" . $fExit . "'" . PHP_EOL;
                 $aliases [$fromAlias] = $fromAlias;
             }
-            
+
             // store order in which transitions will be handled
             if (!isset($order [$fromAlias])) {
                 $order [$fromAlias] = 1;
             } else {
                 $order [$fromAlias] = $order [$fromAlias] + 1;
             }
-            
+
             // get 'to' alias
             if (!isset($aliases [$toAlias])) {
                 $uml .= 'state "' . $to . '" as ' . $toAlias . PHP_EOL;
@@ -143,7 +145,7 @@ SKINS;
                 $uml .= "$toAlias: entry / '" . $tEntry . "'" . PHP_EOL;
                 $uml .= "$toAlias: exit / '" . $tExit . "'" . PHP_EOL;
             }
-            
+
             // write transition information
             $uml .= $fromAlias . ' --> ' . $toAlias;
             $uml .= " : <b><size:10>$nameTransition</size></b>" . $EOL;
@@ -153,7 +155,7 @@ SKINS;
             $uml .= "command/action: '$command'" . $EOL;
             $uml .= $description;
             $uml .= PHP_EOL;
-            
+
             // store possible end states aliases
             if ($t->getStateFrom()->isFinal()) {
                 $endStates [$fromAlias] = $fromAlias;
@@ -162,7 +164,7 @@ SKINS;
                 $endStates [$toAlias] = $toAlias;
             }
         }
-        
+
         // only one begin state
         $initial = $machine->getInitialState();
         $initial = $initial->getName();
@@ -171,19 +173,19 @@ SKINS;
             $uml .= 'state "' . $initial . '" as ' . $initialAlias . PHP_EOL;
         }
         $uml .= "[*] --> $initialAlias" . PHP_EOL;
-        
+
         // note for initial alias with explanation
         $uml .= "note right of $initialAlias $NEWLINE";
         $uml .= "state diagram for machine '" . $machine->getContext()->getMachine() . "'$NEWLINE";
         $uml .= "created by izzum plantuml generator $NEWLINE";
         $uml .= "@link http://plantuml.sourceforge.net/state.html\"" . $NEWLINE;
         $uml .= "end note" . $NEWLINE;
-        
+
         // add end states to diagram
         foreach ($endStates as $end) {
             $uml .= "$end --> [*]" . PHP_EOL;
         }
-        
+
         // close plantuml
         $uml .= "@enduml" . PHP_EOL;
         return $uml;

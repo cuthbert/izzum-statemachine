@@ -1,16 +1,18 @@
 <?php
+
 namespace Izzum\Command;
 
 /**
  * throws an exception
  *
  * @author Rolf Vreijdenberger
- *        
+ *
  */
-class ExceptionCommand extends Command {
+class ExceptionCommand extends Command
+{
     private \Exception $exception;
-    const NULL_MESSAGE = 'null exception';
-    const NULL_CODE = 1234567890;
+    public const NULL_MESSAGE = 'null exception';
+    public const NULL_CODE = 1234567890;
 
     public function __construct(string $message = self::NULL_MESSAGE, int $code = self::NULL_CODE, ?\Throwable $previous = null)
     {

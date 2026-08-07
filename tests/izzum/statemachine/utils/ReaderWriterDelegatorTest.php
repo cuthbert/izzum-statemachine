@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Utils;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -13,13 +15,13 @@ use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\Loader\XML;
 
 /**
- * 
+ *
  * @author rolf
- *        
+ *
  */
 #[Group('statemachine', 'loader', 'xml')]
-class ReaderWriterDelegatorTest extends TestCase {
-
+class ReaderWriterDelegatorTest extends TestCase
+{
     #[Test]
     public function shouldLoadAndWriteViaDelegator()
     {
@@ -33,11 +35,11 @@ class ReaderWriterDelegatorTest extends TestCase {
         $count = $delegator->load($machine);
         //add to the backend
         $this->assertTrue($context->add('a'));
-        
+
         $this->assertCount(4, $machine->getTransitions(), 'there is a regex transition that adds 2 transitions (a-c and b-c)');
         $this->assertEquals(4, $count);
         $this->assertTrue($machine->ab());
-        
+
         //get the data from the memory storage facility
         $data = $writer->getStorageFromRegistry($machine->getContext()->getIdentifier());
         $this->assertEquals('b', $data->state);
@@ -47,7 +49,7 @@ class ReaderWriterDelegatorTest extends TestCase {
         $this->assertEquals('done', $data->state);
 
     }
-    
+
     #[Test]
     public function shouldBehave()
     {
@@ -55,7 +57,7 @@ class ReaderWriterDelegatorTest extends TestCase {
         $writer = new Memory();
         Memory::clear();
         $delegator = new ReaderWriterDelegator($loader, $writer);
-        
+
         $this->assertSame($loader, $delegator->getReader());
         $this->assertSame($writer, $delegator->getWriter());
         $this->assertStringContainsString('Memory', $delegator->toString());
@@ -65,6 +67,6 @@ class ReaderWriterDelegatorTest extends TestCase {
         $this->assertCount(0, $delegator->getEntityIds('test'));
         $this->assertFalse($delegator->isPersisted(new Identifier('123', 'bogus')));
         $delegator->setFailedTransition(new Identifier('foo', 'bar'), new Transition(new State('foo'), new State('bar')), new \Exception('bogus'));
-       
+
     }
 }

@@ -1,15 +1,16 @@
 <?php
+
 namespace Izzum\Command;
 
 /**
  * The Interface for a CompositeCommand aka.
  * MacroCommand.
  * It extends ICommand and therefore functions as a command(with execute())
- * 
+ *
  * @author Rolf Vreijdenberger
  */
-interface IComposite extends ICommand {
-
+interface IComposite extends ICommand
+{
     /**
      * add a command to the composite, to be executed in the sequence of
      * commands

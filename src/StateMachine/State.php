@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine;
+
 use Izzum\Command\ICommand;
 use Izzum\StateMachine\Utils\Utils;
 
@@ -14,14 +16,14 @@ use Izzum\StateMachine\Utils\Utils;
  *
  * A State instance can (and should) be shared by multiple Transition
  * objects when it is the same State for their origin/from State.
- * 
- * A State can be a regex state (or negated regex). 
+ *
+ * A State can be a regex state (or negated regex).
  * A regex state can be used in a transition and when added to a
  * statemachine the regular expression will be matched on all currently
  * known states on that statemachine and new Transitions will be added
- * to the statemachine that match the from/to state regexes. This is very 
+ * to the statemachine that match the from/to state regexes. This is very
  * useful to build a lot of transitions very quickly.
- * 
+ *
  * to build a full mesh of transitions (all states to all states):
  * $a = new State('a');
  * $b = new State('b');
@@ -34,48 +36,48 @@ use Izzum\StateMachine\Utils\Utils;
  *
  * @author Rolf Vreijdenberger
  * @link https://php.net/manual/en/language.types.callable.php
- * @link https://en.wikipedia.org/wiki/Command_pattern    
+ * @link https://en.wikipedia.org/wiki/Command_pattern
  * @link https://php.net/manual/en/function.preg-match.php
- * @link http://regexr.com/ for trying out regular expressions    
+ * @link http://regexr.com/ for trying out regular expressions
  */
-class State implements \Stringable {
-    
+class State implements \Stringable
+{
     /**
      * state name if it is unknown (not configured)
      * @var string
      */
-    const STATE_UNKNOWN = 'unknown';
-    
+    public const STATE_UNKNOWN = 'unknown';
+
     /**
      * default name for the first/only initial state (but you can specify whatever you want for your initial state)
      * @var string
      */
-    const STATE_NEW = 'new';
-    
+    public const STATE_NEW = 'new';
+
     /**
      * default name for a normal final state
      * @var string
      */
-    const STATE_DONE = 'done';
-    
+    public const STATE_DONE = 'done';
+
     /**
      * default exit/entry command
      * @var string
      */
-    const COMMAND_NULL = '\Izzum\Command\NullCommand';
-    
+    public const COMMAND_NULL = '\Izzum\Command\NullCommand';
+
     /**
      * default exit/entry command for constructor
      * @var string
      */
-    const COMMAND_EMPTY = '';
-    const CALLABLE_NULL = null;
-    const REGEX_PREFIX = 'regex:';
-    const REGEX_PREFIX_NEGATED = 'not-regex:';
+    public const COMMAND_EMPTY = '';
+    public const CALLABLE_NULL = null;
+    public const REGEX_PREFIX = 'regex:';
+    public const REGEX_PREFIX_NEGATED = 'not-regex:';
 
-    const CALLABLE_ENTRY = 'state entry';
-    const CALLABLE_EXIT = 'state exit';
-    
+    public const CALLABLE_ENTRY = 'state entry';
+    public const CALLABLE_EXIT = 'state exit';
+
     /**
      * the state types:
      * - 'initial':     a statemachine has exactly 1 initial type, this is always the only
@@ -85,11 +87,11 @@ class State implements \Stringable {
      *                  further transitions.
      * - 'regex':       a statemachine configuration could have regex states, which serve a purpose to create transitions
      *                  from or to multiple other states
-     * 
+     *
      * @var string
      */
-    const TYPE_INITIAL = 'initial', TYPE_NORMAL = 'normal', TYPE_FINAL = 'final', TYPE_REGEX = 'regex';
-    
+    public const TYPE_INITIAL = 'initial', TYPE_NORMAL = 'normal', TYPE_FINAL = 'final', TYPE_REGEX = 'regex';
+
     /**
      * The state type:
      * - State::TYPE_INITIAL
@@ -99,7 +101,7 @@ class State implements \Stringable {
      * @var string
      */
     protected string $type = '';
-    
+
     /**
      * an array of transitions that are outgoing for this state.
      * These will be set by Transition objects (they provide the association)
@@ -112,46 +114,46 @@ class State implements \Stringable {
      * @var Transition[]
      */
     protected array $transitions;
-    
+
     /**
      * The name of the state
-     * 
+     *
      * @var string
      */
     protected string $name;
-    
+
     /**
      * fully qualified command name for the command to be executed
      * when entering a state as part of a transition.
      * This can actually be a ',' seperated string of multiple commands that
      * will be executed as a composite.
-     * 
+     *
      * @var string
      */
     protected string $commandEntryName;
-    
+
     /**
      * fully qualified command name for the command to be executed
      * when exiting a state as part of a transition.
      * This can actually be a ',' seperated string of multiple commands that
      * will be executed as a composite.
-     * 
+     *
      * @var string
      */
     protected string $commandExitName;
-    
+
     /**
      *  the entry callable method
      * @var callable
      */
     protected $callableEntry;
-    
+
     /**
      *  the exit callable method
      * @var callable
      */
     protected $callableExit;
-    
+
     /**
      * a description for the state
      *
@@ -195,7 +197,7 @@ class State implements \Stringable {
 
     /**
      * get the entry callable, the callable to be called when entering this state
-     * @return callable 
+     * @return callable
      */
     public function getEntryCallable()
     {
@@ -219,7 +221,7 @@ class State implements \Stringable {
     public function getExitCallable()
     {
         return $this->callableExit;
-        
+
     }
 
     /**
@@ -291,7 +293,7 @@ class State implements \Stringable {
     {
         //if a client mistakenly creates a regex State (a name of [not-]<regex:>), but with a non-regex type,
         //we will set it to a regex state.
-        if($this->isRegex()) {
+        if ($this->isRegex()) {
             $type = self::TYPE_REGEX;
         }
         $this->type = trim($type);
@@ -303,7 +305,7 @@ class State implements \Stringable {
      *
      * TRICKY: this method should be package visibility only,
      * so don't use directly. it is used to set the bidirectional association
-     * for State and Transition from a Transition instance on the state the transition will be allowed to 
+     * for State and Transition from a Transition instance on the state the transition will be allowed to
      * run from ('state from').
      *
      * @return bool yes in case the transition was not on the State already or in case of an invalid transition
@@ -312,14 +314,14 @@ class State implements \Stringable {
     {
         $output = false;
         // check all existing transitions.
-        if (!$this->hasTransition($transition->getName()) 
-                && $transition->getStateFrom()->getName() == $this->getName() 
+        if (!$this->hasTransition($transition->getName())
+                && $transition->getStateFrom()->getName() == $this->getName()
                 && !$this->isFinal()
                  && !$this->isRegex()) {
             $output = true;
             $this->transitions [] = $transition;
         }
-        
+
         return $output;
     }
 
@@ -380,7 +382,7 @@ class State implements \Stringable {
      */
     protected function callCallable($callable, Context $context, string $type = 'n/a'): void
     {
-        if ($callable != self::CALLABLE_NULL){
+        if ($callable != self::CALLABLE_NULL) {
             Utils::checkCallable($callable, $type, $this, $context);
             call_user_func($callable, $context->getEntity());
         }
@@ -407,7 +409,7 @@ class State implements \Stringable {
     {
         try {
             $command->execute();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // command failure
             $e = new Exception($e->getMessage(), Exception::COMMAND_EXECUTION_FAILURE, $e);
             throw $e;
@@ -427,7 +429,7 @@ class State implements \Stringable {
 
     /**
      * get the transition for this state that can be triggered by an event code.
-     * 
+     *
      * @param string $event
      *            the event code that can trigger a transition (mealy machine)
      * @return Transition[]

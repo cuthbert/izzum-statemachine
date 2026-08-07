@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -15,10 +16,9 @@ namespace Izzum\Rules;
  * @author Rolf Vreijdenberger
  * @author Richard Ruiter
  */
-class RuleResult {
-    public function __construct(private readonly Rule $rule, private string $result)
-    {
-    }
+class RuleResult
+{
+    public function __construct(private readonly Rule $rule, private string $result) {}
 
     public function getRule(): Rule
     {

@@ -1,11 +1,12 @@
 <?php
+
 namespace Izzum\StateMachine;
 
 /**
  * EntityBuilder is an object that builds an entity (an application domain
  * specific model) for a Context object so your statemachine can interact with your
  * domain model.
- * 
+ *
  * The entity returned is the application domain specific object that will be
  * injected in the Rules and Commands for a specific statemachine (eg: Order)
  * and can implement event handlers and callables.
@@ -29,7 +30,7 @@ namespace Izzum\StateMachine;
  * a different Entity by definition). The cache will be rebuilt whenever a new
  * Identifier object is passed to the 'getEntity' method.
  *
- * This specific class (in contrast to subclasses) returns the Identifier itself instead of a domain model. 
+ * This specific class (in contrast to subclasses) returns the Identifier itself instead of a domain model.
  * This is useful because it allows us to test a lot of scenarios without side effects.
  * It also allows us to use the Identifier object for our rules and commands, so
  * you do not necessarily have to write your own entitybuilder.
@@ -48,22 +49,22 @@ namespace Izzum\StateMachine;
  *
  * @see Context::getEntity()
  * @link https://en.wikipedia.org/wiki/Builder_pattern
- *      
+ *
  * @author Rolf Vreijdenberger
- *        
+ *
  */
-class EntityBuilder implements \Stringable {
-    
+class EntityBuilder implements \Stringable
+{
     /**
      * a cached instance of the built entity object
-     * 
+     *
      * @var Object
      */
     protected $entity;
-    
+
     /**
      * a cached instance of the used Identifier.
-     * 
+     *
      * @var Identifier|null
      */
     protected ?Identifier $identifier = null;
@@ -84,7 +85,7 @@ class EntityBuilder implements \Stringable {
      *            cause rules or commands to act on
      *            in-memory data while it should use the persisted data.
      *            (an ORM should handle this automatically)
-     *            
+     *
      * @return Object an object of any type, depending on the statemachine.
      *         This object will be used by the Rule and Command that go with a
      *         certain statemachine. It will be injected in the constructor of
@@ -109,10 +110,10 @@ class EntityBuilder implements \Stringable {
                 $this->identifier = $identifier;
             }
             return $this->entity;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             // already a statemachine exception, just rethrow, it is logged
             throw $e;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // a non statemachine type exception, wrap it so it is logged and
             // throw
             $e = new Exception($e->getMessage(), Exception::BUILDER_FAILURE, $e);

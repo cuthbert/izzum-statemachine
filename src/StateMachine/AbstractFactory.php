@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine;
+
 use Izzum\StateMachine\Loader\Loader;
 use Izzum\StateMachine\Persistence\Adapter;
 
@@ -27,15 +29,15 @@ use Izzum\StateMachine\Persistence\Adapter;
  * $machine->run();
  *
  * @author Rolf Vreijdenberger
- *        
+ *
  * @link https://en.wikipedia.org/wiki/Abstract_factory_pattern
  * @link https://en.wikipedia.org/wiki/Template_method_pattern
  */
-abstract class AbstractFactory {
-
+abstract class AbstractFactory
+{
     /**
      * Gets the concrete Loader.
-     * 
+     *
      * A simple implementation might use the LoaderArray
      *
      * @return Loader An implementation of a Loader class (might be implemented

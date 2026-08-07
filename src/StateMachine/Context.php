@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine;
+
 use Izzum\StateMachine\Persistence\Adapter;
 use Izzum\StateMachine\Persistence\Memory;
 
@@ -8,8 +10,8 @@ use Izzum\StateMachine\Persistence\Memory;
  * statemachine to do it's work with the help of the relevant dependencies.
  * A Context is created by your application to provide the right dependencies
  * ('context') for the statemachine to work with.
- * 
- * It seperates the concerns for the statemachine of how you are reading/writing 
+ *
+ * It seperates the concerns for the statemachine of how you are reading/writing
  * state data and of how you access your domain models.
  *
  * Important are:
@@ -33,20 +35,20 @@ use Izzum\StateMachine\Persistence\Memory;
  * of the Adapter classes. this is useful for
  * testing and creating specific behaviour for statemachines that need extra
  * functionality to get and set the correct states.
- * 
+ *
  *
  * @author Rolf Vreijdenberger
- *        
+ *
  */
-class Context implements \Stringable {
-    
+class Context implements \Stringable
+{
     /**
      * the Identifier that uniquely identifies the statemachine
      *
      * @var Identifier
      */
     protected Identifier $identifier;
-    
+
     /**
      * an associated statemachine, if one is set.
      * Only a statemachine that uses this Context should set itself on the
@@ -216,7 +218,7 @@ class Context implements \Stringable {
                 $output .= "_" . $this->getState();
             }
         }
-        
+
         return $output;
     }
 

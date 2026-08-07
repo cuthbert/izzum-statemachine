@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -46,7 +47,8 @@ namespace Izzum\Rules;
  * @author Richard Ruiter
  * @link https://en.wikipedia.org/wiki/Separation_of_mechanism_and_policy
  */
-abstract class Rule implements IRule, \Stringable {
+abstract class Rule implements IRule, \Stringable
+{
     /**
      * contains results that a concrete Rule can set.
      * This allows clients of the Rule to check if certain conditions in
@@ -54,21 +56,21 @@ abstract class Rule implements IRule, \Stringable {
      * This will happen in case of multiple conditions being checked for a rule
      * to evaluate to true. If one of the conditions is not met, you can set a
      * result there.
-     * 
+     *
      * @var RuleResult[]
      */
     private array $result = [];
-    
+
     /**
      * should we cache the result or not?
      * TRICKY: this might be very dangerous for non-deterministic rules but a
      * great speed optimizer for rules that are evaluated multiple times and are
      * deterministic
-     * 
+     *
      * @var boolean
      */
     private bool $useCaching = false;
-    
+
     /**
      * if the result is cached, it will be put in this variable
      * after the applies method has run
@@ -122,10 +124,10 @@ abstract class Rule implements IRule, \Stringable {
             } else {
                 throw new Exception('A rule must return a boolean.', Exception::CODE_NONBOOLEAN);
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->handleException($e);
             throw $e;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $e = new Exception($e->getMessage(), $e->getCode(), $e);
             $this->handleException($e);
             throw $e;

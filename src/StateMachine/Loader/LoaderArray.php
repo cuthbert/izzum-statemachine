@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Loader;
+
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\State;
@@ -30,9 +32,9 @@ use Izzum\StateMachine\Persistence\PDO;
  * Ideally, they should point to the same State instance.
  * Otherwise, transitions and states are actually stored on the statemachine
  * on a first wins basis (the later transition/state instance is not stored).
- * 
- * Transitions will be sorted before they are added to the machine based on 
- * if they contain a regex or not. All regex transitions will be added to 
+ *
+ * Transitions will be sorted before they are added to the machine based on
+ * if they contain a regex or not. All regex transitions will be added to
  * the machine after the non-regex transitions have been added.
  *
  *
@@ -41,9 +43,10 @@ use Izzum\StateMachine\Persistence\PDO;
  * @see State
  * @see PDO
  * @author Rolf Vreijdenberger
- *        
+ *
  */
-class LoaderArray implements Loader, \Stringable {
+class LoaderArray implements Loader, \Stringable
+{
     /**
      *
      * @var Transition[]
@@ -88,7 +91,7 @@ class LoaderArray implements Loader, \Stringable {
             }
         }
         $sorted = array_merge($hasNoRegex, $hasRegex);
-        
+
         // add the sorted transitions. the transitions added will set the
         // states (from/to) on the statemachine
         foreach ($sorted as $transition) {

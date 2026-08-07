@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -6,8 +7,8 @@ namespace Izzum\Rules;
  *
  * @author Rolf Vreijdenberger
  */
-interface IRule {
-
+interface IRule
+{
     /**
      * The applies method which is executed somewhere at runtime when the
      * rule is invoked.

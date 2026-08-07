@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Utils;
+
 use Izzum\Command\NullCommand;
 use Izzum\Command\Composite;
 use Izzum\StateMachine\Exception;
@@ -15,8 +17,9 @@ use Izzum\StateMachine\Transition;
  * @author Rolf Vreijdenberger
  *
  */
-class Utils {
-    const STATE_CONCATENATOR = '_to_';
+class Utils
+{
+    public const STATE_CONCATENATOR = '_to_';
 
 
     /**
@@ -39,22 +42,19 @@ class Utils {
         $exceptions = [];
         $output = [];
         //check state callables
-        foreach($machine->getStates() as $state)
-        {
+        foreach ($machine->getStates() as $state) {
             $exceptions[] = self::getExceptionForCheckingCallable($state->getExitCallable(), State::CALLABLE_ENTRY, $state);
             $exceptions[] = self::getExceptionForCheckingCallable($state->getEntryCallable(), State::CALLABLE_ENTRY, $state);
         }
 
         //check transition callables
-        foreach($machine->getTransitions() as $transition)
-        {
+        foreach ($machine->getTransitions() as $transition) {
             $exceptions[] = self::getExceptionForCheckingCallable($transition->getGuardCallable(), Transition::CALLABLE_GUARD, $transition);
             $exceptions[] = self::getExceptionForCheckingCallable($transition->getTransitionCallable(), Transition::CALLABLE_TRANSITION, $transition);
         }
         //get the exceptions
-        foreach($exceptions as $e)
-        {
-            if(is_a($e, '\Exception')){
+        foreach ($exceptions as $e) {
+            if (is_a($e, '\Exception')) {
                 $output[] = $e;
             }
         }
@@ -74,7 +74,7 @@ class Utils {
     {
         try {
             self::checkCallable($callable, $type, $info, $context);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return $e;
         }
         return null;
@@ -93,15 +93,21 @@ class Utils {
      */
     public static function checkCallable($callable, string $type, string|\Stringable $info, ?Context $context = null): bool
     {
-        if($callable !== null && !is_callable($callable)) {
-            throw new Exception(sprintf("not a valid '%s' callable for '%s'. %s",
-                $type, $info, $context ),
-                Exception::CALLABLE_FAILURE);
+        if ($callable !== null && !is_callable($callable)) {
+            throw new Exception(
+                sprintf(
+                    "not a valid '%s' callable for '%s'. %s",
+                    $type,
+                    $info,
+                    $context,
+                ),
+                Exception::CALLABLE_FAILURE,
+            );
         }
         return true;
     }
-    
-    
+
+
     /**
      * gets the transition name by two state names, using the default convention
      * for a transition name (which is concatenating state-from to state-to with
@@ -158,7 +164,7 @@ class Utils {
             try {
                 $command = new $singleCommand($entity);
                 $output->add($command);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $e = new Exception(sprintf("command (%s) objects to construction for Context (%s). message: '%s'", $singleCommand, $context->toString(), $e->getMessage()), Exception::COMMAND_CREATION_FAILURE);
                 throw $e;
             }
@@ -232,7 +238,7 @@ class Utils {
             $expression = str_replace(State::REGEX_PREFIX, '', $regex->getName());
             $matches = preg_match($expression, $target->getName()) === 1;
         }
-        if($regex->isNegatedRegex()) {
+        if ($regex->isNegatedRegex()) {
             $expression = str_replace(State::REGEX_PREFIX_NEGATED, '', $regex->getName());
             $matches = preg_match($expression, $target->getName()) !== 1;
         }

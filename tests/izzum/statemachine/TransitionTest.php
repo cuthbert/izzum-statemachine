@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -13,8 +15,8 @@ use Izzum\Rules\Exception as ExceptionInRulePackage;
  *
  */
 #[Group('statemachine', 'transition')]
-class TransitionTest extends TestCase {
-
+class TransitionTest extends TestCase
+{
     #[Test]
     public function shouldWorkWhenCallingPublicMethods()
     {
@@ -62,8 +64,13 @@ class TransitionTest extends TestCase {
         $rule = 'foo-rule';
         $command = 'foo-command';
         $description = 'foobar';
-        $gc = function(){echo "guard callable";return true;};
-        $tc = function(): void{echo "transition callable";};
+        $gc = function () {
+            echo "guard callable";
+            return true;
+        };
+        $tc = function (): void {
+            echo "transition callable";
+        };
         $t = new Transition($a, $b, $event, $rule, $command, $gc, $tc);
         $t->setDescription($description);
 
@@ -159,14 +166,14 @@ class TransitionTest extends TestCase {
         try {
             $transition->getRule($context);
             $this->fail('rule creation throws exception');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::RULE_CREATION_FAILURE, $e->getCode());
         }
 
         try {
             $transition->getCommand($context);
             $this->fail('command creation throws exception');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::COMMAND_CREATION_FAILURE, $e->getCode());
         }
     }
@@ -267,13 +274,13 @@ class TransitionTest extends TestCase {
         try {
             $command = $transition->getCommand($object);
             $this->fail('should not come here');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::COMMAND_CREATION_FAILURE, $e->getCode());
         }
         try {
             $rule = $transition->getRule($object);
             $this->fail('should not come here');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::RULE_CREATION_FAILURE, $e->getCode());
         }
     }
@@ -307,7 +314,7 @@ class TransitionTest extends TestCase {
     #[Test]
     public function shouldNotBeAllowedToTransitionByCallable()
     {
-        $context = new Context(new Identifier('123','foo-machine'));
+        $context = new Context(new Identifier('123', 'foo-machine'));
         $event = 'foo';
         $a = new State('a');
         $b = new State('b');
@@ -327,7 +334,7 @@ class TransitionTest extends TestCase {
 
 
         //scenario 3. callable does not return a boolean
-        $guardCallable = function($entity): void {};
+        $guardCallable = function ($entity): void {};
         $t = new Transition($a, $b, $event, null, null, $guardCallable);
         $this->assertFalse($t->can($context));
     }
@@ -335,12 +342,14 @@ class TransitionTest extends TestCase {
     #[Test]
     public function shouldTransitionWithCallable()
     {
-        $context = new Context(new Identifier('123','foo-machine'));
+        $context = new Context(new Identifier('123', 'foo-machine'));
         $event = 'foo';
         $a = new State('a');
         $b = new State('b');
         $x = 0;
-        $transitionCallable = function($entity): void  {$entity->setEntityId('234');};
+        $transitionCallable = function ($entity): void {
+            $entity->setEntityId('234');
+        };
         $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         $this->assertEquals('123', $context->getEntityId());
         $t->process($context);
@@ -356,14 +365,16 @@ class TransitionTest extends TestCase {
         //https://php.net/manual/en/functions.anonymous.php
         //https://php.net/manual/en/language.types.callable.php
 
-        $context = new Context(new Identifier('123','foo-machine'));
+        $context = new Context(new Identifier('123', 'foo-machine'));
         $event = 'foo';
         $a = new State('a');
         $b = new State('b');
 
 
         //scenario 1: Closure without variables from the parent scope
-        $transitionCallable = function($entity): void  {$entity->setEntityId('234');};
+        $transitionCallable = function ($entity): void {
+            $entity->setEntityId('234');
+        };
         $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         $this->assertEquals('123', $context->getEntityId());
         $t->process($context);
@@ -372,7 +383,9 @@ class TransitionTest extends TestCase {
 
         //scenario 2: Closure with Inheriting variables from the parent scope
         $x = 4;
-        $transitionCallable = function($entity) use (&$x): void { $x+=1;};
+        $transitionCallable = function ($entity) use (&$x): void {
+            $x += 1;
+        };
         $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         $this->assertEquals(4, $x);
         $t->process($context);
@@ -380,7 +393,9 @@ class TransitionTest extends TestCase {
 
         //scenario 3: Anonymous function / literal
         $context->getIdentifier()->setEntityId('123');
-        $t = new Transition($a, $b, $event, null, null, null, function($entity): void  {$entity->setEntityId('234');});
+        $t = new Transition($a, $b, $event, null, null, null, function ($entity): void {
+            $entity->setEntityId('234');
+        });
         $this->assertEquals('123', $context->getEntityId());
         $t->process($context);
         $this->assertEquals('234', $context->getEntityId());
@@ -413,10 +428,12 @@ class TransitionTest extends TestCase {
         $this->assertEquals(2, CallableHelper::$id);
 
         //scenario 7: wrap an existing method in a closure (this is THE way to reuse an existing method)
-        $jo = function($entity): void {
-            $entity->setEntityId(($entity->getEntityId() +1));
+        $jo = function ($entity): void {
+            $entity->setEntityId(($entity->getEntityId() + 1));
         };
-        $callable = function($context) use ($jo): void { $jo($context); };
+        $callable = function ($context) use ($jo): void {
+            $jo($context);
+        };
         $context->getIdentifier()->setEntityId('123');
         $t = new Transition($a, $b, $event, null, null, null, $callable);
         $this->assertEquals('123', $context->getEntityId());
@@ -432,7 +449,7 @@ class TransitionTest extends TestCase {
     public function shouldFailWithBadCallableDefinitions()
     {
 
-        $context = new Context(new Identifier('123','foo-machine'));
+        $context = new Context(new Identifier('123', 'foo-machine'));
         $event = 'foo';
         $a = new State('a');
         $b = new State('b');
@@ -444,7 +461,7 @@ class TransitionTest extends TestCase {
         try {
             $t->process($context);
             $this->fail('should not come here');
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::COMMAND_EXECUTION_FAILURE, $e->getCode());
         }
 
@@ -455,7 +472,7 @@ class TransitionTest extends TestCase {
         try {
             $t->process($context);
             $this->fail('should not come here');
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::COMMAND_EXECUTION_FAILURE, $e->getCode());
         }
 
@@ -465,7 +482,7 @@ class TransitionTest extends TestCase {
         try {
             $t->can($context);
             $this->fail('should not come here');
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::RULE_APPLY_FAILURE, $e->getCode());
         }
 
@@ -484,7 +501,7 @@ class TransitionTest extends TestCase {
         try {
             $transition->can($object);
             $this->fail('should not come here');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::RULE_APPLY_FAILURE, $e->getCode());
             $this->assertEquals(ExceptionInRulePackage::CODE_GENERAL, $e->getPrevious()->getCode());
         }
@@ -503,38 +520,42 @@ class TransitionTest extends TestCase {
         try {
             $transition->process($object);
             $this->fail('should not come here');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::COMMAND_EXECUTION_FAILURE, $e->getCode());
         }
         $this->assertTrue($transition->can($object));
     }
 }
-class CallableHelper {
+class CallableHelper
+{
     //used to check that callables using static/instance method invocation work
     public static $id = 0;
     public $instanceId = 0;
-    public static function increaseId($entity) {
+    public static function increaseId($entity)
+    {
         self::$id++;
     }
 
-    public function increaseInstanceId($entity) {
+    public function increaseInstanceId($entity)
+    {
         $this->instanceId++;
     }
 }
 
 namespace Izzum\Command;
 
-class SimpleCommand extends \Izzum\Command\Command {
-
+class SimpleCommand extends \Izzum\Command\Command
+{
     protected function _execute(): void
     {
         // nothing
     }
 }
+
 namespace Izzum\Command;
 
-class ExceptionOnConstructionCommand extends \Izzum\Command\Command {
-
+class ExceptionOnConstructionCommand extends \Izzum\Command\Command
+{
     public function __construct()
     {
         throw new Exception('construction failed');
@@ -545,10 +566,11 @@ class ExceptionOnConstructionCommand extends \Izzum\Command\Command {
         // nothing
     }
 }
+
 namespace Izzum\Rules;
 
-class ExceptionOnConstructionRule extends \Izzum\Rules\Rule {
-
+class ExceptionOnConstructionRule extends \Izzum\Rules\Rule
+{
     public function __construct()
     {
         throw new Exception('construction failed');
@@ -559,7 +581,3 @@ class ExceptionOnConstructionRule extends \Izzum\Rules\Rule {
         return true;
     }
 }
-
-
-
-

@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -8,8 +9,8 @@ namespace Izzum\Rules;
  *
  * @author Rolf Vreijdenberger
  */
-class ExceptionRule extends Rule {
-
+class ExceptionRule extends Rule
+{
     protected function _applies(): never
     {
         throw new Exception('this rule always throws an exception', Exception::CODE_GENERAL);

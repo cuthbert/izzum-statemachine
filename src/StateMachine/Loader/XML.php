@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Loader;
+
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\State;
 use Izzum\StateMachine\Transition;
@@ -7,23 +9,22 @@ use Izzum\StateMachine\Exception;
 
 /**
  * XML loader. accepts an xml string and loads a machine from it.
- * The xml string can contain one or more machine definitions. 
+ * The xml string can contain one or more machine definitions.
  * The correct machine will be found from the xml structure.
- * 
+ *
  * This class also provides a way to load xml from a file.
  * The format of the data to be loaded is specified via an xml schema definition. see getXSD
- * 
+ *
  * @link https://en.wikipedia.org/wiki/XML
  * @author Rolf Vreijdenberger
  *
  */
-class XML implements Loader, \Stringable {
+class XML implements Loader, \Stringable
+{
     /**
      * @param string $xml optional a valid xml string according to the schema
      */
-    public function __construct(private string $xml)
-    {
-    }
+    public function __construct(private string $xml) {}
 
     /**
      * creates an instance of this class with the data loaded from a file.
@@ -91,7 +92,7 @@ class XML implements Loader, \Stringable {
             $tmp->setDescription((string) @$state->description);
             $states [$tmp->getName()] = $tmp;
         }
-        
+
         $transitions = [];
         foreach ($data->transitions->transition as $transition) {
             $tmp = new Transition($states [(string) @$transition->state_from], $states [(string) @$transition->state_to], (string) @$transition->event, (string) @$transition->rule, (string) @$transition->command, (string) @$transition->guard_callable, (string) @$transition->transition_callable);

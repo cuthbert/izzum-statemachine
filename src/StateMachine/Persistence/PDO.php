@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Persistence;
+
 use Izzum\StateMachine\Loader\Loader;
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\Identifier;
@@ -25,10 +27,10 @@ use Izzum\StateMachine\State;
  *
  * This Adapter does double duty as a Loader since both use the
  * same backend. You could use two seperate classes for this, but you can
- * implement both in one class. 
+ * implement both in one class.
  * You could use the ReaderWriterDelegator to seperate
  * the reading of configuration and the persisting of state and transition data.
- * 
+ *
  *
  * If you need an adapter more specialized to your
  * needs/framework/system you can easily write one yourself.
@@ -39,11 +41,11 @@ use Izzum\StateMachine\State;
  *
  * @link http://php.net/manual/en/pdo.drivers.php
  * @link http://php.net/manual/en/book.pdo.php
- *      
+ *
  * @author Rolf Vreijdenberger
  */
-class PDO extends Adapter implements Loader {
-    
+class PDO extends Adapter implements Loader
+{
     /**
      * the locally cached connections
      *
@@ -51,10 +53,10 @@ class PDO extends Adapter implements Loader {
      * @var \PDO|null
      */
     private $connection;
-    
+
     /**
      * table prefix
-     * 
+     *
      * @var string
      */
     private $prefix = '';
@@ -69,10 +71,8 @@ class PDO extends Adapter implements Loader {
         private string $dsn,
         private ?string $user = null,
         private ?string $password = null,
-        private array $options = []
-    )
-    {
-    }
+        private array $options = [],
+    ) {}
 
     /**
      * get the connection to a database via the PDO adapter.
@@ -88,11 +88,11 @@ class PDO extends Adapter implements Loader {
                 $this->setupConnection($this->connection);
             }
             return $this->connection;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception(sprintf("error creating PDO [%s], message: [%s]", $this->dsn, $e->getMessage()), Exception::PERSISTENCE_FAILED_TO_CONNECT);
         }
     }
-    
+
     /**
      * set the PDO connection explicitely, useful if you want to share the
      * PDO instance when it is created outside this class.
@@ -104,16 +104,16 @@ class PDO extends Adapter implements Loader {
 
     protected function setupConnection(\PDO $connection): void
     {
-    /**
-     * hook, override to:
-     * - set schema on postgresql
-     * - set PRAGMA on sqlite
-     * - etc..
-     * whatever is the need to do a setup on, the first time
-     * you create a connection
-     * - SET UTF-8 on mysql can be done with an option in the $options
-     * constructor argument
-     */
+        /**
+         * hook, override to:
+         * - set schema on postgresql
+         * - set PRAGMA on sqlite
+         * - etc..
+         * whatever is the need to do a setup on, the first time
+         * you create a connection
+         * - SET UTF-8 on mysql can be done with an option in the $options
+         * constructor argument
+         */
     }
 
     /**
@@ -138,7 +138,7 @@ class PDO extends Adapter implements Loader {
     {
         return $this->prefix;
     }
-    
+
     /**
      * {@inheritDoc}
      * This is an implemented method from the Loader interface.
@@ -154,7 +154,7 @@ class PDO extends Adapter implements Loader {
     }
 
     /**
-     * {@inheritDoc}            
+     * {@inheritDoc}
      */
     public function processGetState(Identifier $identifier): string
     {
@@ -171,7 +171,7 @@ class PDO extends Adapter implements Loader {
             if ($result === false) {
                 throw new Exception($this->getErrorInfo($statement));
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception(sprintf('query for getting current state failed: [%s]', $e->getMessage()), Exception::PERSISTENCE_LAYER_EXCEPTION);
         }
         $row = $statement->fetch();
@@ -182,8 +182,8 @@ class PDO extends Adapter implements Loader {
     }
 
 
-    
-    
+
+
     /**
      * {@inheritDoc}
      */
@@ -204,22 +204,22 @@ class PDO extends Adapter implements Loader {
             if ($state != null) {
                 $statement->bindParam(":state", $state);
             }
-    
+
             $result = $statement->execute();
             if ($result === false) {
                 throw new Exception($this->getErrorInfo($statement));
             }
-    
+
             $rows = $statement->fetchAll();
             // @phpstan-ignore identical.alwaysFalse (PHPStan's PDO stub omits the false-on-failure case that the real PDOStatement::fetchAll() can return)
             if ($rows === false) {
                 throw new Exception("failed getting rows: " . $this->getErrorInfo($statement));
             }
-    
+
             foreach ($rows as $row) {
                 $output [] = $row ['entity_id'];
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception($e->getMessage(), Exception::PERSISTENCE_LAYER_EXCEPTION, $e);
         }
         return $output;
@@ -243,20 +243,20 @@ class PDO extends Adapter implements Loader {
             if ($result === false) {
                 throw new Exception($this->getErrorInfo($statement));
             }
-            
+
             $row = $statement->fetch();
-            
+
             if ($row === false) {
                 return false;
             }
             return ($row ['entity_id'] == $identifier->getEntityId());
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception(sprintf('query for getting persistence info failed: [%s]', $e->getMessage()), Exception::PERSISTENCE_LAYER_EXCEPTION);
         }
     }
 
     /**
-     * {@inheritDoc}           
+     * {@inheritDoc}
      */
     #[\Override]
     protected function insertState(Identifier $identifier, string $state, $message = null): void
@@ -281,7 +281,7 @@ class PDO extends Adapter implements Loader {
             if ($result === false) {
                 throw new Exception($this->getErrorInfo($statement));
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception(sprintf('query for inserting state failed: [%s]', $e->getMessage()), Exception::PERSISTENCE_LAYER_EXCEPTION);
         }
     }
@@ -348,7 +348,7 @@ class PDO extends Adapter implements Loader {
             if ($result === false) {
                 throw new Exception($this->getErrorInfo($statement));
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception(sprintf('query for updating state failed: [%s]', $e->getMessage()), Exception::PERSISTENCE_LAYER_EXCEPTION);
         }
     }
@@ -374,8 +374,8 @@ class PDO extends Adapter implements Loader {
             $statement->bindParam(":machine", $machine);
             $statement->bindParam(":entity_id", $entityId);
             $statement->bindParam(":state", $state);
-            if($message) {
-                if(is_string($message)) {
+            if ($message) {
+                if (is_string($message)) {
                     $info = new \stdClass();
                     $info->message = $message;
                     $message = $info;
@@ -390,7 +390,7 @@ class PDO extends Adapter implements Loader {
             if ($result === false) {
                 throw new Exception($this->getErrorInfo($statement));
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception(sprintf('query for updating state failed: [%s]', $e->getMessage()), Exception::PERSISTENCE_LAYER_EXCEPTION);
         }
     }
@@ -436,15 +436,15 @@ class PDO extends Adapter implements Loader {
             $statement = $connection->prepare($query);
             $statement->bindParam(":machine", $machine);
             $result = $statement->execute();
-            
+
             if ($result === false) {
                 throw new Exception($this->getErrorInfo($statement));
             }
             $rows = $statement->fetchAll();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new Exception($e->getMessage(), Exception::PERSISTENCE_LAYER_EXCEPTION, $e);
         }
-        
+
         return $rows;
     }
 
@@ -457,15 +457,15 @@ class PDO extends Adapter implements Loader {
     public function getLoaderData(string $machine): array
     {
         $rows = $this->getTransitions($machine);
-        
+
         $output = [];
         // array for local caching of states
         $states = [];
-        
+
         foreach ($rows as $row) {
             $stateFrom = $row ['state_from'];
             $stateTo = $row ['state_to'];
-            
+
             // create the 'from' state
             if (isset($states [$stateFrom])) {
                 $from = $states [$stateFrom];
@@ -475,7 +475,7 @@ class PDO extends Adapter implements Loader {
             }
             // cache the 'from' state for the next iterations
             $states [$from->getName()] = $from;
-            
+
             // create the 'to' state
             if (isset($states [$stateTo])) {
                 $to = $states [$stateTo];
@@ -485,14 +485,14 @@ class PDO extends Adapter implements Loader {
             }
             // cache to 'to' state for the next iterations
             $states [$to->getName()] = $to;
-            
+
             // build the transition
             $transition = new Transition($from, $to, $row ['event'], $row ['rule'], $row ['command']);
             $transition->setDescription($row ['transition_description']);
-            
+
             $output [] = $transition;
         }
-        
+
         return $output;
     }
 

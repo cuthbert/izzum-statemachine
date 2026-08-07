@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Persistence;
+
 use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\Transition;
@@ -7,9 +9,9 @@ use Izzum\StateMachine\Utils\Utils;
 
 /**
  * The abstract class Adapter is responsible for adapting any code written to access
- * different persistence backends to the targeted php extensions and vendor databases. 
+ * different persistence backends to the targeted php extensions and vendor databases.
  * In essence subclasses will be data access objects (https://en.wikipedia.org/wiki/Data_access_object)
- * 
+ *
  * This class serves as a base class for access to different type of persistence
  * layers we might want to use to store the states for stateful entities.
  * for example: relational (postgres/mysql) databases, nosql databases, php
@@ -40,13 +42,13 @@ use Izzum\StateMachine\Utils\Utils;
  *
  * This class is a helper class for Context. Context delegates reading and
  * writing states to this class and it's subclasses.
- * 
+ *
  * @link https://en.wikipedia.org/wiki/Data_access_object
- * 
+ *
  * @author Rolf Vreijdenberger
  */
-abstract class Adapter implements \Stringable {
-
+abstract class Adapter implements \Stringable
+{
     /**
      * Get all the entity id's for a specific statemachine that have been persisted
      * All entity id's in all states are returned unless a specific
@@ -70,7 +72,7 @@ abstract class Adapter implements \Stringable {
      *
      * A storage facility could store a timestamp and the state the transition
      * was made to, for extra statistical information.
-     * 
+     *
      * this method is public to be able to call it via the ReaderWriterDelegator
      *
      * @return boolean true if just added to storage, false if stored before
@@ -87,7 +89,7 @@ abstract class Adapter implements \Stringable {
             return true;
         }
     }
-    
+
     /**
      * Adds a history record for a transition
      *
@@ -114,16 +116,16 @@ abstract class Adapter implements \Stringable {
     /**
      * @throws Exception
      */
-     protected function updateState(Identifier $identifier, string $state, $message = null): void
-     {
-         //override in subclasses
-     }
+    protected function updateState(Identifier $identifier, string $state, $message = null): void
+    {
+        //override in subclasses
+    }
 
     /**
      * A hook to be able to process the getting of the current state.
      * Implement this method for specifying how you want to get a state from a
      * storage facility.
-     * 
+     *
      * this method is public to be able to call it via the ReaderWriterDelegator
      *
      * @return string the current state of the entity represented in the context
@@ -174,7 +176,7 @@ abstract class Adapter implements \Stringable {
 
     /**
      * Get the current state for an Identifier (machine/id)
-     * 
+     *
      * A template method.
      *
      * @throws Exception
@@ -184,11 +186,11 @@ abstract class Adapter implements \Stringable {
         try {
             // execute a hook that should be implemented in a subclass.
             // the subclass could return STATE_UNKNOWN if it is not already
-            // added to the storage backend or it might throw an exception warning the 
+            // added to the storage backend or it might throw an exception warning the
             //end user that he should 'StateMachine::add' to the backend first
             $state = $this->processGetState($identifier);
             return $state;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $e = Utils::wrapToStateMachineException($e, Exception::IO_FAILURE_GET);
             throw $e;
         }
@@ -213,7 +215,7 @@ abstract class Adapter implements \Stringable {
             // something else that is used internally in legacy
             // systems (eg: order.order_status)
             return $this->processSetState($identifier, $state, $message);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // a possible lowlevel nonstatemachine exception, wrap it and throw
             $e = Utils::wrapToStateMachineException($e, Exception::IO_FAILURE_SET);
             throw $e;
@@ -249,7 +251,7 @@ abstract class Adapter implements \Stringable {
             //no current state available in persistence layer.
             //this is exceptional and should not happen when configured correctly and
             //if the machine has been 'added' or if a transition has been (partly) mande.
-            //therefore, it must be the from state.. 
+            //therefore, it must be the from state..
             $state = $transition->getStateFrom()->getName();
         }
         $message->state = $state;

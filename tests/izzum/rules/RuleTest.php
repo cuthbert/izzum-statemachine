@@ -1,4 +1,5 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 use Codeception\Attribute\Group;
 use Izzum\Rules\Rule;
@@ -16,7 +17,6 @@ use Izzum\Rules\RuleResult;
 #[Group('rule', 'rules', 'all')]
 class RuleTest extends TestCase
 {
-
     public function testBooleanRule()
     {
         $rule = new TrueRule();
@@ -28,7 +28,8 @@ class RuleTest extends TestCase
         $this->assertStringContainsString('False', $rule . '', '__toString');
     }
 
-    public function testExceptionRule() {
+    public function testExceptionRule()
+    {
         $rule = new ExceptionRule();
         try {
             $rule->applies();
@@ -54,7 +55,7 @@ class RuleTest extends TestCase
 
         $rule->expects($this->once())
                 ->method('_applies')
-                ->willReturn(NULL);
+                ->willReturn(null);
 
         $this->expectException(Exception::class);
         $this->expectExceptionCode(Exception::CODE_NONBOOLEAN);
@@ -213,9 +214,9 @@ class RuleTest extends TestCase
      */
     public function testXorChainingTrueTrue()
     {
-    	$ruletrue = new TrueRule();
-    	$rule = $ruletrue->xorRule($ruletrue);
-    	$this->assertFalse($rule->applies());
+        $ruletrue = new TrueRule();
+        $rule = $ruletrue->xorRule($ruletrue);
+        $this->assertFalse($rule->applies());
     }
 
     /**
@@ -223,10 +224,10 @@ class RuleTest extends TestCase
      */
     public function testXorChainingTrueFalse()
     {
-    	$ruletrue = new TrueRule();
-    	$rulefalse = new FalseRule();
-    	$rule = $ruletrue->xorRule($rulefalse);
-    	$this->assertTrue($rule->applies());
+        $ruletrue = new TrueRule();
+        $rulefalse = new FalseRule();
+        $rule = $ruletrue->xorRule($rulefalse);
+        $this->assertTrue($rule->applies());
     }
 
     /**
@@ -234,9 +235,9 @@ class RuleTest extends TestCase
      */
     public function testXorChainingFalseFalse()
     {
-    	$rulefalse = new FalseRule();
-    	$rule = $rulefalse->xorRule($rulefalse);
-    	$this->assertFalse($rule->applies());
+        $rulefalse = new FalseRule();
+        $rule = $rulefalse->xorRule($rulefalse);
+        $this->assertFalse($rule->applies());
         $this->assertCount(0, $rule->getResults());
     }
 
@@ -299,26 +300,30 @@ class RuleTest extends TestCase
         $this->assertTrue($supressedrule->applies());
     }
 
-    public function testClosureRuleTrue() {
+    public function testClosureRuleTrue()
+    {
         $closure = (fn($a, $b) => $a === $b);
 
         $rule = new Closure($closure, [1,1]);
         $this->assertTrue($rule->applies());
     }
 
-    public function testClosureRuleFalse() {
+    public function testClosureRuleFalse()
+    {
         $closure = (fn($a, $b) => $a === $b);
 
         $rule = new Closure($closure, [1,2]);
         $this->assertFalse($rule->applies());
     }
 
-    public function testFalseRule(){
+    public function testFalseRule()
+    {
         $rule = new FalseRule();
         $this->assertFalse($rule->applies());
     }
 
-    public function testTrueRule(){
+    public function testTrueRule()
+    {
         $rule = new TrueRule();
         $this->assertTrue($rule->applies());
     }
@@ -404,16 +409,18 @@ class RuleTest extends TestCase
 
 }
 
-class RandomNumberRule extends Rule {
+class RandomNumberRule extends Rule
+{
     private $count = 0;
 
-    public function getCount() {
+    public function getCount()
+    {
         return $this->count;
     }
     protected function _applies()
     {
         $this->count++;
-        if($this->count === 1) {
+        if ($this->count === 1) {
             return true;
         }
 
@@ -421,8 +428,9 @@ class RandomNumberRule extends Rule {
     }
 }
 
-class RuleResultRule extends Rule {
-    const RESULT_CONDITIONAL = 'we did not come into a conditional statement';
+class RuleResultRule extends Rule
+{
+    public const RESULT_CONDITIONAL = 'we did not come into a conditional statement';
     protected function _applies()
     {
         $this->addResult(self::RESULT_CONDITIONAL);
@@ -430,18 +438,16 @@ class RuleResultRule extends Rule {
     }
 }
 
-class throwsExceptionRule extends Rule {
-    public function __construct(private $bool)
-    {
-    }
+class throwsExceptionRule extends Rule
+{
+    public function __construct(private $bool) {}
 
     protected function _applies()
     {
-        if($this->bool) {
-            throw new  Exception('oops', 1);
+        if ($this->bool) {
+            throw new Exception('oops', 1);
         } else {
             throw new \Exception('ooops', 2);
         }
     }
 }
-

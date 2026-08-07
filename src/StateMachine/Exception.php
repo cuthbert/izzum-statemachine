@@ -1,22 +1,23 @@
 <?php
+
 namespace Izzum\StateMachine;
 
 /**
  * Exception class.
  * used internally in the statemachine.
  * Codes can be used to get more information about the errors or to translate.
- * 
+ *
  * @author Rolf Vreijdenberger
- *        
+ *
  */
-class Exception extends \Exception {
-    
+class Exception extends \Exception
+{
     /**
      * add constants, useful for testing exception codes
-     * 
+     *
      * @var int
      */
-    const ADD_TO_SM_FAILED = 1,
+    public const ADD_TO_SM_FAILED = 1,
         SM_CAN_FAILED = 2,
         SM_FACTORY_GET_INVALID = 3,
         SM_TRANSITION_FAILED = 4,

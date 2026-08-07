@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Persistence;
+
 use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\State;
 
@@ -14,8 +16,8 @@ use Izzum\StateMachine\State;
  *
  * @author Rolf Vreijdenberger
  */
-class Memory extends Adapter {
-    
+class Memory extends Adapter
+{
     /**
      * hashmap.
      * the key is Identifier->getId()
@@ -99,7 +101,7 @@ class Memory extends Adapter {
         }
         return $state;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -149,5 +151,5 @@ class Memory extends Adapter {
     {
         return self::$registry;
     }
-   
+
 }

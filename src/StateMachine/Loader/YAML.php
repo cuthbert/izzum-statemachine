@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Loader;
+
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\State;
 use Izzum\StateMachine\Transition;
@@ -21,13 +23,12 @@ use Izzum\StateMachine\Exception;
  * @author Rolf Vreijdenberger
  *
  */
-class YAML implements Loader, \Stringable {
+class YAML implements Loader, \Stringable
+{
     /**
      * @param string $yaml optional a valid yaml string as specified in assets/yaml/example.yaml
      */
-    public function __construct(private string $yaml)
-    {
-    }
+    public function __construct(private string $yaml) {}
 
     /**
      * creates an instance of this class with the data loaded from a file.
@@ -41,7 +42,7 @@ class YAML implements Loader, \Stringable {
             throw new Exception(sprintf('Failed to load yaml from file "%s". The file does not exist', $filename), Exception::BAD_LOADERDATA);
         }
         //suppres warning with @ operator. we are explicitely testing the return value.
-        $yaml = @file_get_contents ($filename);
+        $yaml = @file_get_contents($filename);
         if (false === $yaml) {
             throw new Exception(sprintf('Failed to read yaml data from file "%s". Unknown error (permissions?)', $filename), Exception::BAD_LOADERDATA);
         }
@@ -65,7 +66,7 @@ class YAML implements Loader, \Stringable {
         $name = $stateMachine->getContext()->getMachine();
         $found = false;
         $data = null;
-        if(is_array(@$decoded['machines'])) {
+        if (is_array(@$decoded['machines'])) {
             foreach ($decoded['machines'] as $data) {
                 if ($data['name'] === $name) {
                     $found = true;
@@ -109,4 +110,3 @@ class YAML implements Loader, \Stringable {
         return $this->toString();
     }
 }
-

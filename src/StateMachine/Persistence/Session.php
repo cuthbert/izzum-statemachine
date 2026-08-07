@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Persistence;
+
 use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\State;
 
@@ -14,14 +16,15 @@ use Izzum\StateMachine\State;
  *
  * A simple adapter for a proof of concept and an example.
  * it's possible to use this adapter for for instance gui wizards.
- * 
+ *
  * see also the /examples/session for how to use this adapter.
  *
  * TRICKY: make sure output is not already sent when instantiating this adapter.
  *
  * @author Rolf Vreijdenberger
  */
-class Session extends Adapter {
+class Session extends Adapter
+{
     /**
      * @param string $namespace the namespace of the session
      * @param string $sessionId
@@ -42,7 +45,7 @@ class Session extends Adapter {
             $_SESSION [$this->namespace] = [];
         }
     }
-    
+
 
     /**
      * {@inheritDoc}

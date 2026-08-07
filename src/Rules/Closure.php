@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -12,16 +13,15 @@ namespace Izzum\Rules;
  * $rule = new Closure(function ($a, $b) { return $a === $b; }), array(1,2));
  * $rule->applies();//returns false: 1 is not equal to 2
  */
-class Closure extends Rule {
+class Closure extends Rule
+{
     /**
      * @param mixed[] $arguments an optional array of arguments to pass to the closure
      */
     public function __construct(
         private readonly \Closure $closure,
-        private array $arguments = []
-    )
-    {
-    }
+        private array $arguments = [],
+    ) {}
 
     protected function _applies()
     {

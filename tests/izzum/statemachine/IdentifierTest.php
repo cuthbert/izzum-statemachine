@@ -1,17 +1,19 @@
 <?php
+
 namespace Izzum\StateMachine;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
 
 /**
- * 
+ *
  * @author rolf
- *        
+ *
  */
 #[Group('statemachine', 'Context')]
-class IdentifierTest extends TestCase {
-
+class IdentifierTest extends TestCase
+{
     #[Test]
     public function shouldBehave()
     {
@@ -20,7 +22,7 @@ class IdentifierTest extends TestCase {
         $identifier = new Identifier($entityId, $machine);
         $this->assertEquals($entityId, $identifier->getEntityId());
         $this->assertEquals($machine, $identifier->getMachine());
-        
+
         //getId
         $this->assertStringContainsString('test', $identifier->getId(true));
         $this->assertStringContainsString('test', $identifier->getId(false));
@@ -39,11 +41,11 @@ class IdentifierTest extends TestCase {
         $this->assertStringContainsString($entityId, $identifier . "");
         $this->assertStringContainsString($machine, $identifier . "");
         $this->assertStringContainsString('Identifier', $identifier . "");
-        
-        
+
+
         $identifier->setEntityId('321');
         $this->assertEquals('321', $identifier->getEntityId());
-        
-        
+
+
     }
 }

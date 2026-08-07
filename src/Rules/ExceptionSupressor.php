@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -10,27 +11,25 @@ namespace Izzum\Rules;
  *
  * This rule is an implementation of the Decorator pattern and allows a client
  * to use rules with a consistent behaviour for exceptions.
- * 
+ *
  * @author Rolf Vreijdenberger
  * @link https://en.wikipedia.org/wiki/Decorator_pattern
- *      
+ *
  */
-class ExceptionSupressor extends Rule {
-    
+class ExceptionSupressor extends Rule
+{
     /**
      * @param boolean $supressedResult
      *            what to return in case the decorated rule
      *            throws an error
      */
-    public function __construct(private readonly Rule $decoree, private bool $supressedResult = false)
-    {
-    }
+    public function __construct(private readonly Rule $decoree, private bool $supressedResult = false) {}
 
     public function _applies()
     {
         try {
             $output = (bool) $this->decoree->applies();
-        } catch(Exception) {
+        } catch (Exception) {
             $output = $this->supressedResult;
         }
         return $output;

@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Utils;
+
 use Izzum\StateMachine\Persistence\Adapter;
 use Izzum\StateMachine\Loader\Loader;
 use Izzum\StateMachine\Identifier;
@@ -8,15 +10,15 @@ use Izzum\StateMachine\Transition;
 use Izzum\StateMachine\StateMachine;
 
 /**
- * mix and match a loader (reader) and a persistance adapter (writer) by wrapping 
+ * mix and match a loader (reader) and a persistance adapter (writer) by wrapping
  * both of them and use them to delegate the handling logic to.
- * 
+ *
  * This allows us to load the statemachine configuration from a specific source and use
  * a different sink to write the current state and history information to.
- * 
+ *
  * You might want to do this to read the relatively static content for the configuration from
  * the filesystem and use a fast backend system to write the state and transition history data to.
- * 
+ *
  * for example:
  * - use an xml file with the PDO (sql) adapter:
  *      Izzum\StateMachine\Loader\XML & Izzum\StateMachine\Persistence\PDO
@@ -24,29 +26,30 @@ use Izzum\StateMachine\StateMachine;
  *      Izzum\StateMachine\Loader\JSON & Izzum\StateMachine\Persistence\Redis classes
  * - use php code to configure the machine with the Session adapter:
  *      Izzum\StateMachine\Loader\LoaderArray & Izzum\StateMachine\Persistence\Session classes)
- * 
+ *
  *
  * @author Rolf Vreijdenberger
  * @link https://en.wikipedia.org/wiki/Delegation_pattern
- *        
+ *
  */
-class ReaderWriterDelegator extends Adapter implements Loader {
+class ReaderWriterDelegator extends Adapter implements Loader
+{
     /**
      * @param Loader $reader the Loader instance to decorate, which reads data
      * @param Adapter $writer the Adapter instance to decorate, which writes data
      */
     public function __construct(
         private readonly Loader $reader,
-        private readonly Adapter $writer
-    )
-    {
-    }
+        private readonly Adapter $writer,
+    ) {}
 
-    public function getReader(): Loader {
+    public function getReader(): Loader
+    {
         return $this->reader;
     }
 
-    public function getWriter(): Adapter {
+    public function getWriter(): Adapter
+    {
         return $this->writer;
     }
 
@@ -86,13 +89,13 @@ class ReaderWriterDelegator extends Adapter implements Loader {
     {
         $this->writer->setFailedTransition($identifier, $transition, $e);
     }
-    
+
     #[\Override]
     public function toString(): string
     {
-        return parent::toString() . " [reader] " . $this->reader->toString() .  " [writer] " . $this->writer->toString();
+        return parent::toString() . " [reader] " . $this->reader->toString() . " [writer] " . $this->writer->toString();
     }
-    
+
     #[\Override]
     public function __toString(): string
     {

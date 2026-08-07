@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Command;
 
 /**
@@ -15,16 +16,15 @@ namespace Izzum\Command;
  *
  * @author Rolf Vreijdenberger
  */
-class Closure extends Command {
+class Closure extends Command
+{
     /**
      * @param array $arguments an optional array of arguments to pass to the closure
      */
     public function __construct(
         private readonly \Closure $closure,
-        private array $arguments = []
-    )
-    {
-    }
+        private array $arguments = [],
+    ) {}
 
     protected function _execute(): void
     {

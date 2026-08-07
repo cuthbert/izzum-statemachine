@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\StateMachine;
 
 /**
@@ -7,23 +8,24 @@ namespace Izzum\StateMachine;
  * A statemachine is always uniquely identified by the combination of an entity
  * id and a machine name (that provides the relation to the statemachine the
  * entity is governed by).
- * 
+ *
  * the machine name should be a 'machine readable' string, since it will be stored in different
  * backends and might be used as a key there (eg: in redis).
- * 
- * The entity id is something that uniquely identifies a domain model. Probably 
+ *
+ * The entity id is something that uniquely identifies a domain model. Probably
  * something that is stored in your application, like a primary key in a table, a GUID or a hash.
  *
  * This object thus stores the minimum data needed from other processes in your
  * application domain to succesfully work with the statemachine.
  *
  * @author Rolf Vreijdenberger
- *        
+ *
  */
-class Identifier implements \Stringable {
-    const NULL_ENTITY_ID = "-1";
-    const NULL_STATEMACHINE = 'null-machine';
-    
+class Identifier implements \Stringable
+{
+    public const NULL_ENTITY_ID = "-1";
+    public const NULL_STATEMACHINE = 'null-machine';
+
     /**
      * an entity id that represents the unique identifier for an application
      * domain specific object (entity) like 'Order', 'Customer' etc.

@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Command;
 
 /**
@@ -6,6 +7,6 @@ namespace Izzum\Command;
  * Concrete Commands will always throw an error of this type.
  *
  * @author Rolf Vreijdenberger
- *        
+ *
  */
 class Exception extends \Exception {}

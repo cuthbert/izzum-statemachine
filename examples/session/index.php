@@ -1,5 +1,7 @@
 <?php
+
 namespace izzum\examples\inheritance;
+
 use Izzum\StateMachine\Context;
 use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\State;
@@ -11,17 +13,17 @@ use Izzum\StateMachine\Utils\Utils;
 /**
  * Example script that uses the 'standalone mode' as one of the four usage models for the statemachine.
  * The other three usage models being inheritance, composition and delegation.
- * 
+ *
  * This demonstrates the use of a sesssion adapter to store the state in a php session
  * to display in a browser over page refreshes.
- * 
+ *
  * run this script from the (bash) command line:
  * php -S localhost:2468 -t <docroot: the path to this index.php file which you
  * can get via the shell command 'pwd'>
  * go to the browser and open localhost:2468 and refresh a couple of times
  * and stop the webserver when you're done with ctrl+c
  */
-require_once ('../autoload.php');
+require_once('../autoload.php');
 
 //all states, the color of the rainbow
 $new = new State('white', State::TYPE_INITIAL);
@@ -46,7 +48,7 @@ $machine->addTransition(new Transition($green, $blue));
 $machine->addTransition(new Transition($blue, $indigo));
 $machine->addTransition(new Transition($indigo, $violet));
 $machine->addTransition(new Transition($violet, $red));
-//initialize the first time to 'red' and then cycle through the 
+//initialize the first time to 'red' and then cycle through the
 //colors for each page refresh
 $machine->run();
 
@@ -98,7 +100,3 @@ $output = <<<EOT
 EOT;
 //and echo the output
 echo $output;
-
-
-
-

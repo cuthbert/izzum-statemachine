@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\StateMachine\Utils;
 
 /**
@@ -75,10 +76,10 @@ namespace Izzum\StateMachine\Utils;
  *
  *
  * @author Rolf Vreijdenberger
- *        
+ *
  */
-class ExternalData {
-    
+class ExternalData
+{
     /**
      * a simple holder for any data we want, strings, domain models etc.
      *
@@ -89,7 +90,7 @@ class ExternalData {
     /**
      * is there any external data set?
      */
-    static public function has(): bool
+    public static function has(): bool
     {
         return self::$data !== null;
     }
@@ -97,7 +98,7 @@ class ExternalData {
     /**
      * clear the external context
      */
-    static public function clear(): void
+    public static function clear(): void
     {
         self::set(null);
     }
@@ -105,7 +106,7 @@ class ExternalData {
     /**
      * @param mixed $data
      */
-    static public function set($data = null): void
+    public static function set($data = null): void
     {
         self::$data = $data;
     }
@@ -113,7 +114,7 @@ class ExternalData {
     /**
      * @return mixed
      */
-    static public function get()
+    public static function get()
     {
         return self::$data;
     }

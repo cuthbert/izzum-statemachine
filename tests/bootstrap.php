@@ -1,4 +1,5 @@
 <?php
+
 //we use ob_start for some tests that use php sessions
 ob_start();
 /**
@@ -8,8 +9,8 @@ ob_start();
  * <root>/vendor/autoload.php
  */
 $files = [__DIR__ . '/../../../../vendor/autoload.php', __DIR__ . '/../vendor/autoload.php'];
-foreach($files as $file) {
-    if(file_exists($file)) {
+foreach ($files as $file) {
+    if (file_exists($file)) {
         require_once($file);
         break;
     }

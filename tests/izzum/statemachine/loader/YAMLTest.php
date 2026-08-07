@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Loader;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -17,9 +19,8 @@ use Izzum\StateMachine\Exception;
  *
  */
 #[Group('statemachine', 'loader', 'yaml', 'not-on-production')]
-class YAMLTest extends TestCase {
-
-
+class YAMLTest extends TestCase
+{
     #[Test]
     public function shouldLoadTransitionsFromFile()
     {
@@ -28,7 +29,7 @@ class YAMLTest extends TestCase {
         //this is a symbolic link to the assets/yaml/example.yaml file
         $loader = YAML::createFromFile(__DIR__ . '/fixture-example.yaml');
         $count = $loader->load($machine);
-        $this->assertCount(4, $machine->getTransitions(),'there is a regex transition that adds 2 transitions (a-c and b-c)');
+        $this->assertCount(4, $machine->getTransitions(), 'there is a regex transition that adds 2 transitions (a-c and b-c)');
         $this->assertEquals(4, $count);
         //echo $machine->toString(true);
     }
@@ -41,7 +42,7 @@ class YAMLTest extends TestCase {
         $count = $loader->load($machine);
         $this->assertStringContainsString('bdone', $loader->getYAML());
         $this->assertStringContainsString('YAML', $loader->toString());
-        $this->assertStringContainsString('YAML', $loader . '' , '__toString()');
+        $this->assertStringContainsString('YAML', $loader . '', '__toString()');
     }
 
     #[Test]
@@ -51,7 +52,7 @@ class YAMLTest extends TestCase {
         try {
             $loader = YAML::createFromFile(__DIR__ . '/bogus.yaml');
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('bogus', $e->getMessage());
             $this->assertStringContainsString('does not exist', $e->getMessage());
@@ -70,7 +71,7 @@ class YAMLTest extends TestCase {
         try {
             $loader = YAML::createFromFile(__DIR__ . '/fixture-no-permission.yaml');
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('Failed to read', $e->getMessage());
         }
@@ -84,7 +85,7 @@ class YAMLTest extends TestCase {
         try {
             $loader->load($machine);
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('no machine data', $e->getMessage());
         }
@@ -98,7 +99,7 @@ class YAMLTest extends TestCase {
         try {
             $loader->load($machine);
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('no machine data', $e->getMessage());
         }

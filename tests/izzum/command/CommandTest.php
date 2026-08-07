@@ -1,4 +1,5 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -8,6 +9,7 @@ use Izzum\Command\Exception;
 use Izzum\Command\ExceptionCommand;
 use Izzum\Command\Composite;
 use Izzum\Command\Closure;
+
 /**
  * This class tests the basic workings of the Core Command package.
  * Since all commands build upon the Core, these tests should cover all
@@ -16,9 +18,8 @@ use Izzum\Command\Closure;
  *
  */
 #[Group('command')]
-class CommandTest extends TestCase {
-
-
+class CommandTest extends TestCase
+{
     public function testCommand()
     {
         //use a command that has a reference to a list.
@@ -55,10 +56,9 @@ class CommandTest extends TestCase {
         $code = 123;
         $command = new ExceptionCommand($message, $code);
         try {
-           $command->execute();
-           $this->fail("command should throw an exception");
-        } catch (\Exception $e)
-        {
+            $command->execute();
+            $this->fail("command should throw an exception");
+        } catch (\Exception $e) {
             $this->assertTrue(is_a($e, 'Izzum\Command\Exception'), "should be of type Izzum\Command\Exception");
             $this->assertTrue(is_a($e, 'Exception'));
             $this->assertEquals($message, $e->getMessage());
@@ -71,7 +71,9 @@ class CommandTest extends TestCase {
     {
         //one argument for closure
         $output = null;
-        $closure = function(&$output): void { $output = 1;};
+        $closure = function (&$output): void {
+            $output = 1;
+        };
         $command = new Closure($closure, [&$output]);
         $command->execute();
         $this->assertEquals(1, $output);
@@ -83,7 +85,9 @@ class CommandTest extends TestCase {
         //multiple arguments for closure
         $output = null;
         $input = 5;
-        $closure = function(&$output, $input): void { $output = $input;};
+        $closure = function (&$output, $input): void {
+            $output = $input;
+        };
         $command = new Closure($closure, [&$output, $input]);
         $command->execute();
         $this->assertEquals(5, $output);
@@ -169,8 +173,7 @@ class CommandTest extends TestCase {
         try {
             $command->execute();
             $this->fail("exception should have been thrown");
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->assertEquals(111, $e->getCode());
             $this->assertEquals('test', $e->getMessage());
             $this->assertEquals("Izzum\Command\Exception", $e::class);
@@ -206,7 +209,8 @@ class CommandTest extends TestCase {
  * @author rolf
  *
  */
-class AddToListCommand extends Command {
+class AddToListCommand extends Command
+{
     private static $ID = 0;
     private array $list;
     /**
@@ -226,18 +230,16 @@ class AddToListCommand extends Command {
 }
 
 
-class throwsExceptionCommand extends Command {
-    public function __construct(private $bool)
-    {
-    }
+class throwsExceptionCommand extends Command
+{
+    public function __construct(private $bool) {}
 
     protected function _execute(): void
     {
-        if($this->bool) {
-            throw new  Exception('oops');
+        if ($this->bool) {
+            throw new Exception('oops');
         } else {
             throw new \Exception('ooops');
         }
     }
 }
-

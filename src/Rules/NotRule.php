@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -9,11 +10,9 @@ namespace Izzum\Rules;
  * @author Rolf Vreijdenberger
  * @author Richard Ruiter
  */
-class NotRule extends Rule {
-    
-    public function __construct(private readonly Rule $original)
-    {
-    }
+class NotRule extends Rule
+{
+    public function __construct(private readonly Rule $original) {}
 
     public function _applies()
     {

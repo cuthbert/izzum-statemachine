@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Command;
 
 /**
@@ -8,8 +9,7 @@ namespace Izzum\Command;
  * @author Rolf Vreijdenberger
  *
  */
-class NullCommand extends Command {
-
-    protected function _execute(): void
-    {}
+class NullCommand extends Command
+{
+    protected function _execute(): void {}
 }

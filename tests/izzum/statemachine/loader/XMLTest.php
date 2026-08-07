@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Loader;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -9,13 +11,13 @@ use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\Exception;
 
 /**
- * 
+ *
  * @author rolf
- *        
+ *
  */
 #[Group('statemachine', 'loader', 'xml')]
-class XMLTest extends TestCase {
-
+class XMLTest extends TestCase
+{
     #[Test]
     public function shouldBehave()
     {
@@ -27,7 +29,7 @@ class XMLTest extends TestCase {
         $this->assertStringContainsString('XML', $loader->toString());
         $this->assertStringContainsString('XML', $loader . '', '_toString()');
     }
-    
+
     #[Test]
     public function shouldLoadTransitionsFromFile()
     {
@@ -53,14 +55,14 @@ class XMLTest extends TestCase {
         try {
             $loader = XML::createFromFile(__DIR__ . '/bogus.xml');
             $this->fail('should not come here');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('bogus', $e->getMessage());
             $this->assertStringContainsString('does not exist', $e->getMessage());
         }
     }
 
-    
+
     /**
      * this has been tested locally with a file with permissions of 220 (no read permissions) and it passes.
      * github/travis builds do not play well with this so if you want to run this, create the file with those permissions
@@ -73,12 +75,12 @@ class XMLTest extends TestCase {
         try {
             $loader = XML::createFromFile(__DIR__ . '/fixture-no-permission.xml');
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('Failed to read', $e->getMessage());
         }
     }
-    
+
     #[Test]
     public function shouldThrowExceptionForBadXMLData()
     {
@@ -87,12 +89,12 @@ class XMLTest extends TestCase {
         try {
             $loader->load($machine);
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('could not load', $e->getMessage());
         }
     }
-    
+
     #[Test]
     public function shouldThrowExceptionForNoMachineData()
     {
@@ -101,7 +103,7 @@ class XMLTest extends TestCase {
         try {
             $loader->load($machine);
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('no machine data', $e->getMessage());
         }
@@ -112,7 +114,8 @@ class XMLTest extends TestCase {
  * Static class. this can be called as a callable. configured in the
  * configuration loaded by loaders
  */
-class MyStatic {
+class MyStatic
+{
     public static $guard = 0;
     public static $transition = 0;
     public static $entry = 0;

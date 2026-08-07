@@ -1,27 +1,30 @@
 <?php
+
 namespace Izzum\StateMachine;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
+
 /**
  * Tests the public methods of builders.
- * 
+ *
  * @author rolf
  *
  */
 #[Group('statemachine', 'EntityBuilder')]
-class EntityBuilderTest extends TestCase {
-    
+class EntityBuilderTest extends TestCase
+{
     public function testDefaultBuilder()
     {
-        //create Entity in default state. this is enough to pass it 
+        //create Entity in default state. this is enough to pass it
         //to the builder
         $object1 = new Identifier(-1, 'order');
         $object2 = new Identifier(-2, 'order');
         $this->assertNotEquals($object1, $object2);
-        
-        
-        
+
+
+
         //scenario: call it twice with same object
         $builder = new EntityBuilder();
         $result1 = $builder->getEntity($object1);
@@ -32,7 +35,7 @@ class EntityBuilderTest extends TestCase {
         $this->assertEquals($object1, $result2);
         $this->assertEquals($result1, $result2, 'obviously');
         $this->assertEquals('Izzum\StateMachine\EntityBuilder', $builder->toString());
-        
+
         //scenario: call it with different objects
         $builder = new EntityBuilder();
         $result1 = $builder->getEntity($object1);
@@ -40,10 +43,10 @@ class EntityBuilderTest extends TestCase {
         //different result when we call it again
         $result2 = $builder->getEntity($object2);
         $this->assertEquals($object2, $result2);
-        
+
         $this->assertStringContainsString('EntityBuilder', $builder . '', '__toString()');
     }
-    
+
     /**
      * tests the overriden function for building/.
      * this is also used to check if the caching works
@@ -55,8 +58,8 @@ class EntityBuilderTest extends TestCase {
         $object1 = new Identifier(-1, 'order');
         $object2 = new Identifier(-2, 'order');
         $this->assertNotEquals($object1, $object2);
-        
-        
+
+
         //scenario: call it with same objects to check CACHING! on the differently
         //returned references
         $builder = new EntityBuilderStdClss();
@@ -72,16 +75,16 @@ class EntityBuilderTest extends TestCase {
         //identity is exactly the same (same cached object)
         $this->assertEquals($result1, $result2, 'same identity because cached');
         $this->assertEquals('Izzum\StateMachine\EntityBuilderStdClss', $builder->toString());
-        
+
         //scenario: call it twice with different object
         $builder = new EntityBuilderStdClss();
         $result1 = $builder->getEntity($object1);
         //different result when we call it again
         $result2 = $builder->getEntity($object2);
         $this->assertNotEquals($result1, $result2);
-        
+
     }
-    
+
     #[Test]
     public function shouldThrowException()
     {
@@ -93,7 +96,7 @@ class EntityBuilderTest extends TestCase {
         } catch (Exception $e) {
             $this->assertEquals(0, $e->getCode());
         }
-        
+
         $builder = new EntityBuilderException(false);
         try {
             $builder->getEntity($identifier);
@@ -107,7 +110,8 @@ class EntityBuilderTest extends TestCase {
 /**
  * helper class. this reference builder builds a stdClss.
  */
-class EntityBuilderStdClss extends EntityBuilder {
+class EntityBuilderStdClss extends EntityBuilder
+{
     #[\Override]
     protected function build(Identifier $identifier)
     {
@@ -121,14 +125,13 @@ class EntityBuilderStdClss extends EntityBuilder {
 /**
  * helper class. this reference builder builds a stdClss.
  */
-class EntityBuilderException extends EntityBuilder {
-    public function __construct(private $bool)
-    {
-    }
+class EntityBuilderException extends EntityBuilder
+{
+    public function __construct(private $bool) {}
     #[\Override]
     protected function build(Identifier $identifier)
     {
-        if($this->bool) {
+        if ($this->bool) {
             throw new Exception('oops', 0);
         } else {
             throw new \Exception('ooops');

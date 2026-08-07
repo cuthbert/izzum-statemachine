@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Command;
 
 /**
@@ -9,8 +10,8 @@ namespace Izzum\Command;
  * @author Rolf Vreijdenberger
  * @link https://en.wikipedia.org/wiki/Command_pattern
  */
-interface ICommand {
-
+interface ICommand
+{
     /**
      * The execute method which is executed somewhere at runtime when the
      * command is invoked.
@@ -23,7 +24,7 @@ interface ICommand {
      * execution time from objects it knows about.
      *
      * Context provided can also be a mock (for unittesting)
-     * 
+     *
      * @throws \Izzum\Command\Exception
      */
     public function execute(): void;

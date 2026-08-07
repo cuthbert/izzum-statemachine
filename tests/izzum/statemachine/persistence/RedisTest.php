@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Persistence;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -9,6 +11,7 @@ use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\State;
 use Izzum\StateMachine\Transition;
+
 /**
  * this test makes use of an active redis instance on the localhost listening
  * on port 6379 (the defaults) and database 15 (which will be flused on each test)
@@ -21,8 +24,8 @@ use Izzum\StateMachine\Transition;
  *
  */
 #[Group('persistence', 'loader', 'redis', 'not-on-production')]
-class RedisTest extends TestCase {
-
+class RedisTest extends TestCase
+{
     #[Test]
     public function shouldBeAbleToLoadConfigurationAndTestSomeGettersAndSetters()
     {
@@ -33,7 +36,7 @@ class RedisTest extends TestCase {
         $machine = new StateMachine(new Context(new Identifier(1, 'test-machine'), null, $redis));
         //create the loader
         //get the configuration from the json file
-        $configuration = file_get_contents(__DIR__ .'/../loader/fixture-example.json');
+        $configuration = file_get_contents(__DIR__ . '/../loader/fixture-example.json');
         //set it. normally, this would be done by a seperate process that has already loaded the configuration
         $redis->set(Redis::KEY_CONFIGURATION, $configuration);
         //load the machine
@@ -60,7 +63,7 @@ class RedisTest extends TestCase {
         $machine = new StateMachine(new Context($identifier, null, $redis));
         //create the loader
         //get the configuration from the json file
-        $configuration = file_get_contents(__DIR__ .'/../loader/fixture-example.json');
+        $configuration = file_get_contents(__DIR__ . '/../loader/fixture-example.json');
         //set it. normally, this would be done by a seperate process that has already loaded the configuration
         $redis->set(sprintf(Redis::KEY_CONFIGURATION_SPECIFIC, $redis->getConfigurationKey(), 'test-machine'), $configuration);
         //load the machine
@@ -96,7 +99,7 @@ class RedisTest extends TestCase {
         $machine = new StateMachine(new Context(new Identifier('1', 'test-machine'), null, $redis));
         //create the loader
         //get the configuration from the json file
-        $configuration = file_get_contents(__DIR__ .'/../loader/fixture-example.json');
+        $configuration = file_get_contents(__DIR__ . '/../loader/fixture-example.json');
         //set it. normally, this would be done by a seperate process that has already loaded the configuration
         $redis->set(Redis::KEY_CONFIGURATION, $configuration);
         //load the machine
@@ -112,7 +115,7 @@ class RedisTest extends TestCase {
         try {
             $machine->goToC();
             $this->fail('should not come here');
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::RULE_APPLY_FAILURE, $e->getCode());
         }
         $this->assertEquals('b', $machine->getCurrentState());

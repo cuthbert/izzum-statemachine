@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Persistence;
+
 use Izzum\StateMachine\Identifier;
 
 /**
@@ -9,11 +11,11 @@ use Izzum\StateMachine\Identifier;
  *
  * @author Rolf Vreijdenberger
  */
-class StorageData {
-    
+class StorageData
+{
     /**
      * the entity id
-     * 
+     *
      * @var string
      */
     public string $id;

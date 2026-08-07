@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine;
+
 use Izzum\Command\ICommand;
 use Izzum\Rules\TrueRule;
 use Izzum\StateMachine\Utils\Utils;
@@ -30,15 +32,16 @@ use Izzum\Rules\IRule;
  * @author Rolf Vreijdenberger
  *
  */
-class Transition implements \Stringable {
-    const RULE_TRUE = '\Izzum\Rules\TrueRule';
-    const RULE_FALSE = '\Izzum\Rules\FalseRule';
-    const RULE_EMPTY = '';
-    const COMMAND_NULL = '\Izzum\Command\NullCommand';
-    const COMMAND_EMPTY = '';
-    const CALLABLE_NULL = null;
-    const CALLABLE_GUARD = 'transition guard';
-    const CALLABLE_TRANSITION = 'transition logic';
+class Transition implements \Stringable
+{
+    public const RULE_TRUE = '\Izzum\Rules\TrueRule';
+    public const RULE_FALSE = '\Izzum\Rules\FalseRule';
+    public const RULE_EMPTY = '';
+    public const COMMAND_NULL = '\Izzum\Command\NullCommand';
+    public const COMMAND_EMPTY = '';
+    public const CALLABLE_NULL = null;
+    public const CALLABLE_GUARD = 'transition guard';
+    public const CALLABLE_TRANSITION = 'transition logic';
 
     /**
      * the state this transition starts from
@@ -138,7 +141,8 @@ class Transition implements \Stringable {
      * the callable to call as part of the transition logic
      * @param callable|null $callable
      */
-    public function setTransitionCallable($callable): static {
+    public function setTransitionCallable($callable): static
+    {
         $this->callableTransition = $callable;
         return $this;
     }
@@ -156,7 +160,8 @@ class Transition implements \Stringable {
      * the callable to call as part of the transition guard
      * @param callable|null $callable
      */
-    public function setGuardCallable($callable): static {
+    public function setGuardCallable($callable): static
+    {
         $this->callableGuard = $callable;
         return $this;
     }
@@ -189,13 +194,13 @@ class Transition implements \Stringable {
     public function can(Context $context): bool
     {
         try {
-            if(!$this->getRule($context)->applies()) {
+            if (!$this->getRule($context)->applies()) {
                 return false;
             }
             return $this->callCallable($this->getGuardCallable(), $context, self::CALLABLE_GUARD);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             //rule or callable failure
-            $e = new Exception($this->toString() . ' '. $e->getMessage(), Exception::RULE_APPLY_FAILURE, $e);
+            $e = new Exception($this->toString() . ' ' . $e->getMessage(), Exception::RULE_APPLY_FAILURE, $e);
             throw $e;
         }
     }
@@ -211,7 +216,7 @@ class Transition implements \Stringable {
         try {
             $this->getCommand($context)->execute();
             $this->callCallable($this->getTransitionCallable(), $context, self::CALLABLE_TRANSITION);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // command or callable failure
             $e = new Exception($e->getMessage(), Exception::COMMAND_EXECUTION_FAILURE, $e);
             throw $e;
@@ -223,9 +228,10 @@ class Transition implements \Stringable {
      * @param callable $callable
      * @throws Exception in case of an invalid callable
      */
-    protected function callCallable($callable, Context $context, string $type = 'n/a'): bool {
+    protected function callCallable($callable, Context $context, string $type = 'n/a'): bool
+    {
         //in case it is a guard callable we need to return true/false
-        if($callable != self::CALLABLE_NULL){
+        if ($callable != self::CALLABLE_NULL) {
             Utils::checkCallable($callable, $type, "transition: " . $this, $context);
             return (bool) call_user_func($callable, $context->getEntity());
         }
@@ -264,7 +270,7 @@ class Transition implements \Stringable {
                 $andRule = new $singleRule($entity);
                 // create a chain of rules that need to be true
                 $rule = new AndRule($rule, $andRule);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $e = new Exception(sprintf("failed rule creation, class objects to construction with entity: (%s) for Context (%s). message: %s", $this->rule, $context->toString(), $e->getMessage()), Exception::RULE_CREATION_FAILURE);
                 throw $e;
             }

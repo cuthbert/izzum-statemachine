@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -9,8 +10,8 @@ namespace Izzum\Rules;
  *
  * @author Rolf Vreijdenberger
  */
-class TrueRule extends Rule {
-
+class TrueRule extends Rule
+{
     protected function _applies()
     {
         return true;

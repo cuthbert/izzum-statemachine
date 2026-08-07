@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Loader;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -14,8 +16,8 @@ use Izzum\StateMachine\Exception;
  *
  */
 #[Group('statemachine', 'loader', 'json')]
-class JSONTest extends TestCase {
-
+class JSONTest extends TestCase
+{
     #[Test]
     public function shouldLoadTransitionsFromFile()
     {
@@ -24,7 +26,7 @@ class JSONTest extends TestCase {
         //this is a symbolic link to the assets/json/example.json file
         $loader = JSON::createFromFile(__DIR__ . '/fixture-example.json');
         $count = $loader->load($machine);
-        $this->assertCount(4, $machine->getTransitions(),'there is a regex transition that adds 2 transitions (a-c and b-c)');
+        $this->assertCount(4, $machine->getTransitions(), 'there is a regex transition that adds 2 transitions (a-c and b-c)');
         $this->assertEquals(4, $count);
     }
 
@@ -37,7 +39,7 @@ class JSONTest extends TestCase {
         $this->assertStringContainsString('bdone', $loader->getJSON());
         $this->assertStringContainsString('json-schema', $loader->getJSONSchema());
         $this->assertStringContainsString('JSON', $loader->toString());
-        $this->assertStringContainsString('JSON', $loader . '' , '__toString()');
+        $this->assertStringContainsString('JSON', $loader . '', '__toString()');
     }
 
     #[Test]
@@ -47,7 +49,7 @@ class JSONTest extends TestCase {
         try {
             $loader = JSON::createFromFile(__DIR__ . '/bogus.json');
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('bogus', $e->getMessage());
             $this->assertStringContainsString('does not exist', $e->getMessage());
@@ -66,7 +68,7 @@ class JSONTest extends TestCase {
         try {
             $loader = JSON::createFromFile(__DIR__ . '/fixture-no-permission.json');
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('Failed to read', $e->getMessage());
         }
@@ -80,7 +82,7 @@ class JSONTest extends TestCase {
         try {
             $loader->load($machine);
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('decode', $e->getMessage());
         }
@@ -94,7 +96,7 @@ class JSONTest extends TestCase {
         try {
             $loader->load($machine);
             $this->fail('should not come here');
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
             $this->assertStringContainsString('no machine data', $e->getMessage());
         }

@@ -1,18 +1,20 @@
 <?php
+
 namespace Izzum\Command;
 
 /**
  * Command Pattern [GoF] implementation
  * CompositeCommand (aka MacroCommand) can be used to insert multiple ICommand
  * instances which will be handled in the execute() method
- * 
+ *
  * @author Rolf Vreijdenberger
  * @link https://en.wikipedia.org/wiki/Command_pattern
  */
-class Composite extends Command implements IComposite {
+class Composite extends Command implements IComposite
+{
     /**
      * an array of commands
-     * 
+     *
      * @var ICommand[]
      */
     private array $commands;
@@ -51,7 +53,7 @@ class Composite extends Command implements IComposite {
     {
         $total = count($this->commands);
         $removed = false;
-        for($i = ($total - 1); $i >= 0; $i--) {
+        for ($i = ($total - 1); $i >= 0; $i--) {
             $current = $this->commands [$i];
             if ($current === $command) {
                 array_splice($this->commands, $i, 1);
@@ -78,7 +80,7 @@ class Composite extends Command implements IComposite {
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see \Izzum\Command\IComposite::count()
      */
     public function count(): int

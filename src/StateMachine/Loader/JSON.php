@@ -1,5 +1,7 @@
 <?php
+
 namespace Izzum\StateMachine\Loader;
+
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\State;
 use Izzum\StateMachine\Transition;
@@ -7,16 +9,16 @@ use Izzum\StateMachine\Exception;
 
 /**
  * JSON loader. accepts a json string and loads a machine from it.
- * The json string can contain one or more machine definitions. 
+ * The json string can contain one or more machine definitions.
  * The correct machine will be found from the json structure.
- * 
+ *
  * This class provides a way to load json from a file on your file system (fast access)
  * and is also used by the Redis adapter to load a json string from a redis server.
- * 
- * The format of the data to be loaded is specified via a json-schema. 
- * The schema can be retrieved via JSON::getJSONSchema() and the schema itself and 
+ *
+ * The format of the data to be loaded is specified via a json-schema.
+ * The schema can be retrieved via JSON::getJSONSchema() and the schema itself and
  * a full example of the data can be found in 'assets/json'
- * 
+ *
  * @link https://en.wikipedia.org/wiki/JSON
  * @Link http://json-schema.org
  * @link http://jsonschemalint.com/draft4/ for validating according to a json-schema (useful for building your own)
@@ -25,13 +27,12 @@ use Izzum\StateMachine\Exception;
  * @author Rolf Vreijdenberger
  *
  */
-class JSON implements Loader, \Stringable {
+class JSON implements Loader, \Stringable
+{
     /**
      * @param string $json optional a valid json string according to the schema
      */
-    public function __construct(private string $json)
-    {
-    }
+    public function __construct(private string $json) {}
 
     /**
      * creates an instance of this class with the data loaded from a file.
@@ -73,14 +74,14 @@ class JSON implements Loader, \Stringable {
         //decode the json in a php object structure
         $decoded = json_decode($this->getJSON(), false);
         if (!$decoded) {
-            //could not decode (make sure that fully qualified names are escaped with 
+            //could not decode (make sure that fully qualified names are escaped with
             //2 backslashes: \\Izzum\\Commands\\NullCommand and that only double quotes are used.
             throw new Exception(sprintf('could not decode json data. did you only use double quotes? check the json format against %s', 'http://jsonlint.com/'), Exception::BAD_LOADERDATA);
         }
         $name = $stateMachine->getContext()->getMachine();
         $found = false;
         $data = null;
-        if(is_array(@$decoded->machines)) {
+        if (is_array(@$decoded->machines)) {
             foreach ($decoded->machines as $data) {
                 if ($data->name === $name) {
                     $found = true;
@@ -101,14 +102,14 @@ class JSON implements Loader, \Stringable {
             $tmp->setDescription(@$state->description);
             $states [$tmp->getName()] = $tmp;
         }
-        
+
         $transitions = [];
         foreach ($data->transitions as $transition) {
             $tmp = new Transition($states [$transition->state_from], $states [$transition->state_to], @$transition->event, @$transition->rule, @$transition->command, @$transition->guard_callable, @$transition->transition_callable);
             $tmp->setDescription(@$transition->description);
             $transitions [] = $tmp;
         }
-        
+
         //delegate to loader
         $loader = new LoaderArray($transitions);
         return $loader->load($stateMachine);
@@ -118,10 +119,9 @@ class JSON implements Loader, \Stringable {
     {
         return static::class;
     }
-    
+
     public function __toString(): string
     {
         return $this->toString();
     }
 }
-

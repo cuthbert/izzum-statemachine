@@ -1,17 +1,19 @@
 <?php
+
 namespace Izzum\StateMachine;
+
 use PHPUnit\Framework\TestCase;
 use Codeception\Attribute\Group;
 use Izzum\StateMachine\Persistence\Memory;
 
 /**
- * 
+ *
  * @author rolf
- *        
+ *
  */
 #[Group('statemachine', 'Context')]
-class ContextTest extends TestCase {
-
+class ContextTest extends TestCase
+{
     /**
      * test the factory method with default parameters only
      * implicitely tests the constructor
@@ -21,7 +23,7 @@ class ContextTest extends TestCase {
         $entityId = "id123";
         $machine = "test-machine";
         $identifier = new Identifier($entityId, $machine);
-        
+
         // only mandatory parameters
         $o = new Context($identifier);
         $this->assertStringContainsString($entityId, $o->getId());
@@ -30,7 +32,7 @@ class ContextTest extends TestCase {
         $this->assertStringContainsString($machine, $o->getId(false));
         $this->assertStringContainsString($entityId, $o->getId(true));
         $this->assertStringContainsString($machine, $o->getId(true));
-        
+
         $this->assertEquals($entityId, $o->getEntityId());
         $this->assertEquals($machine, $o->getMachine());
         $this->assertNull($o->getStateMachine());
@@ -44,7 +46,7 @@ class ContextTest extends TestCase {
         $this->assertStringContainsString($entityId, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
         $this->assertStringContainsString('Izzum\StateMachine\Context', $o->toString());
-        
+
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
     }
 
@@ -65,7 +67,7 @@ class ContextTest extends TestCase {
         $identifier = new Identifier($entityId, $machine);
         $builder = new EntityBuilder();
         $io = new Memory();
-        
+
         // all parameters
         $o = new Context($identifier, $builder, $io);
         $this->assertEquals($entityId, $o->getEntityId());
@@ -78,12 +80,12 @@ class ContextTest extends TestCase {
         $this->assertStringContainsString($entityId, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
         $this->assertStringContainsString('Izzum\StateMachine\Context', $o->toString());
-        
+
         // even though we have a valid reader, the state machine does not exist.
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
         $this->assertTrue($o->setState('lala'));
         $this->assertEquals('lala', $o->getState());
-        
+
         // adding
         $machine = 'add-experiment-machine';
         $context = new Context(new Identifier('add-experiment-id', $machine), $builder, $io);
@@ -109,7 +111,7 @@ class ContextTest extends TestCase {
         $identifier = new Identifier($entityId, $machine);
         $builder = new EntityBuilder();
         $io = new Memory();
-        
+
         // all parameters
         $o = new Context($identifier, $builder, $io);
         $this->assertEquals($entityId, $o->getEntityId());
@@ -122,12 +124,12 @@ class ContextTest extends TestCase {
         $this->assertStringContainsString($entityId, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
         $this->assertStringContainsString('Izzum\StateMachine\Context', $o->toString());
-        
+
         // even though we have a valid reader, the state machine does not exist.
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
         $this->assertTrue($o->setState(State::STATE_NEW, 'this is an informational message about why we set this state: we set this state to new for a unittest'), 'added');
         $this->assertFalse($o->setState(State::STATE_NEW), 'already there');
-        
+
         // for coverage.
         $statemachine = new StateMachine($o);
         $this->assertNull($o->setStateMachine($statemachine));

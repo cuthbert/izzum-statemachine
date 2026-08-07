@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Rules;
 
 /**
@@ -7,10 +8,9 @@ namespace Izzum\Rules;
  *
  * @author romuald villetet
  */
-class XorRule extends Rule {
-    public function __construct(private readonly Rule $original, private readonly Rule $other)
-    {
-    }
+class XorRule extends Rule
+{
+    public function __construct(private readonly Rule $original, private readonly Rule $other) {}
 
     public function _applies()
     {

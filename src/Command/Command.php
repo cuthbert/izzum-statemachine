@@ -1,4 +1,5 @@
 <?php
+
 namespace Izzum\Command;
 
 /**
@@ -14,24 +15,18 @@ namespace Izzum\Command;
  *
  * @author Rolf Vreijdenberger
  * @link https://en.wikipedia.org/wiki/Command_pattern
- *      
+ *
  */
-abstract class Command implements ICommand, \Stringable {
-
-    /**
-     * (non-PHPdoc)
-     * 
-     * @see \Izzum\Command\ICommand::execute()
-     * @throws Exception https://en.wikipedia.org/wiki/Template_method_pattern
-     */
+abstract class Command implements ICommand, \Stringable
+{
     final public function execute(): void
     {
         try {
             $this->_execute();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->handleException($e);
             throw $e;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // make sure we always throw the right type
             $e = new Exception($e->getMessage(), $e->getCode(), $e);
             $this->handleException($e);
@@ -39,16 +34,12 @@ abstract class Command implements ICommand, \Stringable {
         }
     }
 
-    /**
-     * hook method for logging etc.
-     */
     protected function handleException(Exception $e): void
     {
         // implement in subclass if needed
     }
 
     /**
-     *
      * @throws \Exception
      */
     abstract protected function _execute(): void;
