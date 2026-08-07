@@ -17,16 +17,10 @@ namespace Izzum\Command;
  */
 class Closure extends Command {
     /**
-     *
-     * @param \Closure $closure
-     * @param array $arguments
-     *            an optional array of arguments to pass to the closure
+     * @param array $arguments an optional array of arguments to pass to the closure
      */
     public function __construct(
         private readonly \Closure $closure,
-        /**
-         * an array of arguments to pass as parameters to the closure
-         */
         private array $arguments = []
     )
     {

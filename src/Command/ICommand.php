@@ -28,8 +28,5 @@ interface ICommand {
      */
     public function execute(): void;
 
-    /**
-     * gives a string representation of the instance
-     */
     public function toString(): string;
 }

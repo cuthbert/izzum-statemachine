@@ -11,10 +11,6 @@ namespace Izzum\Rules;
  */
 class NotRule extends Rule {
     
-    /**
-     *
-     * @param Rule $original            
-     */
     public function __construct(private readonly Rule $original)
     {
     }
@@ -26,8 +22,6 @@ class NotRule extends Rule {
 
     /**
      * Return original results
-     *
-     * @return array
      */
     #[\Override]
     public function getResults(): array

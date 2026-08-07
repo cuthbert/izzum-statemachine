@@ -14,16 +14,10 @@ namespace Izzum\Rules;
  */
 class Closure extends Rule {
     /**
-     *
-     * @param \Closure $closure
-     * @param mixed[] $arguments
-     *            an optional array of arguments to pass to the closure
+     * @param mixed[] $arguments an optional array of arguments to pass to the closure
      */
     public function __construct(
         private readonly \Closure $closure,
-        /**
-         * an array of arguments to pass as parameters to the closure
-         */
         private array $arguments = []
     )
     {

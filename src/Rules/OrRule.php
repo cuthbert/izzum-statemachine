@@ -14,11 +14,6 @@ namespace Izzum\Rules;
  * @author Richard Ruiter
  */
 class OrRule extends Rule {
-    /**
-     *
-     * @param Rule $original
-     * @param Rule $other
-     */
     public function __construct(private readonly Rule $original, private readonly Rule $other)
     {
     }
@@ -28,10 +23,6 @@ class OrRule extends Rule {
         return (bool) $this->original->applies() || $this->other->applies();
     }
 
-    /**
-     *
-     * @return string
-     */
     #[\Override]
     public function toString(): string
     {
@@ -43,8 +34,6 @@ class OrRule extends Rule {
 
     /**
      * Merge results
-     *
-     * @return array
      */
     #[\Override]
     public function getResults(): array

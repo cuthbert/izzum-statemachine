@@ -38,10 +38,6 @@ class Composite extends Command implements IComposite {
     /**
      * this method can be used to add multiple commands that will be used in the
      * execute() method
-     *
-     * @param ICommand $command
-     *            a concrete command that implements the ICommand
-     *            interface
      */
     public function add(ICommand $command): void
     {
@@ -50,9 +46,6 @@ class Composite extends Command implements IComposite {
 
     /**
      * Removes a command if it is part of the composite (based on identity ===)
-     *
-     * @param ICommand $command
-     * @return boolean
      */
     public function remove(ICommand $command): bool
     {
@@ -70,9 +63,6 @@ class Composite extends Command implements IComposite {
 
     /**
      * does this contain a command (based on identity ===)
-     * 
-     * @param ICommand $command            
-     * @return boolean
      */
     public function contains(ICommand $command): bool
     {

@@ -41,8 +41,6 @@ abstract class Command implements ICommand, \Stringable {
 
     /**
      * hook method for logging etc.
-     *
-     * @param Exception $e
      */
     protected function handleException(Exception $e): void
     {
@@ -55,10 +53,6 @@ abstract class Command implements ICommand, \Stringable {
      */
     abstract protected function _execute(): void;
 
-    /**
-     *
-     * @return string
-     */
     public function toString(): string
     {
         // includes the namespace

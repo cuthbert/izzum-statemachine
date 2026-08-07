@@ -8,11 +8,6 @@ namespace Izzum\Rules;
  * @author romuald villetet
  */
 class XorRule extends Rule {
-    /**
-     *
-     * @param Rule $original            
-     * @param Rule $other            
-     */
     public function __construct(private readonly Rule $original, private readonly Rule $other)
     {
     }
@@ -22,10 +17,6 @@ class XorRule extends Rule {
         return (bool) ($this->original->applies() ^ $this->other->applies());
     }
 
-    /**
-     *
-     * @return string
-     */
     #[\Override]
     public function toString(): string
     {
@@ -37,8 +28,6 @@ class XorRule extends Rule {
 
     /**
      * Merge results
-     *
-     * @return array
      */
     #[\Override]
     public function getResults(): array

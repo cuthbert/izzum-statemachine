@@ -18,8 +18,6 @@ namespace Izzum\Rules;
 class ExceptionSupressor extends Rule {
     
     /**
-     *
-     * @param Rule $decoree            
      * @param boolean $supressedResult
      *            what to return in case the decorated rule
      *            throws an error

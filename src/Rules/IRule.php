@@ -20,13 +20,8 @@ interface IRule {
      * execution time from objects it knows about.
      *
      * Context provided can also be a mock (for unittesting)
-     *
-     * @return bool
      */
     public function applies(): bool;
 
-    /**
-     * gives a string representation of the instance
-     */
     public function toString(): string;
 }

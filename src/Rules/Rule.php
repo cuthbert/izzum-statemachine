@@ -105,7 +105,6 @@ abstract class Rule implements IRule, \Stringable {
      * NULL value the caller may asume that false is meant. The rule cannot
      * trust that the caller checks the boolean type so we will.
      *
-     * @return boolean
      * @throws Exception https://en.wikipedia.org/wiki/Template_method_pattern
      */
     final public function applies(): bool
@@ -135,8 +134,6 @@ abstract class Rule implements IRule, \Stringable {
 
     /**
      * hook method for logging etc.
-     * 
-     * @param Exception $e            
      */
     protected function handleException(Exception $e): void
     {
@@ -146,9 +143,6 @@ abstract class Rule implements IRule, \Stringable {
     /**
      * Chain a 'OR' rule.
      * This means one of the rules should apply.
-     *
-     * @param Rule $other            
-     * @return Rule
      */
     final public function orRule(Rule $other): Rule
     {
@@ -158,9 +152,6 @@ abstract class Rule implements IRule, \Stringable {
     /**
      * Chain a 'XOR' rule.
      * This means one of the rules should apply but not both.
-     *
-     * @param Rule $other            
-     * @return Rule
      */
     final public function xorRule(Rule $other): Rule
     {
@@ -170,9 +161,6 @@ abstract class Rule implements IRule, \Stringable {
     /**
      * Chain a 'AND' rule.
      * This means both rules should apply.
-     *
-     * @param Rule $other            
-     * @return Rule
      */
     final public function andRule(Rule $other): Rule
     {
@@ -181,18 +169,12 @@ abstract class Rule implements IRule, \Stringable {
 
     /**
      * Inverse current rule
-     *
-     * @return Rule
      */
     final public function not(): Rule
     {
         return new NotRule($this);
     }
 
-    /**
-     *
-     * @return string
-     */
     public function toString(): string
     {
         // includes the namespace
@@ -219,8 +201,6 @@ abstract class Rule implements IRule, \Stringable {
      *
      * this might be useful if a client wants to check if a rule
      * has executed certain steps during the logic of rule execution.
-     * 
-     * @param string $result            
      */
     final protected function addResult(string $result): void
     {
@@ -233,9 +213,8 @@ abstract class Rule implements IRule, \Stringable {
      * the result. you can check this against constants in a class eg:
      * Rule::RESULT_<*>.
      * In case you want to also know the class or classname, use getResults()
-     * 
+     *
      * @see Rule::getResults()
-     * @param string $expected            
      */
     final public function containsResult(string $expected): bool
     {
@@ -269,11 +248,6 @@ abstract class Rule implements IRule, \Stringable {
         }
     }
 
-    /**
-     * Has any result?
-     *
-     * @return boolean
-     */
     final public function hasResult(): bool
     {
         return count($this->getResults()) !== 0;
@@ -281,8 +255,6 @@ abstract class Rule implements IRule, \Stringable {
 
     /**
      * should we cache the result if the rule is applied more than once?
-     *
-     * @param boolean $cached
      */
     final public function setCacheEnabled(bool $cached = true): void
     {
@@ -290,21 +262,11 @@ abstract class Rule implements IRule, \Stringable {
         $this->clearCache();
     }
 
-    /**
-     * return the cached value
-     *
-     * @return boolean
-     */
     final protected function getCache(): ?bool
     {
         return $this->cache;
     }
 
-    /**
-     * should we return a cached value?
-     *
-     * @return boolean
-     */
     private function shouldReturnCache(): bool
     {
         if ($this->getCacheEnabled()) {
@@ -315,10 +277,6 @@ abstract class Rule implements IRule, \Stringable {
         return false;
     }
 
-    /**
-     *
-     * @return boolean
-     */
     final public function getCacheEnabled(): bool
     {
         return $this->useCaching;
