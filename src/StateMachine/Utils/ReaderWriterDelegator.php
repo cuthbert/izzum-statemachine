@@ -32,32 +32,20 @@ use Izzum\StateMachine\StateMachine;
  */
 class ReaderWriterDelegator extends Adapter implements Loader {
     /**
-     * @param Loader $reader the Loader instance to decorate
-     * @param Adapter $writer the Adapter instance to decorate
+     * @param Loader $reader the Loader instance to decorate, which reads data
+     * @param Adapter $writer the Adapter instance to decorate, which writes data
      */
     public function __construct(
-        /**
-         * an instance of a Loader, which reads data
-         */
         private readonly Loader $reader,
-        /**
-         * an instance of an Adapter, which writes data
-         */
         private readonly Adapter $writer
     )
     {
     }
-    /**
-     * gets the reader/Loader
-     * @return Loader
-     */
+
     public function getReader(): Loader {
         return $this->reader;
     }
-    /**
-     * gets the writer/Adapter
-     * @return Adapter
-     */
+
     public function getWriter(): Adapter {
         return $this->writer;
     }

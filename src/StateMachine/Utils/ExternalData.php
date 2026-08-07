@@ -88,8 +88,6 @@ class ExternalData {
 
     /**
      * is there any external data set?
-     *
-     * @return boolean
      */
     static public function has(): bool
     {
@@ -105,8 +103,6 @@ class ExternalData {
     }
 
     /**
-     * set the external data
-     *
      * @param mixed $data
      */
     static public function set($data = null): void
@@ -115,8 +111,6 @@ class ExternalData {
     }
 
     /**
-     * get the external data
-     *
      * @return mixed
      */
     static public function get()

@@ -29,7 +29,6 @@ class Utils {
      * This does not instantiate any objects. It just checks if callables can be found
      * and if classes for rules and commands can be found
      *
-     * @param StateMachine $machine
      * @return Exception[] an array of exceptions if anything is wrong with the configuration
      */
     public static function checkConfiguration(StateMachine $machine): array
@@ -108,10 +107,6 @@ class Utils {
      * for a transition name (which is concatenating state-from to state-to with
      * '_to_')
      *
-     * @param string $from
-     *            the state from which the transition is made
-     * @param string $to
-     *            the state to which the transition will be made
      * @return string a string formatted as "state_from_to_state_to"
      */
     public static function getTransitionName(string $from, string $to): string
@@ -131,7 +126,6 @@ class Utils {
      *            composite command will be returned.
      * @param Context $context
      *            to be able to get the entity
-     * @return ICommand
      * @throws Exception
      */
     public static function getCommand(?string $commandName, Context $context): ICommand
@@ -177,9 +171,6 @@ class Utils {
      * izzum exception).
      * optionally throws it.
      *
-     * @param \Exception $e
-     * @param int $code
-     * @return Exception
      * @throws Exception
      */
     public static function wrapToStateMachineException(\Exception $e, int $code, bool $throw = false): Exception
@@ -231,7 +222,6 @@ class Utils {
      *            the regex state
      * @param State $target
      *            the state to match the regular expression to
-     * @return boolean
      * @link https://php.net/manual/en/function.preg-match.php
      * @link http://regexr.com/ for trying out regular expressions
      */

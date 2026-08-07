@@ -23,9 +23,6 @@ class PlantUml {
 
     /**
      * create an alias for a state that has a valid plantuml syntax
-     *
-     * @param string $original            
-     * @return string
      */
     private function plantUmlStateAlias(string $original): string
     {
@@ -36,7 +33,6 @@ class PlantUml {
     /**
      * get skins for layout
      *
-     * @return string
      * @link http://plantuml.sourceforge.net/skinparam.html
      * @link http://plantuml.com/classes.html#Skinparam
      */
@@ -77,7 +73,6 @@ SKINS;
     /**
      * creates plantuml state output for a statemachine
      *
-     * @param StateMachine $machine
      * @return string plant uml code, this can be used to render an image
      * @link http://www.plantuml.com/plantuml/
      * @link http://plantuml.sourceforge.net/state.html
