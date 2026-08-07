@@ -13,7 +13,7 @@ use Izzum\StateMachine\Utils\Utils;
  * This class serves as a base class for access to different type of persistence
  * layers we might want to use to store the states for stateful entities.
  * for example: relational (postgres/mysql) databases, nosql databases, php
- * sessions, files, memory, mongodb, redis etc..
+ * sessions, files, memory, redis etc..
  *
  * It also acts as a central place to store logic related to this persistance
  * layer, which might be useful when you want to get statistics from the

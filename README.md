@@ -12,7 +12,7 @@ see the [presentation for an Amsterdam phpmeetup here](https://github.com/rolfvr
 
 
 ### about
-A proven enterprise grade, fully unittested and high quality statemachine. It has the ability to be used with different backends (postgres, redis, sqlite, mongodb, mysql, session or memory) for storing state data and transition history, and for configuring the statemachine with states, transitions and the logic for those transitions (in yaml, json, xml, sql, redis or mongodb).
+A proven enterprise grade, fully unittested and high quality statemachine. It has the ability to be used with different backends (postgres, redis, sqlite, mysql, session or memory) for storing state data and transition history, and for configuring the statemachine with states, transitions and the logic for those transitions (in yaml, json, xml, sql or redis).
 
 It will work seamlessly with existing domain models (like 'Order', 'Customer' etc) by operating on those models instead of having to create new domain models with statemachine logic in them (which is also possible). The examples, extensive (inline) documentation and unittests will make it easy to setup and get going. 
 
@@ -357,8 +357,8 @@ $transition = new Transition($action, new State('shipping'), 'ship', $rule, $com
 ### using a persistance adapter to store state
 Persistence adapters provide an abstraction to write state data and transition history to a persistence backend of choice, so your statemachine can be used in multiple consecutive php processes because it remembers in which state it is. 
 
-Out of the box izzum provides persistance adapters for sql based backends for [postgresql](http://www.postgresql.org), [mysql](http://www.mysql.com), [sqlite](http://www.sqlite.org) (they all function via the [php PDO library](http://www.php.net/PDO)), the [redis key/value database(nosql)](http://www.redis.io), and the [document based mongoDB (nosql)](http://www.mongodb.org). 
-These Adapters all support the full range of abilities that their php drivers support. They are implemented using known stable php modules (PDO, redis, mongo) and more information can be found in the phpdocs in the classes and on [php.net](http://php.net).
+Out of the box izzum provides persistance adapters for sql based backends for [postgresql](http://www.postgresql.org), [mysql](http://www.mysql.com), [sqlite](http://www.sqlite.org) (they all function via the [php PDO library](http://www.php.net/PDO)), and the [redis key/value database(nosql)](http://www.redis.io). 
+These Adapters all support the full range of abilities that their php drivers support. They are implemented using known stable php modules (PDO, redis) and more information can be found in the phpdocs in the classes and on [php.net](http://php.net).
 
 A semi persistant adapter is the php session adapter and a non-persistent adapter is the memory adapter (the default). 
 
@@ -402,15 +402,13 @@ $adapter->load($statemachine);//the adapter can also act as a loader
 $statemachine->add('creation of machine...');
 ```
 
-### persistance 4. storing transition history and state data in redis or mongodb
-Redis is a nosql key/value database and MongoDB is a nosql document based database.
-Both are schemaless and as such need no configuration to start storing state and transition history.
-Both the redis and the mongodb provide the possibility to store full statemachine configurations in JSON format (see the Loader examples for more info).
+### persistance 4. storing transition history and state data in redis
+Redis is a nosql key/value database.
+It is schemaless and as such needs no configuration to start storing state and transition history.
+Redis provides the possibility to store full statemachine configurations in JSON format (see the Loader examples for more info).
 ```php
 $identifier('UUID-1234-ACD3-2156', 'data-migration-machine');
 $adapter = new Redis('127.0.0.1', 6379);
-//or use mongodb
-$adapter = new MongoDB('mongodb://localhost:27017');
 $context = new Context($identifier, $builder, $adapter);
 $statemachine = new StateMachine($context);
 $adapter->load($statemachine);//the adapter can also act as a loader
@@ -418,7 +416,7 @@ $statemachine->add('creation of machine...');
 ```
 
 ### loading statemachine configurations
-By using one of the provided Loader classes you are able to load (multiple) statemachine definitions from [JSON](https://en.wikipedia.org/wiki/JSON), [XML](https://en.wikipedia.org/wiki/XML) or [YAML](https://en.wikipedia.org/wiki/YAML). They all can load data from a file and from a string). Loading data can also be done by using one of the provided persistence adapters (redis and mongodb use the JSON format but can be subclassed to load any other format).
+By using one of the provided Loader classes you are able to load (multiple) statemachine definitions from [JSON](https://en.wikipedia.org/wiki/JSON), [XML](https://en.wikipedia.org/wiki/XML) or [YAML](https://en.wikipedia.org/wiki/YAML). They all can load data from a file and from a string). Loading data can also be done by using one of the provided persistence adapters (redis uses the JSON format but can be subclassed to load any other format).
 
 By using a Loader class you do not have to configure your statemachine in a php script and make maintaining and defining statemachines easier and reusable.
 
@@ -463,14 +461,13 @@ $adapter->load($statemachine);
 $statemachine->run();
 ```
 
-### loading statemachine configurations: examples for mongodb and redis
-MongoDb and Redis persistence adapters can also be used as a Loader. The implementation uses JSON as specified in `assets/json`.
+### loading statemachine configurations: examples for redis
+The Redis persistence adapter can also be used as a Loader. The implementation uses JSON as specified in `assets/json`.
 You should load the JSON data in the backend in a specific location.
-For MongoDB you would store the JSON data (which will internally be converted to a document) in the <database>.configuration collection. You can store multiple configurations in the collection and the adapter will automatically find the one matching the machine name in the collection.
 For Redis you would store the JSON string in the `<configurable-prefix>:configuration:<machine-name>` key if you want to use multiple configurations in different keys. Alternatively, you can store the JSON string in the `<configurable-prefix>:configuration` key if you want to store multiple configurations in one key. The adapter will automatically find the configuration by matching the machine name in the specific key and will fallback to the default key.
 
-For both Adapters it will be easier to maintain multiple machines if you put 1 machine definition in one JSON string.
-see the `tests\Izzum\StateMachine\Persistence\RedisTest` and `tests\Izzum\StateMachine\Persistence\MongoDBTest` for some more details.
+It will be easier to maintain multiple machines if you put 1 machine definition in one JSON string.
+see the `tests\Izzum\StateMachine\Persistence\RedisTest` for some more details.
 ```php
 $redis = new Redis('127.0.0.1', 6379);
 $machine = new StateMachine(new Context(new Identifier(1988442, 'crazy-machine'), null, $redis));
@@ -517,14 +514,13 @@ You will find the izzum package in ./vendor/rolfvreijdenberger/izzum-statemachin
 You can also download it directly from github. The package should be included via an autoloader (provided by composer by default)
 
 ###running unittests
-you can run the testsuite with phpunit (installable via composer) in the tests directory from the command line.
+you can run the testsuite with Codeception (installable via composer) from the project root.
 ```
-cd ./vendor/rolfvreijdenberger/izzum-statemachine/tests
-phpunit -c phpunit.xml
+composer test
 ```
-Not all tests are run by default, since the persistence layer tests depend on the different backends being available (postgres, mysql, sqlite, mongodb, redis) and/or php modules (yaml, redis, mongodb). These can be run by adjusting the phpunit-xall.xml file, installing the correct php modules and having the correct backends in place.
+Not all tests are run by default, since the persistence layer tests depend on the different backends being available (postgres, mysql, sqlite, redis) and/or php modules (yaml, redis). Tests requiring those are tagged with the `not-on-production` group and skipped by default. To run the full suite, including those, install the correct php modules, have the correct backends in place, and run:
 ```
-phpunit -c phpunit-all.xml
+vendor/bin/codecept run unit
 ```
 
 

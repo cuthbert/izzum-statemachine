@@ -25,7 +25,6 @@ use Izzum\StateMachine\Utils\Utils;
  * relevant information for a statemachine including configuration, transition history and current states.
  * - relational databases: postgresql, mysql, sqlite
  * - nosql key/value: redis
- * - nosql document based: mongodb 
  * Memory and session backend adapters can be used to temporarily store the state information.
  * yaml, json and xml loaders can be used to load configuration data from files containing those
  * data formats.
