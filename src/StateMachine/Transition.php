@@ -1,10 +1,9 @@
 <?php
 namespace Izzum\StateMachine;
+use Izzum\Command\ICommand;
 use Izzum\Rules\TrueRule;
 use Izzum\StateMachine\Utils\Utils;
-use Izzum\Rules\Rule;
 use Izzum\Rules\AndRule;
-use Izzum\Rules\Izzum\Rules;
 use Izzum\Rules\IRule;
 
 /**
@@ -46,21 +45,21 @@ class Transition implements \Stringable {
      *
      * @var State
      */
-    protected $stateFrom;
+    protected State $stateFrom;
 
     /**
      * the state this transition points to
      *
      * @var State
      */
-    protected $stateTo;
+    protected State $stateTo;
 
     /**
      * an event code that can trigger this transitions
      *
      * @var string
      */
-    protected $event;
+    protected string $event;
 
     /**
      * The fully qualified Rule class name of the
@@ -69,7 +68,7 @@ class Transition implements \Stringable {
      *
      * @var string
      */
-    protected $rule;
+    protected string $rule;
 
     /**
      * the fully qualified Command class name of the Command to be
@@ -78,7 +77,7 @@ class Transition implements \Stringable {
      *
      * @var string
      */
-    protected $command;
+    protected string $command;
 
     /**
      * the callable to call as part of the transition logic
@@ -95,9 +94,9 @@ class Transition implements \Stringable {
     /**
      * a description for the state
      *
-     * @var string
+     * @var string|null
      */
-    protected $description;
+    protected ?string $description = null;
 
     /**
      *
@@ -121,7 +120,7 @@ class Transition implements \Stringable {
      * @param callable|null $callableTransition
      *            optional: a php callable to call. eg: "Izzum\MyClass::myStaticMethod"
      */
-    public function __construct(State $stateFrom, State $stateTo, $event = null, $rule = self::RULE_EMPTY, $command = self::COMMAND_EMPTY, $callableGuard = self::CALLABLE_NULL, $callableTransition = self::CALLABLE_NULL)
+    public function __construct(State $stateFrom, State $stateTo, ?string $event = null, ?string $rule = self::RULE_EMPTY, ?string $command = self::COMMAND_EMPTY, $callableGuard = self::CALLABLE_NULL, $callableTransition = self::CALLABLE_NULL)
     {
         $this->stateFrom = $stateFrom;
         $this->stateTo = $stateTo;
@@ -142,7 +141,7 @@ class Transition implements \Stringable {
      * the callable to call as part of the transition logic
      * @param callable|null $callable
      */
-    public function setTransitionCallable($callable) {
+    public function setTransitionCallable($callable): static {
         $this->callableTransition = $callable;
         return $this;
     }
@@ -160,7 +159,7 @@ class Transition implements \Stringable {
      * the callable to call as part of the transition guard
      * @param callable|null $callable
      */
-    public function setGuardCallable($callable) {
+    public function setGuardCallable($callable): static {
         $this->callableGuard = $callable;
         return $this;
     }
@@ -182,7 +181,7 @@ class Transition implements \Stringable {
      *        may pass through arbitrary/unchecked event values
      * @return boolean
      */
-    public function isTriggeredBy($event)
+    public function isTriggeredBy($event): bool
     {
         return $this->event === $event || $this->getName() === $event;
     }
@@ -194,7 +193,7 @@ class Transition implements \Stringable {
      * @param Context $context
      * @return boolean
      */
-    public function can(Context $context)
+    public function can(Context $context): bool
     {
         try {
             if(!$this->getRule($context)->applies()) {
@@ -215,7 +214,7 @@ class Transition implements \Stringable {
      * @param Context $context
      * @return void
      */
-    public function process(Context $context)
+    public function process(Context $context): void
     {
         // execute, we do not need to check if we 'can' since this is done
         // by the statemachine itself
@@ -235,7 +234,7 @@ class Transition implements \Stringable {
      * @param Context $context
      * @throws Exception in case of an invalid callable
      */
-    protected function callCallable($callable, Context $context, $type = 'n/a') {
+    protected function callCallable($callable, Context $context, string $type = 'n/a'): bool {
         //in case it is a guard callable we need to return true/false
         if($callable != self::CALLABLE_NULL){
             Utils::checkCallable($callable, $type, "transition: " . $this, $context);
@@ -254,10 +253,10 @@ class Transition implements \Stringable {
      *         seperated string of rules.
      * @throws Exception
      */
-    public function getRule(Context $context)
+    public function getRule(Context $context): IRule
     {
         // if no rule is defined, just allow the transition by default
-        if ($this->rule === '' || $this->rule === null) {
+        if ($this->rule === '') {
             return new TrueRule();
         }
 
@@ -298,7 +297,7 @@ class Transition implements \Stringable {
      * @return \Izzum\Command\ICommand
      * @throws Exception
      */
-    public function getCommand(Context $context)
+    public function getCommand(Context $context): ICommand
     {
         return Utils::getCommand($this->command, $context);
     }
@@ -307,7 +306,7 @@ class Transition implements \Stringable {
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return static::class . " '" . $this->getName() . "' [event]: '" . $this->event . "'" . " [rule]: '" . $this->rule . "' [command]: '" . $this->command . "'";
     }
@@ -317,7 +316,7 @@ class Transition implements \Stringable {
      *
      * @return State
      */
-    public function getStateFrom()
+    public function getStateFrom(): State
     {
         return $this->stateFrom;
     }
@@ -327,7 +326,7 @@ class Transition implements \Stringable {
      *
      * @return State
      */
-    public function getStateTo()
+    public function getStateTo(): State
     {
         return $this->stateTo;
     }
@@ -339,7 +338,7 @@ class Transition implements \Stringable {
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         $name = Utils::getTransitionName($this->getStateFrom()->getName(), $this->getStateTo()->getName());
         return $name;
@@ -354,7 +353,7 @@ class Transition implements \Stringable {
      *
      * @return string
      */
-    public function getCommandName()
+    public function getCommandName(): string
     {
         return $this->command;
     }
@@ -362,13 +361,13 @@ class Transition implements \Stringable {
     /**
      * @param string|null $command null is treated the same as self::COMMAND_EMPTY
      */
-    public function setCommandName($command)
+    public function setCommandName(?string $command): static
     {
         $this->command = trim($command ?? self::COMMAND_EMPTY);
         return $this;
     }
 
-    public function getRuleName()
+    public function getRuleName(): string
     {
         return $this->rule;
     }
@@ -376,7 +375,7 @@ class Transition implements \Stringable {
     /**
      * @param string|null $rule null is treated the same as self::RULE_EMPTY
      */
-    public function setRuleName($rule)
+    public function setRuleName(?string $rule): static
     {
         $this->rule = trim($rule ?? self::RULE_EMPTY);
         return $this;
@@ -385,9 +384,9 @@ class Transition implements \Stringable {
     /**
      * set the description of the transition (for uml generation for example)
      *
-     * @param string $description
+     * @param string|null $description
      */
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
         return $this;
@@ -396,9 +395,9 @@ class Transition implements \Stringable {
     /**
      * get the description for this transition (if any)
      *
-     * @return string
+     * @return string|null
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -410,7 +409,7 @@ class Transition implements \Stringable {
      *
      * @param string|null $event
      */
-    public function setEvent($event)
+    public function setEvent(?string $event): static
     {
         if ($event === null || $event === '') {
             $event = $this->getName();
@@ -424,7 +423,7 @@ class Transition implements \Stringable {
      *
      * @return string
      */
-    public function getEvent()
+    public function getEvent(): string
     {
         return $this->event;
     }
@@ -442,9 +441,8 @@ class Transition implements \Stringable {
      *
      * @param State $from
      * @param State $to
-     * @return Transition
      */
-    public function getCopy(State $from, State $to)
+    public function getCopy(State $from, State $to): static
     {
         // @phpstan-ignore new.static (intentional late static binding so subclasses are copied as their own type, per docblock above)
         $copy = new static($from, $to, $this->getEvent(), $this->getRuleName(), $this->getCommandName(), $this->getGuardCallable(), $this->getTransitionCallable());

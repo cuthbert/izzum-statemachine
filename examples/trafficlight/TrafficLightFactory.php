@@ -12,11 +12,11 @@ use Izzum\StateMachine\Transition;
  */
 class TrafficLightFactory extends AbstractFactory{
     
-    protected function createBuilder() {
+    protected function createBuilder(): \Izzum\StateMachine\EntityBuilder {
         return new EntityBuilderTrafficLight();
     }
 
-    protected function createLoader() {
+    protected function createLoader(): \Izzum\StateMachine\Loader\Loader {
         //we use the array loader
         //in a non-example situation we would use a backend like a
         //database for example
@@ -58,13 +58,13 @@ class TrafficLightFactory extends AbstractFactory{
         return $loader;
     }
 
-    protected function getMachineName() {
+    protected function getMachineName(): string {
         return 'traffic-light';
     }
 
-    protected function createAdapter() {
+    protected function createAdapter(): \Izzum\StateMachine\Persistence\Adapter {
         //we use the in-memory adapter
-        //in real life we would use some persisten storage like 
+        //in real life we would use some persisten storage like
         //a relational database.
         //@see PDO adapter
         return new Memory();

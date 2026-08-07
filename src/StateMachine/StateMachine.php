@@ -190,7 +190,7 @@ class StateMachine implements \Stringable {
      *
      * @var State[]
      */
-    private $states = [];
+    private array $states = [];
     
     /**
      * The available transitions.
@@ -200,7 +200,7 @@ class StateMachine implements \Stringable {
      *
      * @var Transition[]
      */
-    private $transitions = [];
+    private array $transitions = [];
     
     /**
      * the current state
@@ -240,7 +240,7 @@ class StateMachine implements \Stringable {
      *         or fully) failed transition.
      * @link https://en.wikipedia.org/wiki/Moore_machine
      */
-    public function transition($transitionName, $message = null)
+    public function transition(string $transitionName, ?string $message = null): bool
     {
         $transition = $this->getTransitionWithNullCheck($transitionName);
         return $this->performTransition($transition, $message);
@@ -270,7 +270,7 @@ class StateMachine implements \Stringable {
      * @link http://martinfowler.com/books/dsl.html for event handling
      *       statemachines
      */
-    public function handle($event, $message = null)
+    public function handle(?string $event, ?string $message = null): bool
     {
         $transitioned = false;
         $transitions = $this->getCurrentState()->getTransitionsTriggeredByEvent($event);
@@ -308,7 +308,7 @@ class StateMachine implements \Stringable {
      * @throws Exception in case something went awfully wrong.
      *        
      */
-    public function run($message = null)
+    public function run(?string $message = null): bool
     {
         try {
             $transitions = $this->getCurrentState()->getTransitions();
@@ -337,7 +337,7 @@ class StateMachine implements \Stringable {
      * @return int the number of sucessful transitions made.
      * @throws Exception in case something went badly wrong.
      */
-    public function runToCompletion($message = null)
+    public function runToCompletion(?string $message = null): int
     {
         $transitions = 0;
         try {
@@ -363,7 +363,7 @@ class StateMachine implements \Stringable {
      *            convention: <state-from>_to_<state-to>
      * @return boolean
      */
-    public function canTransition($transitionName)
+    public function canTransition(string $transitionName): bool
     {
         $transition = $this->getTransition($transitionName);
         return $transition === null ? false : $this->doCheckCanTransition($transition);
@@ -376,7 +376,7 @@ class StateMachine implements \Stringable {
      * @param string $event            
      * @return boolean false if no transitions possible or existing
      */
-    public function canHandle($event)
+    public function canHandle(?string $event): bool
     {
         $transitions = $this->getCurrentState()->getTransitionsTriggeredByEvent($event);
         foreach ($transitions as $transition) {
@@ -394,7 +394,7 @@ class StateMachine implements \Stringable {
      * @param string $event            
      * @return boolean
      */
-    public function hasEvent($event)
+    public function hasEvent(?string $event): bool
     {
         $transitions = $this->getCurrentState()->getTransitionsTriggeredByEvent($event);
         if (count($transitions) > 0) {
@@ -417,7 +417,7 @@ class StateMachine implements \Stringable {
      * @throws Exception in case something went horribly wrong
      * @link https://en.wikipedia.org/wiki/Template_method_pattern
      */
-    private function performTransition(Transition $transition, $message = null)
+    private function performTransition(Transition $transition, ?string $message = null): bool
     {
         // every method in this core routine has hook methods, event handlers and
         // callbacks it can call during the execution phase of the
@@ -450,7 +450,7 @@ class StateMachine implements \Stringable {
      *         not take place
      * @throws Exception in case something went horribly wrong
      */
-    private function doCheckCanTransition(Transition $transition)
+    private function doCheckCanTransition(Transition $transition): bool
     {
         try {
             // check if we have this transition on the current state.
@@ -485,7 +485,7 @@ class StateMachine implements \Stringable {
      *
      * @param Transition $transition            
      */
-    private function doExitState(Transition $transition)
+    private function doExitState(Transition $transition): void
     {
         // hook for subclasses to implement
         $this->_onExitState($transition);
@@ -502,7 +502,7 @@ class StateMachine implements \Stringable {
      * @param string $message optional message. this can be used by the persistence adapter
      *          to be part of the transition history to provide extra information about the transition.          
      */
-    private function doTransition(Transition $transition, $message = null)
+    private function doTransition(Transition $transition, ?string $message = null): void
     {
         // hook for subclasses to implement
         $this->_onTransition($transition);
@@ -522,7 +522,7 @@ class StateMachine implements \Stringable {
      *
      * @param Transition $transition            
      */
-    private function doEnterState(Transition $transition)
+    private function doEnterState(Transition $transition): void
     {
         // an event handler that is possibly defined on the domain model: onEnterState
         $this->callEventHandler($this->getContext()->getEntity(), 'onEnterState', $this->getContext()->getIdentifier(), $transition);
@@ -540,7 +540,7 @@ class StateMachine implements \Stringable {
      *
      * @return State[]
      */
-    public function getStates()
+    public function getStates(): array
     {
         return $this->states;
     }
@@ -551,7 +551,7 @@ class StateMachine implements \Stringable {
      * @param string $name
      * @return State|null
      */
-    public function getState($name)
+    public function getState(string $name): ?State
     {
         return $this->states [$name] ?? null;
     }
@@ -572,7 +572,7 @@ class StateMachine implements \Stringable {
      * @param State $state 
      * @return boolean true if the state was not know to the machine or wasn't added, false otherwise.           
      */
-    public function addState(State $state)
+    public function addState(State $state): bool
     {
         //no regex states
         if ($state->isRegex()) {
@@ -602,7 +602,7 @@ class StateMachine implements \Stringable {
      *          to be part of the transition history to provide extra information about the transition.  
      * @throws Exception in case the state is not valid/known for this machine          
      */
-    public function setState(State $state, $message = null)
+    public function setState(State $state, ?string $message = null): void
     {
         
         if($this->getState($state->getName()) === null) {
@@ -633,7 +633,7 @@ class StateMachine implements \Stringable {
      *          in this case, about the first adding of this machine to the persistence layer. 
      * @return boolean true if not persisted before, false otherwise
      */
-    public function add($message = null)
+    public function add(?string $message = null): bool
     {
         return $this->getContext()->add($this->getInitialState()->getName(), $message);
     }
@@ -650,7 +650,7 @@ class StateMachine implements \Stringable {
      * @return State
      * @throws Exception in case there is no valid current state found
      */
-    public function getCurrentState()
+    public function getCurrentState(): State
     {
         // do we have a current state?
         if ($this->state) {
@@ -678,7 +678,7 @@ class StateMachine implements \Stringable {
      * @return State|null
      * @throws Exception if $allowNull is false an no inital state was found
      */
-    public function getInitialState($allowNull = false)
+    public function getInitialState(bool $allowNull = false): ?State
     {
         $states = $this->getStates();
         foreach ($states as $state) {
@@ -697,7 +697,7 @@ class StateMachine implements \Stringable {
      *
      * @return Transition[]
      */
-    public function getTransitions()
+    public function getTransitions(): array
     {
         return $this->transitions;
     }
@@ -709,7 +709,7 @@ class StateMachine implements \Stringable {
      *            convention: <state_from>_to_<state_to>
      * @return Transition|null
      */
-    public function getTransition($name)
+    public function getTransition(string $name): ?Transition
     {
         return $this->transitions [$name] ?? null;
     }
@@ -746,7 +746,7 @@ class StateMachine implements \Stringable {
      * @return int a count of how many transitions were added. In case of a regex transition this might be
      *              multiple and in case a transition already exists it might be 0.
      */
-    public function addTransition(Transition $transition, $allowSelfTransitionByRegex = false)
+    public function addTransition(Transition $transition, bool $allowSelfTransitionByRegex = false): int
     {
         $from = $transition->getStateFrom();
         $to = $transition->getStateTo();
@@ -791,7 +791,7 @@ class StateMachine implements \Stringable {
      * @param Transition $transition   
      * @return boolean true in case it was added. false otherwise         
      */
-    protected function addTransitionWithoutRegex(Transition $transition)
+    protected function addTransitionWithoutRegex(Transition $transition): bool
     {
         // don't allow transitions from a final state
         if ($transition->getStateFrom()->isFinal()) {
@@ -835,7 +835,7 @@ class StateMachine implements \Stringable {
      *
      * @return Context
      */
-    public function getContext()
+    public function getContext(): Context
     {
         return $this->context;
     }
@@ -861,7 +861,7 @@ class StateMachine implements \Stringable {
      * @param Context $context            
      * @throws Exception
      */
-    public function setContext(Context $context)
+    public function setContext(Context $context): void
     {
         if ($this->context) {
             // context already exists.
@@ -886,7 +886,7 @@ class StateMachine implements \Stringable {
      * @param Transition $transition            
      * @param Exception $e            
      */
-    protected function handleTransitionException(Transition $transition, Exception $e)
+    protected function handleTransitionException(Transition $transition, Exception $e): void
     {
         // override if necessary to log exceptions or to add some extra info
         // to the underlying storage facility (for example, an exception will
@@ -908,7 +908,7 @@ class StateMachine implements \Stringable {
      *            so it can be logged or handled
      * @throws Exception an izzum exception
      */
-    protected function handlePossibleNonStatemachineException(\Exception $e, $code, $transition = null)
+    protected function handlePossibleNonStatemachineException(\Exception $e, int $code, ?Transition $transition = null): never
     {
         $e = Utils::wrapToStateMachineException($e, $code);
         if ($transition !== null) {
@@ -949,7 +949,7 @@ class StateMachine implements \Stringable {
      *         logic (Rule)
      * @link https://en.wikipedia.org/wiki/Object_composition
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments): bool
     {
         //prepend the $name (event/trigger) to other arguments and call the 'handle' method
         array_unshift($arguments, $name);
@@ -968,7 +968,7 @@ class StateMachine implements \Stringable {
      *            the method to call on the object
      * @return boolean|mixed
      */
-    protected function callEventHandler($object, $method)
+    protected function callEventHandler($object, string $method)
     {
         // return true by default (because of transition guard callbacks that
         // might not exist)
@@ -995,7 +995,7 @@ class StateMachine implements \Stringable {
      * @return Transition
      * @throws Exception
      */
-    private function getTransitionWithNullCheck($name)
+    private function getTransitionWithNullCheck(string $name): Transition
     {
         $transition = $this->getTransition($name);
         if ($transition === null) {
@@ -1004,7 +1004,7 @@ class StateMachine implements \Stringable {
         return $transition;
     }
 
-    public function toString($elaborate = false)
+    public function toString(bool $elaborate = false): string
     {
         $output = static::class . ": [" . $this->getContext()->getId(true) . "]";
         if (!$elaborate) {
@@ -1037,7 +1037,7 @@ class StateMachine implements \Stringable {
      * @return boolean if false, the transition and it's associated logic will
      *         not take place
      */
-    protected function _onCheckCanTransition(Transition $transition)
+    protected function _onCheckCanTransition(Transition $transition): bool
     {
         // eg: dispatch an event and see if it is rejected by a listener
         return true;
@@ -1055,7 +1055,7 @@ class StateMachine implements \Stringable {
      *
      * @param Transition $transition            
      */
-    protected function _onExitState(Transition $transition)
+    protected function _onExitState(Transition $transition): void
     {}
 
     /**
@@ -1064,7 +1064,7 @@ class StateMachine implements \Stringable {
      *
      * @param Transition $transition            
      */
-    protected function _onTransition(Transition $transition)
+    protected function _onTransition(Transition $transition): void
     {}
 
     /**
@@ -1079,6 +1079,6 @@ class StateMachine implements \Stringable {
      *
      * @param Transition $transition            
      */
-    protected function _onEnterState(Transition $transition)
+    protected function _onEnterState(Transition $transition): void
     {}
 }

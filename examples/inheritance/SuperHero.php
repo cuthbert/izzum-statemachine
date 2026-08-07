@@ -78,11 +78,11 @@ class SuperHero extends StateMachine {
 	    echo $output;
 	}
 	
-	protected function _onExitState(Transition $transition) {
+	protected function _onExitState(Transition $transition): void {
 		//echo '_onExitState: ' . $transition . PHP_EOL;
 	}
-	
-	protected function _onTransition(Transition $transition) {
+
+	protected function _onTransition(Transition $transition): void {
 		//echo '_onTransition: ' . $transition . PHP_EOL;
 		
 	}
@@ -94,7 +94,7 @@ class SuperHero extends StateMachine {
 	    $this->statistics[$state] = $this->statistics[$state] + 1;
 	}
 	
-	protected function _onEnterState(Transition $transition) {
+	protected function _onEnterState(Transition $transition): void {
 		//echo '_onEnterState: ' . $transition . PHP_EOL;
 		$state = $transition->getStateTo()->getName();
 		switch($state) {
@@ -112,7 +112,7 @@ class SuperHero extends StateMachine {
 	}
 	
 	#[\Override]
-    protected function _onCheckCanTransition(Transition $transition) {
+    protected function _onCheckCanTransition(Transition $transition): bool {
 		//echo '_onCheckCanTransition: ' . $transition . PHP_EOL;
 		return true;
 	}

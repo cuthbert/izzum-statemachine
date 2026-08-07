@@ -45,7 +45,7 @@ class FactoryTest extends TestCase {
 namespace Izzum\StateMachine;
 use Izzum\StateMachine\Persistence\Memory;
 class SimpleTestFactory extends AbstractFactory{
-    protected function createLoader() {
+    protected function createLoader(): \Izzum\StateMachine\Loader\Loader {
             //this is only for the tests.
             //normally you'd create a specific loader, which would get the data
             //from a backend somewhere.
@@ -70,18 +70,18 @@ class SimpleTestFactory extends AbstractFactory{
         
     }
 
-    protected function getMachineName() {
+    protected function getMachineName(): string {
        return 'factory-test';
     }
 
-    protected function createAdapter() {
+    protected function createAdapter(): \Izzum\StateMachine\Persistence\Adapter {
         $io = new Memory();
         $io->clear();
         return $io;
     }
 
 
-    protected function createBuilder() {
+    protected function createBuilder(): EntityBuilder {
         return new EntityBuilder();
     }
 

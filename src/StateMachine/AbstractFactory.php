@@ -41,21 +41,21 @@ abstract class AbstractFactory {
      * @return Loader An implementation of a Loader class (might be implemented
      *         on the persistence adapter)
      */
-    abstract protected function createLoader();
+    abstract protected function createLoader(): Loader;
 
     /**
      * Returns an implementation of an Adapter class for the persistence layer
      *
      * @return Adapter
      */
-    abstract protected function createAdapter();
+    abstract protected function createAdapter(): Adapter;
 
     /**
      * Get a builder to build your domain objects
      *
      * @return EntityBuilder
      */
-    abstract protected function createBuilder();
+    abstract protected function createBuilder(): EntityBuilder;
 
     /**
      * get the machine name for the machines that are produced by this factory.
@@ -63,7 +63,7 @@ abstract class AbstractFactory {
      *
      * @return string
      */
-    abstract protected function getMachineName();
+    abstract protected function getMachineName(): string;
 
     /**
      * Factory method to get a correctly configured statemachine without
@@ -96,7 +96,7 @@ abstract class AbstractFactory {
      * @link https://en.wikipedia.org/wiki/Abstract_factory_pattern
      * @link https://en.wikipedia.org/wiki/Template_method_pattern
      */
-    public function getStateMachine($id)
+    public function getStateMachine($id): StateMachine
     {
         $context = $this->createContext(new Identifier($id, $this->getMachineName()));
         $machine = $this->createMachine($context);
@@ -111,7 +111,7 @@ abstract class AbstractFactory {
      * @param Context $context            
      * @return StateMachine
      */
-    protected function createMachine(Context $context)
+    protected function createMachine(Context $context): StateMachine
     {
         return new StateMachine($context);
     }
@@ -127,7 +127,7 @@ abstract class AbstractFactory {
      * @link https://en.wikipedia.org/wiki/Abstract_factory_pattern
      * @link https://en.wikipedia.org/wiki/Template_method_pattern
      */
-    protected function createContext(Identifier $identifier)
+    protected function createContext(Identifier $identifier): Context
     {
         $context = new Context($identifier, $this->createBuilder(), $this->createAdapter());
         return $context;

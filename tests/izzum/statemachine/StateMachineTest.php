@@ -1022,13 +1022,13 @@ namespace Izzum\StateMachine;
  */
 class SubClassedStateMachine extends StateMachine {
     #[\Override]
-    protected function _onCheckCanTransition(Transition $transition) {
+    protected function _onCheckCanTransition(Transition $transition): bool {
         //only block a specific transition
         if($transition->getName() == 'b_to_c') return false;
         return true;
     }
-    
-    protected function _onExitState(Transition $transition) {}
-    protected function _onTransition(Transition $transition) {}
-    protected function _onEnterState(Transition $transition) {}
+
+    protected function _onExitState(Transition $transition): void {}
+    protected function _onTransition(Transition $transition): void {}
+    protected function _onEnterState(Transition $transition): void {}
 }

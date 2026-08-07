@@ -45,16 +45,16 @@ class Context implements \Stringable {
      *
      * @var Identifier
      */
-    protected $identifier;
+    protected Identifier $identifier;
     
     /**
      * an associated statemachine, if one is set.
      * Only a statemachine that uses this Context should set itself on the
      * Context, providing a bidirectional association.
      *
-     * @var StateMachine
+     * @var StateMachine|null
      */
-    protected $statemachine;
+    protected ?StateMachine $statemachine = null;
 
     /**
      * Constructor
@@ -71,10 +71,10 @@ class Context implements \Stringable {
     public function __construct(Identifier $identifier, /**
      * the builder to get the reference to the entity.
      */
-    protected $entityBuilder = null, /**
+    protected ?EntityBuilder $entityBuilder = null, /**
      * the instance for getting to the persistence layer
      */
-    protected $persistenceAdapter = null)
+    protected ?Adapter $persistenceAdapter = null)
     {
         $this->identifier = $identifier;
     }
@@ -85,7 +85,7 @@ class Context implements \Stringable {
      *
      * @param StateMachine $statemachine            
      */
-    public function setStateMachine(StateMachine $statemachine)
+    public function setStateMachine(StateMachine $statemachine): void
     {
         $this->statemachine = $statemachine;
     }
@@ -95,7 +95,7 @@ class Context implements \Stringable {
      *
      * @return StateMachine|null
      */
-    public function getStateMachine()
+    public function getStateMachine(): ?StateMachine
     {
         return $this->statemachine;
     }
@@ -110,7 +110,7 @@ class Context implements \Stringable {
      *            optional
      * @return mixed
      */
-    public function getEntity($createFreshEntity = false)
+    public function getEntity(bool $createFreshEntity = false)
     {
         // use a specialized builder object to create the (cached) reference.
         return $this->getBuilder()->getEntity($this->getIdentifier(), $createFreshEntity);
@@ -123,7 +123,7 @@ class Context implements \Stringable {
      *
      * @return string
      */
-    public function getState()
+    public function getState(): string
     {
         // get the state by delegating to a specific reader
         $state = $this->getPersistenceAdapter()->getState($this->getIdentifier());
@@ -156,7 +156,7 @@ class Context implements \Stringable {
      *         machine before (just added for the
      *         first time), false otherwise
      */
-    public function setState($state, $message = null)
+    public function setState(string $state, ?string $message = null): bool
     {
         // set the state by delegating to a specific writer
         return $this->getPersistenceAdapter()->setState($this->getIdentifier(), $state, $message);
@@ -173,7 +173,7 @@ class Context implements \Stringable {
      *          to be part of the transition history to provide extra information about the transition.            
      * @return boolean true if it was added, false if it was already there
      */
-    public function add($state, $message = null)
+    public function add(string $state, ?string $message = null): bool
     {
         return $this->getPersistenceAdapter()->add($this->getIdentifier(), $state, $message);
     }
@@ -183,9 +183,9 @@ class Context implements \Stringable {
      *
      * @return EntityBuilder
      */
-    public function getBuilder()
+    public function getBuilder(): EntityBuilder
     {
-        if ($this->entityBuilder === null || !is_a($this->entityBuilder, 'Izzum\StateMachine\EntityBuilder')) {
+        if ($this->entityBuilder === null) {
             // the default builder returns the Identifier as the entity
             $this->entityBuilder = new EntityBuilder();
         }
@@ -197,9 +197,9 @@ class Context implements \Stringable {
      *
      * @return Adapter a concrete persistence adapter
      */
-    public function getPersistenceAdapter()
+    public function getPersistenceAdapter(): Adapter
     {
-        if ($this->persistenceAdapter === null || !is_a($this->persistenceAdapter, 'Izzum\StateMachine\Persistence\Adapter')) {
+        if ($this->persistenceAdapter === null) {
             // the default
             $this->persistenceAdapter = new Memory();
         }
@@ -212,7 +212,7 @@ class Context implements \Stringable {
      *
      * @return string
      */
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->getIdentifier()->getEntityId();
     }
@@ -222,7 +222,7 @@ class Context implements \Stringable {
      *
      * @return Identifier
      */
-    public function getIdentifier()
+    public function getIdentifier(): Identifier
     {
         return $this->identifier;
     }
@@ -232,7 +232,7 @@ class Context implements \Stringable {
      *
      * @return string
      */
-    public function getMachine()
+    public function getMachine(): string
     {
         return $this->getIdentifier()->getMachine();
     }
@@ -242,7 +242,7 @@ class Context implements \Stringable {
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return static::class . "(" . $this->getId(true) . ")";
     }
@@ -257,7 +257,7 @@ class Context implements \Stringable {
      *            append current state. defaults to false
      * @return string
      */
-    public function getId($readable = false, $withState = false)
+    public function getId(bool $readable = false, bool $withState = false): string
     {
         $output = $this->getIdentifier()->getId($readable);
         if ($readable) {
@@ -288,7 +288,7 @@ class Context implements \Stringable {
      * @param Transition $transition            
      * @param Exception $e            
      */
-    public function setFailedTransition(Transition $transition, Exception $e)
+    public function setFailedTransition(Transition $transition, Exception $e): void
     {
         $this->getPersistenceAdapter()->setFailedTransition($this->getIdentifier(), $transition, $e);
     }
