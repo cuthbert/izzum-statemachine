@@ -198,7 +198,6 @@ class PDO extends Adapter implements Loader {
         $row = $statement->fetch();
         if ($row === false) {
             throw new Exception(sprintf('no state found for [%s]. Did you "$machine->add()" it to the persistence layer?', $identifier->toString()), Exception::PERSISTENCE_LAYER_EXCEPTION);
-            return State::STATE_UNKNOWN;
         }
         return $row ['state'];
     }

@@ -183,7 +183,7 @@ class Transition implements \Stringable {
      */
     public function isTriggeredBy($event)
     {
-        return ($this->event === $event || $this->getName() === $event) && $event !== null && $event !== '';
+        return $this->event === $event || $this->getName() === $event;
     }
 
     /**
