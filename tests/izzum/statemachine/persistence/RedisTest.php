@@ -155,13 +155,13 @@ class RedisTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(2, $machine4->runToCompletion('running the machine to completion'));
 
         $ids = $redis->getEntityIds('test-machine');
-        $this->assertEquals(array('1', '2'), $ids);
+        $this->assertEquals(['1', '2'], $ids);
         $ids = $redis->getEntityIds('another-machine');
-        $this->assertEquals(array('3'), $ids);
+        $this->assertEquals(['3'], $ids);
         $ids = $redis->getEntityIds('test-machine', 'done');
-        $this->assertEquals(array('2'), $ids, 'only 2 was run to completion and in state done');
+        $this->assertEquals(['2'], $ids, 'only 2 was run to completion and in state done');
         $ids = $redis->getEntityIds('another-machine', 'leave');
-        $this->assertEquals(array('3'), $ids, 'only 3 was run to completion and in state leave');
+        $this->assertEquals(['3'], $ids, 'only 3 was run to completion and in state leave');
 
         //$redis->hmset("key" , array("name1" => "value1", "name2" => "value2"));
 

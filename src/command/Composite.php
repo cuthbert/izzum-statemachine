@@ -23,7 +23,7 @@ class Composite extends Command implements IComposite {
 
     public function __construct()
     {
-        $this->commands = array();
+        $this->commands = [];
     }
 
     /**
@@ -100,9 +100,10 @@ class Composite extends Command implements IComposite {
         return count($this->commands);
     }
 
+    #[\Override]
     public function toString()
     {
-        $composition = array();
+        $composition = [];
         $children = '';
         foreach ($this->commands as $command) {
             $composition [] = $command->toString();
@@ -110,6 +111,6 @@ class Composite extends Command implements IComposite {
         if (count($composition) != 0) {
             $children = " consisting of: [" . implode(", ", $composition) . "]";
         }
-        return get_class($this) . $children;
+        return static::class . $children;
     }
 }

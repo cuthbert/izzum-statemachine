@@ -36,25 +36,23 @@ use izzum\statemachine\Identifier;
  */
 class ModelBuilder extends EntityBuilder {
     /**
-     * the model to be returned by the Context
-     * 
-     * @var mixed
-     */
-    private $model;
-
-    /**
      *
      * @param mixed $model
      *            the domain model you want to have returned from this class.
      */
-    public function __construct($model)
+    public function __construct(
+        /**
+         * the model to be returned by the Context
+         */
+        private $model
+    )
     {
-        $this->model = $model;
     }
 
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function build(Identifier $identifier)
     {
         // no building actually happens. we always return the same model.

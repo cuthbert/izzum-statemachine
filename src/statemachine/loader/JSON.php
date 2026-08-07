@@ -26,20 +26,18 @@ use izzum\statemachine\Exception;
  * @author Rolf Vreijdenberger
  *
  */
-class JSON implements Loader {
-    /**
-     * an undecoded json string
-     * @var string
-     */
-    private $json;
-
+class JSON implements Loader, \Stringable {
     /**
      * 
      * @param string $json optional a valid json string according to the schema
      */
-    public function __construct($json)
+    public function __construct(
+        /**
+         * an undecoded json string
+         */
+        private $json
+    )
     {
-        $this->json = $json;
     }
 
     /**
@@ -105,14 +103,14 @@ class JSON implements Loader {
         //accessing json as an object with an @ error suppresion operator ('shut the fuck up' operator),
         //allows you to get properties, even if they do not exist, without notices.
         //this lets us be a little lazy in mapping the json properties to the state and transition properties
-        $states = array();
+        $states = [];
         foreach ($data->states as $state) {
             $tmp = new State($state->name, $state->type, @$state->entry_command, @$state->exit_command, @$state->entry_callable, @$state->exit_callable);
             $tmp->setDescription(@$state->description);
             $states [$tmp->getName()] = $tmp;
         }
         
-        $transitions = array();
+        $transitions = [];
         foreach ($data->transitions as $transition) {
             $tmp = new Transition($states [$transition->state_from], $states [$transition->state_to], @$transition->event, @$transition->rule, @$transition->command, @$transition->guard_callable, @$transition->transition_callable);
             $tmp->setDescription(@$transition->description);
@@ -126,10 +124,10 @@ class JSON implements Loader {
 
     public function toString()
     {
-        return get_class($this);
+        return static::class;
     }
     
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

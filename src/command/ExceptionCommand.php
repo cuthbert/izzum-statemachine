@@ -18,7 +18,7 @@ class ExceptionCommand extends Command {
         $this->exception = new \Exception($message, $code, $previous);
     }
 
-    protected function _execute()
+    protected function _execute(): never
     {
         throw $this->exception;
     }

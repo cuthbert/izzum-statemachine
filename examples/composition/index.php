@@ -14,7 +14,7 @@ use izzum\statemachine\StateMachine;
  * php -f index.php
  * and stop it with ctrl+c
  */
- 
+
 require_once('../autoload.php');
 
 //TODO

@@ -15,17 +15,13 @@ use izzum\statemachine\utils\Utils;
  *
  */
 class SuperHero extends StateMachine {
-    private $name;
-    private $alias;
-    private $statistics = array();
+    private $statistics = [];
     
-	public function __construct($name, $alias)
+	public function __construct(private $name, private $alias)
 	{
-	    $this->name = $name;
-	    $this->alias = $alias;
-		//create machine with unique superhero name. 
+	    //create machine with unique superhero name. 
 		//associate the domain object (that will be used on callables) with $this
-		$context = new Context(new Identifier($name. ":" . $alias, "superhero-machine"), new ModelBuilder($this));
+		$context = new Context(new Identifier($this->name. ":" . $this->alias, "superhero-machine"), new ModelBuilder($this));
 		//call parent constructor
 		parent::__construct($context);
 
@@ -33,9 +29,9 @@ class SuperHero extends StateMachine {
 		
 		//define the states and the state types, and some entry states
 		$start = new State('start', State::TYPE_INITIAL);
-		$callback_dress_normal_for_entering_state = array($this, 'changeIntoNormalClothes');
+		$callback_dress_normal_for_entering_state = $this->changeIntoNormalClothes(...);
 		$normal = new State('normal', State::TYPE_NORMAL, null, null, $callback_dress_normal_for_entering_state);
-		$callback_entering_superhero_state = array($this, 'changeIntoCostume');
+		$callback_entering_superhero_state = $this->changeIntoCostume(...);
 		$super = new State('superhero', State::TYPE_NORMAL, null, null, $callback_entering_superhero_state);
 		$posing = new State('posing');
 		$fighting = new State('fighting');
@@ -115,7 +111,8 @@ class SuperHero extends StateMachine {
 		}
 	}
 	
-	protected function _onCheckCanTransition(Transition $transition) {
+	#[\Override]
+    protected function _onCheckCanTransition(Transition $transition) {
 		//echo '_onCheckCanTransition: ' . $transition . PHP_EOL;
 		return true;
 	}

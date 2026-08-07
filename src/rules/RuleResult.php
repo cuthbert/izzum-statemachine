@@ -18,25 +18,11 @@ namespace izzum\rules;
 class RuleResult {
     /**
      *
-     * @var Rule
-     */
-    private $rule;
-    
-    /**
-     *
-     * @var string
-     */
-    private $result;
-
-    /**
-     *
      * @param Rule $rule            
      * @param string $result            
      */
-    public function __construct(Rule $rule, $result)
+    public function __construct(private readonly Rule $rule, private $result)
     {
-        $this->rule = $rule;
-        $this->result = $result;
     }
 
     /**

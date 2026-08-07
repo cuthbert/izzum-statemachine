@@ -272,7 +272,7 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
         $this->assertCount(0, $ids);
 
         //diverse tests for the persistance of a non existing fully random id
-        $random_id = rand(1,999999999) . "-" . microtime();
+        $random_id = random_int(1,999999999) . "-" . microtime();
         $identifier = new Identifier($random_id, $machine);
         $context = new Context($identifier, null, $adapter);
         try {
@@ -328,7 +328,7 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
 
 
         //create a new context to take the unhappy flow
-        $random_id = rand(1, 999999999) . "-" . microtime();
+        $random_id = random_int(1, 999999999) . "-" . microtime();
         $identifier = new Identifier($random_id, $machine);
         $other_context = new Context($identifier, null, $adapter);
         $sm->setContext($other_context);
@@ -363,7 +363,7 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
 
 
         //create a new context to take the unhappy flow
-        $random_id = rand(1, 999999999) . "-" . microtime();
+        $random_id = random_int(1, 999999999) . "-" . microtime();
         $identifier = new Identifier($random_id, $machine);
         $other_context = new Context($identifier, null, $adapter);
         $sm->setContext($other_context);
@@ -424,7 +424,7 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
         $adapter = new PDO($dsn);
         $this->assertPersistenceAdapterPDO($adapter, $machine, false);
 
-        $machine = new StateMachine(new Context(new Identifier('test-addition' . microtime() . rand(1,99999), 'izzum'), null, $adapter));
+        $machine = new StateMachine(new Context(new Identifier('test-addition' . microtime() . random_int(1,99999), 'izzum'), null, $adapter));
         $adapter->load($machine);
         $this->assertTrue($machine->getContext()->add($machine->getInitialState(), 'another info message for addition to persistence layer' ));
         $this->assertFalse($machine->getContext()->add($machine->getInitialState()));
@@ -444,9 +444,9 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
         $dsn = 'mysql:host=localhost;dbname=test';
         $username = null;
         $password = null;
-        $options = array(
+        $options = [
             \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-        );
+        ];
 
         $machine = 'izzum';
         $adapter = new PDO($dsn, $username, $password, $options);
@@ -462,12 +462,14 @@ class MemoryEntityConcatenator extends Memory {
      * overriden implementation
      */
 
+    #[\Override]
     public function processSetState(Identifier $identifier, $state, $message = null){
         return $identifier->getMachine() . "_" .
         $identifier->getEntityId() . "_" .
         $state;
     }
 
+    #[\Override]
     public function processGetState(Identifier $identifier) {
         return $identifier->getMachine() .  "_" . $identifier->getEntityId();
     }
@@ -476,10 +478,10 @@ namespace izzum\statemachine\persistence;
 use izzum\statemachine\Identifier;
 use izzum\statemachine\Exception;
 class MemoryException extends Memory {
-    private $bool;
-    public function __construct($bool) {
-        $this->bool = $bool;
+    public function __construct(private $bool)
+    {
     }
+    #[\Override]
     public function processSetState(Identifier $identifier, $state, $message = null){
         if($this->bool) {
             throw new \Exception('processing setstate exception');
@@ -488,6 +490,7 @@ class MemoryException extends Memory {
         }
     }
 
+    #[\Override]
     public function processGetState(Identifier $identifier) {
        if($this->bool) {
             throw new \Exception('processing setstate exception');

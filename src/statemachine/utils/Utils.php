@@ -37,8 +37,8 @@ class Utils {
 
         //TODO: also check the rules and commands
 
-        $exceptions = array();
-        $output = array();
+        $exceptions = [];
+        $output = [];
         //check state callables
         foreach($machine->getStates() as $state)
         {
@@ -206,7 +206,7 @@ class Utils {
      */
     public static function getAllRegexMatchingStates(State $regex, $targets)
     {
-        $all = array();
+        $all = [];
         if ($regex->isRegex()) {
             // lookup all from states that conform to this rgex
             foreach ($targets as $target) {

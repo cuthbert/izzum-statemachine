@@ -39,7 +39,7 @@ use izzum\statemachine\Exception;
  * @author Rolf Vreijdenberger
  *        
  */
-class Context {
+class Context implements \Stringable {
     
     /**
      * the Identifier that uniquely identifies the statemachine
@@ -47,20 +47,6 @@ class Context {
      * @var Identifier
      */
     protected $identifier;
-    
-    /**
-     * the builder to get the reference to the entity.
-     *
-     * @var EntityBuilder
-     */
-    protected $entity_builder;
-    
-    /**
-     * the instance for getting to the persistence layer
-     *
-     * @var Adapter
-     */
-    protected $persistence_adapter;
     
     /**
      * an associated statemachine, if one is set.
@@ -83,11 +69,15 @@ class Context {
      *            optional: A specific reader/writer class can be used to
      *            generate different 'read/write' behaviour
      */
-    public function __construct(Identifier $identifier, $entity_builder = null, $persistence_adapter = null)
+    public function __construct(Identifier $identifier, /**
+     * the builder to get the reference to the entity.
+     */
+    protected $entity_builder = null, /**
+     * the instance for getting to the persistence layer
+     */
+    protected $persistence_adapter = null)
     {
         $this->identifier = $identifier;
-        $this->entity_builder = $entity_builder;
-        $this->persistence_adapter = $persistence_adapter;
     }
 
     /**
@@ -255,7 +245,7 @@ class Context {
      */
     public function toString()
     {
-        return get_class($this) . "(" . $this->getId(true) . ")";
+        return static::class . "(" . $this->getId(true) . ")";
     }
 
     /**
@@ -284,7 +274,7 @@ class Context {
         return $output;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

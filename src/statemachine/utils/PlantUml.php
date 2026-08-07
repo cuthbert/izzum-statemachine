@@ -31,7 +31,7 @@ class PlantUml {
      */
     private function plantUmlStateAlias($original)
     {
-        $alias = ucfirst(implode("", array_map('ucfirst', explode("-", $original))));
+        $alias = ucfirst(implode("", array_map(ucfirst(...), explode("-", $original))));
         return $alias;
     }
 
@@ -90,8 +90,8 @@ SKINS;
         $transitions = $machine->getTransitions();
         
         // all states are aliased so the plantuml parser can handle the names
-        $aliases = array();
-        $end_states = array();
+        $aliases = [];
+        $end_states = [];
         $EOL = "\\n\\" . PHP_EOL; /* for multiline stuff in plantuml */
         $NEWLINE = PHP_EOL;
         
@@ -102,7 +102,7 @@ SKINS;
         $uml .= $this->getPlantUmlSkins() . PHP_EOL;
         
         // the order in which transitions are executed
-        $order = array();
+        $order = [];
         
         // create the diagram by drawing all transitions
         foreach ($transitions as $t) {

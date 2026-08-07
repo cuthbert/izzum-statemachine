@@ -46,7 +46,7 @@ use izzum\statemachine\utils\Utils;
  * 
  * @author Rolf Vreijdenberger
  */
-abstract class Adapter {
+abstract class Adapter implements \Stringable {
 
     /**
      * Get all the entity id's for a specific statemachine that have been persisted
@@ -286,11 +286,11 @@ abstract class Adapter {
 
     public function toString()
     {
-        return get_class($this);
+        return static::class;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->toString();
+        return (string) $this->toString();
     }
 }

@@ -22,7 +22,7 @@ class CommandTest extends PHPUnit_Framework_TestCase {
     {
         //use a command that has a reference to a list.
         //we can then check the list to see what happens to it.
-        $list = array();
+        $list = [];
         $command = new AddToListCommand($list);
 
         //check basics
@@ -72,8 +72,8 @@ class CommandTest extends PHPUnit_Framework_TestCase {
     {
         //one argument for closure
         $output;
-        $closure = function(&$output) { $output = 1;};
-        $command = new Closure($closure, array(&$output));
+        $closure = function(&$output): void { $output = 1;};
+        $command = new Closure($closure, [&$output]);
         $this->assertNull($output);
         $command->execute();
         $this->assertEquals(1, $output);
@@ -85,8 +85,8 @@ class CommandTest extends PHPUnit_Framework_TestCase {
         //multiple arguments for closure
         $output;
         $input = 5;
-        $closure = function(&$output, $input) { $output = $input;};
-        $command = new Closure($closure, array(&$output, $input));
+        $closure = function(&$output, $input): void { $output = $input;};
+        $command = new Closure($closure, [&$output, $input]);
         $this->assertNull($output);
         $command->execute();
         $this->assertEquals(5, $output);
@@ -101,7 +101,7 @@ class CommandTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(in_array('izzum\command\IComposite', class_implements($composite)));
         $this->assertTrue(in_array('izzum\command\ICommand', class_implements($composite)));
 
-        $list = array();
+        $list = [];
         //create 3 commands with a reference to the same list
         $command1 = new AddToListCommand($list);
         $command2 = new AddToListCommand($list);
@@ -124,7 +124,7 @@ class CommandTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($list[2] == ($list[1] + 1));
 
 
-        $list = array();
+        $list = [];
         $command1 = new AddToListCommand($list);
         $command2 = new AddToListCommand($list);
         $command3 = new AddToListCommand($list);
@@ -179,7 +179,7 @@ class CommandTest extends PHPUnit_Framework_TestCase {
         {
             $this->assertEquals(111, $e->getCode());
             $this->assertEquals('test', $e->getMessage());
-            $this->assertEquals("izzum\command\Exception", get_class($e));
+            $this->assertEquals("izzum\command\Exception", $e::class);
         }
     }
 
@@ -193,7 +193,7 @@ class CommandTest extends PHPUnit_Framework_TestCase {
         try {
             $command->execute();
             $this->fail('should throw exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
 
         }
 
@@ -201,7 +201,7 @@ class CommandTest extends PHPUnit_Framework_TestCase {
         try {
             $command->execute();
             $this->fail('should throw exception');
-        } catch (Exception $e) {
+        } catch (Exception) {
 
         }
 
@@ -234,10 +234,8 @@ class AddToListCommand extends izzum\command\Command {
 
 
 class throwsExceptionCommand extends izzum\command\Command {
-    private $bool;
-    public function __construct($bool)
+    public function __construct(private $bool)
     {
-        $this->bool = $bool;
     }
 
     protected function _execute()

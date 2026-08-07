@@ -13,16 +13,11 @@ use izzum\examples\trafficlight\TrafficLight;
  */
 class CanSwitch extends Rule {
     /**
-     * @var TrafficLight
-     */
-    private $light;
-    
-    /**
      * constructor. get the domain object injected
      * @param TrafficLight $light
      */
-    public function __construct($light) {
-        $this->light = $light;
+    public function __construct(private $light)
+    {
     }
     
     /**

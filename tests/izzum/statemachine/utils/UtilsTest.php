@@ -49,7 +49,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
      */
     public function shouldPassConfigurationCheckForBasicMachine()
     {
-        $transitions = array();
+        $transitions = [];
         $s1 = new State("1");
         $s2 = new State("2");
         $s3 = new State("3");
@@ -70,7 +70,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
      */
     public function shouldPassConfigurationCheckForMachineWithGoodCallables()
     {
-        $transitions = array();
+        $transitions = [];
         $s1 = new State("1");
         $s1->setEntryCallable('phpinfo');
         $s2 = new State("2");
@@ -100,7 +100,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
      */
     public function shouldFailConfigurationCheckForMachineWithBadCallables()
     {
-        $transitions = array();
+        $transitions = [];
         $s1 = new State("1");
         $s1->setEntryCallable('foobar');
         $s2 = new State("2");
@@ -295,27 +295,27 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
         $e = new State('action-hero');
         $f = new State('action-bad-guy');
         $g = new State('ac');
-        $targets = array($a, $b, $c, $d, $e, $f, $g);
+        $targets = [$a, $b, $c, $d, $e, $f, $g];
         
         $regex = new State('regex:/.*/');
         $this->assertEquals($targets, Utils::getAllRegexMatchingStates($regex, $targets));
 
         
         $regex = new State('regex:/^a.*/');
-        $this->assertEquals(array($a, $b, $d, $e, $f, $g), Utils::getAllRegexMatchingStates($regex, $targets));
+        $this->assertEquals([$a, $b, $d, $e, $f, $g], Utils::getAllRegexMatchingStates($regex, $targets));
         
         $regex = new State('regex:/^a.+/');
-        $this->assertEquals(array($b, $d, $e, $f, $g), Utils::getAllRegexMatchingStates($regex, $targets));
+        $this->assertEquals([$b, $d, $e, $f, $g], Utils::getAllRegexMatchingStates($regex, $targets));
         
         $regex = new State('regex:/^a.*a.+$/');
-        $this->assertEquals(array($d, $f), Utils::getAllRegexMatchingStates($regex, $targets));
+        $this->assertEquals([$d, $f], Utils::getAllRegexMatchingStates($regex, $targets));
         
         $regex = new State('regex:/^ac.*-.+$/');
-        $this->assertEquals(array($e, $f), Utils::getAllRegexMatchingStates($regex, $targets));
+        $this->assertEquals([$e, $f], Utils::getAllRegexMatchingStates($regex, $targets));
         
         $regex = new State('ac');
         $this->assertFalse($regex->isRegex());
-        $this->assertEquals(array($g), Utils::getAllRegexMatchingStates($regex, $targets), 'non regex state');
+        $this->assertEquals([$g], Utils::getAllRegexMatchingStates($regex, $targets), 'non regex state');
 
     }
     
@@ -327,11 +327,9 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
 
 //helper class, increases the id on an entity when executed.
 class IncreaseId extends Command {
-	private $entity;
-	public function __construct($entity)
-	{
-		$this->entity = $entity;
-	}
+	public function __construct(private $entity)
+    {
+    }
 
 	
 	protected function _execute()

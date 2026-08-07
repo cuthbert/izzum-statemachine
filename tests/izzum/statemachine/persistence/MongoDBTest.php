@@ -48,11 +48,11 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
         $adapter->load($machine);
         $machine->add("adding for " . __FUNCTION__);
         $machine->runToCompletion("testing 213");
-        $this->assertEquals(array("mongo"), $adapter->getEntityIds('test-machine'));
-        $this->assertEquals(array("mongo"), $adapter->getEntityIds('test-machine', 'done'));
-        $this->assertEquals(array(), $adapter->getEntityIds('test-machine', 'a'));
-        $this->assertEquals(array(), $adapter->getEntityIds('test-machine', 'b'));
-        $this->assertEquals(array(), $adapter->getEntityIds('test-machine', 'c'));
+        $this->assertEquals(["mongo"], $adapter->getEntityIds('test-machine'));
+        $this->assertEquals(["mongo"], $adapter->getEntityIds('test-machine', 'done'));
+        $this->assertEquals([], $adapter->getEntityIds('test-machine', 'a'));
+        $this->assertEquals([], $adapter->getEntityIds('test-machine', 'b'));
+        $this->assertEquals([], $adapter->getEntityIds('test-machine', 'c'));
 
         //another
         $identifier = new Identifier('another-mongo', 'test-machine');
@@ -70,13 +70,13 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
         $machine->add("adding for " . __FUNCTION__);
         $machine->runToCompletion("testing 213");
 
-        $index = array("entity_id" => 1, "machine" => 1);
-        $options = array ("background" => true);
+        $index = ["entity_id" => 1, "machine" => 1];
+        $options =  ["background" => true];
         $adapter->getClient()->izzum->history->createIndex($index, $options);
         //getting the state for an entity_id/machine should be fast
         //db.states.createIndex({entity_id: 1, machine: 1}, {background: true});
-        $index = array("entity_id" => 1, "machine" => 1);
-        $options = array ("background" => true);
+        $index = ["entity_id" => 1, "machine" => 1];
+        $options =  ["background" => true];
         $adapter->getClient()->izzum->states->createIndex($index, $options);
 
 

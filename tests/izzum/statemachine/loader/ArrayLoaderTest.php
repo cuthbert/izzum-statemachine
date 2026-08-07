@@ -30,7 +30,7 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
 
         
         //scenario: configure loader
-        $transitions = array();
+        $transitions = [];
         $s1 = new State("1");
         $s2 = new State("2");
         $s3 = new State("3");
@@ -41,7 +41,7 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
         
         
         //scenario: configure loader with bad object types
-        $transitions = array();
+        $transitions = [];
         $transitions[] = new Transition($s2, $s3);
         $transitions[] =  new \stdClass();
         try {
@@ -57,7 +57,7 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
      */
     public function shouldLoadStateMachine()
     {
-        $transitions = array();
+        $transitions = [];
         $s1 = new State("1");
         $s2 = new State("2");
         $s3 = new State("3");
@@ -79,7 +79,7 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
      */
     public function shouldAddToLoader()
     {
-    	$transitions = array();
+    	$transitions = [];
     	$s1 = new State("1");
     	$s2 = new State("2");
     	$s3 = new State("3");
@@ -109,7 +109,7 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
         $context = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($context);
         
-        $transitions = array();
+        $transitions = [];
         $s1 = new State("1");
         $s2 = new State("2");
         $s3 = new State("3");

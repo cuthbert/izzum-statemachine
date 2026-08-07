@@ -16,24 +16,11 @@ namespace izzum\rules;
 class OrRule extends Rule {
     /**
      *
-     * @var Rule
-     */
-    private $original;
-    /**
-     *
-     * @var Rule
-     */
-    private $other;
-
-    /**
-     *
      * @param Rule $original
      * @param Rule $other
      */
-    public function __construct(Rule $original, Rule $other)
+    public function __construct(private readonly Rule $original, private readonly Rule $other)
     {
-        $this->original = $original;
-        $this->other = $other;
     }
 
     public function _applies()
@@ -45,6 +32,7 @@ class OrRule extends Rule {
      *
      * @return string
      */
+    #[\Override]
     public function toString()
     {
         // includes the namespace
@@ -58,6 +46,7 @@ class OrRule extends Rule {
      *
      * @return array
      */
+    #[\Override]
     public function getResults()
     {
         return array_merge($this->other->getResults(), $this->original->getResults());

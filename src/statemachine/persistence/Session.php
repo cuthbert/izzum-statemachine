@@ -23,20 +23,16 @@ use izzum\statemachine\State;
  */
 class Session extends Adapter {
     /**
-     * the namespace of the session
-     *
-     * @var string
-     */
-    private $namespace;
-
-    /**
      *
      * @param string $namespace
      *            optional, defaults to izzum
      * @param string $session_id
      *            optional force a session id, used for testing purposes
      */
-    public function __construct($namespace = 'izzum', $session_id = null)
+    public function __construct(/**
+     * the namespace of the session
+     */
+    private $namespace = 'izzum', $session_id = null)
     {
         if (session_status() === PHP_SESSION_NONE) {
             if ($session_id !== null) {
@@ -44,12 +40,11 @@ class Session extends Adapter {
             }
             session_start();
         }
-        $this->namespace = $namespace;
         if (!isset($_SESSION)) {
-            $_SESSION = array();
+            $_SESSION = [];
         }
         if (!isset($_SESSION [$this->namespace])) {
-            $_SESSION [$this->namespace] = array();
+            $_SESSION [$this->namespace] = [];
         }
     }
     
@@ -72,6 +67,7 @@ class Session extends Adapter {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function insertState(Identifier $identifier, $state, $message = null)
     {
         // set object on the session
@@ -83,6 +79,7 @@ class Session extends Adapter {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function updateState(Identifier $identifier, $state, $message = null)
     {
         // set object on the session
@@ -108,7 +105,7 @@ class Session extends Adapter {
      */
     public function getEntityIds($machine, $state = null)
     {
-        $ids = array();
+        $ids = [];
         foreach ($_SESSION [$this->namespace] as $key => $storage) {
             if (strstr($key, $machine)) {
                 if ($state) {

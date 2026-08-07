@@ -8,6 +8,7 @@ use \izzum\statemachine\Identifier;
  * as long as this builder is called via the same context.
  */
 class EntityBuilderTrafficLight extends EntityBuilder{
+    #[\Override]
     protected function build(Identifier $identifier) {
         $light = new TrafficLight($identifier->getEntityId());
         return $light;

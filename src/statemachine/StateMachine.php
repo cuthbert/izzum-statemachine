@@ -177,7 +177,7 @@ use izzum\statemachine\utils\Utils;
  * @link https://en.wikipedia.org/wiki/Finite-state_machine
  * @link https://en.wikipedia.org/wiki/UML_state_machine
  */
-class StateMachine {
+class StateMachine implements \Stringable {
     
     /**
      * The context instance that provides the context for the statemachine to
@@ -195,7 +195,7 @@ class StateMachine {
      *
      * @var State[]
      */
-    private $states = array();
+    private $states = [];
     
     /**
      * The available transitions.
@@ -205,7 +205,7 @@ class StateMachine {
      *
      * @var Transition[]
      */
-    private $transitions = array();
+    private $transitions = [];
     
     /**
      * the current state
@@ -558,7 +558,7 @@ class StateMachine {
      */
     public function getState($name)
     {
-        return isset($this->states [$name]) ? $this->states [$name] : null;
+        return $this->states [$name] ?? null;
     }
 
     /**
@@ -717,7 +717,7 @@ class StateMachine {
      */
     public function getTransition($name)
     {
-        return isset($this->transitions [$name]) ? $this->transitions [$name] : null;
+        return $this->transitions [$name] ?? null;
     }
 
     /**
@@ -959,7 +959,7 @@ class StateMachine {
     {
         //prepend the $name (event/trigger) to other arguments and call the 'handle' method
         array_unshift($arguments, $name);
-        return call_user_func_array(array($this, 'handle'), $arguments);
+        return call_user_func_array($this->handle(...), $arguments);
     }
 
     /**
@@ -987,7 +987,7 @@ class StateMachine {
             array_shift($args);
             // have the methods be able to return what they like
             // but make sure the 'onCheckCanTransition method returns a boolean
-            $output = call_user_func_array(array($object,$method), $args);
+            $output = call_user_func_array([$object,$method], $args);
         }
         return $output;
     }
@@ -1012,7 +1012,7 @@ class StateMachine {
 
     public function toString($elaborate = false)
     {
-        $output = get_class($this) . ": [" . $this->getContext()->getId(true) . "]";
+        $output = static::class . ": [" . $this->getContext()->getId(true) . "]";
         if (!$elaborate) {
             return $output;
         } else {
@@ -1023,9 +1023,9 @@ class StateMachine {
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->toString(true);
+        return (string) $this->toString(true);
     }
     
     // ###################### HOOK METHODS #######################

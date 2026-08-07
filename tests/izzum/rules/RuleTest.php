@@ -57,7 +57,7 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(array('_applies'))
+                ->setMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
@@ -78,7 +78,7 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(array('_applies'))
+                ->setMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
@@ -99,7 +99,7 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(array('_applies'))
+                ->setMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
@@ -120,7 +120,7 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(array('_applies'))
+                ->setMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
@@ -143,7 +143,7 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(array('applies', '_applies'))
+                ->setMethods(['applies', '_applies'])
                 ->getMock();
 
         $rule->expects($this->any())
@@ -282,7 +282,7 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(array('_applies'))
+                ->setMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
@@ -300,7 +300,7 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(array('_applies'))
+                ->setMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
@@ -312,20 +312,16 @@ class RuleTest extends PHPUnit_Framework_TestCase
     }
 
     public function testClosureRuleTrue() {
-        $closure = function ($a, $b) {
-            return $a === $b;
-        };
+        $closure = (fn($a, $b) => $a === $b);
 
-        $rule = new Closure($closure, array(1,1));
+        $rule = new Closure($closure, [1,1]);
         $this->assertTrue($rule->applies());
     }
 
     public function testClosureRuleFalse() {
-        $closure = function ($a, $b) {
-            return $a === $b;
-        };
+        $closure = (fn($a, $b) => $a === $b);
 
-        $rule = new Closure($closure, array(1,2));
+        $rule = new Closure($closure, [1,2]);
         $this->assertFalse($rule->applies());
     }
 
@@ -447,10 +443,8 @@ class RuleResultRule extends Rule {
 }
 
 class throwsExceptionRule extends Rule {
-    private $bool;
-    public function __construct($bool)
+    public function __construct(private $bool)
     {
-        $this->bool = $bool;
     }
 
     protected function _applies()

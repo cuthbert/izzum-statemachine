@@ -341,6 +341,7 @@ class Redis extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function insertState(Identifier $identifier, $state, $message = null)
     {
         $redis = $this->getRedis();
@@ -370,6 +371,7 @@ class Redis extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function updateState(Identifier $identifier, $state, $message = null)
     {
 
@@ -405,6 +407,7 @@ class Redis extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function addHistory(Identifier $identifier, $state, $message = null, $is_exception = false)
     {
         $redis = $this->getRedis();
@@ -422,7 +425,7 @@ class Redis extends Adapter implements Loader {
             
             //create the record for the transition to store in a redis hash
             $timestamp = time();
-            $record = array();
+            $record = [];
             $record['state'] = $state;
             $record['machine'] = $machine;
             $record['entity_id'] = $entity_id;
@@ -491,7 +494,7 @@ class Redis extends Adapter implements Loader {
      * {@inheritDoc}
      */
     public function getEntityIds($machine, $state = null) {
-        $output = array();
+        $output = [];
         try {
             $redis = $this->getRedis();
             if($state !== null) {
@@ -548,7 +551,7 @@ class Redis extends Adapter implements Loader {
                 $this->redis->close();
                 $this->redis = null;
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
            //nothing we can do about it...
         }
     }
@@ -568,15 +571,17 @@ class Redis extends Adapter implements Loader {
     public function __call($name, $arguments)
     {
         //call the method with $name on the \Redis instance
-        return call_user_func_array(array($this->getRedis(), $name), $arguments);
+        return call_user_func_array([$this->getRedis(), $name], $arguments);
     }
     
+    #[\Override]
     public function toString()
     {
-        return get_class($this) . ' redis://'. $this->host . ':' . $this->port . '/' . $this->database;
+        return static::class . ' redis://'. $this->host . ':' . $this->port . '/' . $this->database;
     }
     
-    public function __toString()
+    #[\Override]
+    public function __toString(): string
     {
         return $this->toString();
     }

@@ -30,7 +30,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains($transition->getName(), $transition->toString());
         $command = $transition->getCommand($object);
         $rule = $transition->getRule($object);
-        $this->assertTrue(is_a($command, 'izzum\command\Composite'), get_class($command));
+        $this->assertTrue(is_a($command, 'izzum\command\Composite'), $command::class);
         $this->assertTrue(is_a($rule, 'izzum\rules\AndRule'));
 
         $this->assertNotNull($transition->toString());
@@ -67,7 +67,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $command = 'foo-command';
         $description = 'foobar';
         $gc = function(){echo "guard callable";return true;};
-        $tc = function(){echo "transition callable";};
+        $tc = function(): void{echo "transition callable";};
         $t = new Transition($a, $b, $event, $rule, $command, $gc, $tc);
         $t->setDescription($description);
 
@@ -339,7 +339,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $event = 'foo';
         $a = new State('a');
         $b = new State('b');
-        $guard_callable = function($entity) {return false;};
+        $guard_callable = (fn($entity) => false);
 
         //scenario 1. inject in constructor
         $t = new Transition($a, $b, $event, null, null, $guard_callable);
@@ -355,7 +355,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
 
 
         //scenario 3. callable does not return a boolean
-        $guard_callable = function($entity) {};
+        $guard_callable = function($entity): void {};
         $t = new Transition($a, $b, $event, null, null, $guard_callable);
         $this->assertFalse($t->can($context));
     }
@@ -370,7 +370,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $a = new State('a');
         $b = new State('b');
         $x = 0;
-        $transition_callable = function($entity)  {$entity->setEntityId('234');};
+        $transition_callable = function($entity): void  {$entity->setEntityId('234');};
         $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
         $this->assertEquals('123', $context->getEntityId());
         $t->process($context);
@@ -395,7 +395,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
 
 
         //scenario 1: Closure without variables from the parent scope
-        $transition_callable = function($entity)  {$entity->setEntityId('234');};
+        $transition_callable = function($entity): void  {$entity->setEntityId('234');};
         $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
         $this->assertEquals('123', $context->getEntityId());
         $t->process($context);
@@ -404,7 +404,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
 
         //scenario 2: Closure with Inheriting variables from the parent scope
         $x = 4;
-        $transition_callable = function($entity) use (&$x) { $x+=1;};
+        $transition_callable = function($entity) use (&$x): void { $x+=1;};
         $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
         $this->assertEquals(4, $x);
         $t->process($context);
@@ -412,14 +412,14 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
 
         //scenario 3: Anonymous function / literal
         $context->getIdentifier()->setEntityId('123');
-        $t = new Transition($a, $b, $event, null, null, null, function($entity)  {$entity->setEntityId('234');});
+        $t = new Transition($a, $b, $event, null, null, null, function($entity): void  {$entity->setEntityId('234');});
         $this->assertEquals('123', $context->getEntityId());
         $t->process($context);
         $this->assertEquals('234', $context->getEntityId());
 
         //scenario 4: instance method invocation (method as string)
         $helper = new CallableHelper();
-        $transition_callable = array($helper, 'increaseInstanceId');
+        $transition_callable = $helper->increaseInstanceId(...);
         $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
         $this->assertEquals(0, $helper->instance_id);
         $t->process($context);
@@ -429,7 +429,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
 
         //scenario 5: static method invocation in array (use fully qualified name)
         $helper = new CallableHelper();
-        $transition_callable = array('izzum\statemachine\CallableHelper', 'increaseId');
+        $transition_callable = ['izzum\statemachine\CallableHelper', 'increaseId'];
         $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
         $this->assertEquals(0, CallableHelper::$id);
         $t->process($context);
@@ -448,7 +448,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         function jo($entity) {
             $entity->setEntityId(($entity->getEntityId() +1));
         }
-        $callable = function($context) { jo($context); };
+        $callable = function($context): void { jo($context); };
         $context->getIdentifier()->setEntityId('123');
         $t = new Transition($a, $b, $event, null, null, null, $callable);
         $this->assertEquals('123', $context->getEntityId());
@@ -471,7 +471,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
 
 
         //scenario 5: static method invocation in array (use fully qualified name)
-        $transition_callable = array('Foo', 'Bar');
+        $transition_callable = ['Foo', 'Bar'];
         $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
         try {
             $t->process($context);

@@ -443,7 +443,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         }
         $stop = microtime(true);
         //echo "stopping benchmark: $total took " . ($stop - $start);
-        
+
         //on my fairly old machine, 10.000 transitions with the bare algorithm (no guards/logic) 
         //took about 0.5 seconds
         
@@ -739,7 +739,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($b, $machine->getCurrentState());
         $machine->setContext($c1);
         $this->assertEquals($a, $machine->getCurrentState(), 'switched back again. again with correct state');
-        
+
         // var_dump(Memory::get());
     }
 
@@ -908,7 +908,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $id = 123;
         $context = new Context(new Identifier($id, $machine));
         $machine = new StateMachine($context);
-        $transitions = array();
+        $transitions = [];
         
         $new = new State('new', State::TYPE_INITIAL, State::COMMAND_EMPTY, State::COMMAND_NULL);
         $new->setDescription("the initial state");
@@ -1004,9 +1004,9 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('a', $machine->getCurrentState());
         
         // we expect the transition and the event name to be passed as arguments
-        $expected = array(
+        $expected = [
                 $machine->getTransition('new_to_a')
-        );
+        ];
         $this->assertEquals($expected, $model->oncheckcantransition);
         $this->assertEquals($expected, $model->onexitstate);
         $this->assertEquals($expected, $model->ontransition);
@@ -1017,44 +1017,42 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
 // implements all the callables that can be called as part of a transition
 // and lets us test if the right parameters are passed
 class CallableHandler {
-    public $allow;
     public $oncheckcantransition;
     public $onexitstate;
     public $ontransition;
     public $onenterstate;
 
-    public function __construct($allow = true)
+    public function __construct(public $allow = true)
     {
-        $this->allow = $allow;
     }
 
     public function onExitState($identifier, $transition)
     {
-        $this->onexitstate = array(
+        $this->onexitstate = [
                 $transition
-        );
+        ];
     }
 
     public function onCheckCanTransition($identifier, $transition)
     {
-        $this->oncheckcantransition = array(
+        $this->oncheckcantransition = [
                 $transition
-        );
+        ];
         return $this->allow;
     }
 
     public function onTransition($identifier, $transition)
     {
-        $this->ontransition = array(
+        $this->ontransition = [
                 $transition
-        );
+        ];
     }
 
     public function onEnterState($identifier, $transition)
     {
-        $this->onenterstate = array(
+        $this->onenterstate = [
                 $transition
-        );
+        ];
     }
 }
 
@@ -1065,6 +1063,7 @@ namespace izzum\statemachine;
  *
  */
 class SubClassedStateMachine extends StateMachine {
+    #[\Override]
     protected function _onCheckCanTransition(Transition $transition) {
         //only block a specific transition
         if($transition->getName() == 'b_to_c') return false;

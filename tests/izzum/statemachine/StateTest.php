@@ -95,30 +95,30 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $tda = new Transition($d, $a, 'possible-to-handle-more-than-one-from-d');
         $tdc = new Transition($d, $c, 'possible-to-handle-more-than-one-from-d');
         
-        $this->assertEquals(array(
+        $this->assertEquals([
                 $tba
-        ), $b->getTransitionsTriggeredByEvent('b-a'));
-        $this->assertEquals(array(
+        ], $b->getTransitionsTriggeredByEvent('b-a'));
+        $this->assertEquals([
                 $tbb
-        ), $b->getTransitionsTriggeredByEvent('event-self'));
-        $this->assertEquals(array(
+        ], $b->getTransitionsTriggeredByEvent('event-self'));
+        $this->assertEquals([
                 $tbc
-        ), $b->getTransitionsTriggeredByEvent('b_to_c'), 'default name is transition name');
-        $this->assertEquals(array(
+        ], $b->getTransitionsTriggeredByEvent('b_to_c'), 'default name is transition name');
+        $this->assertEquals([
                 $tab
-        ), $a->getTransitionsTriggeredByEvent('a_to_b'), 'default name is transition name');
-        $this->assertEquals(array(
+        ], $a->getTransitionsTriggeredByEvent('a_to_b'), 'default name is transition name');
+        $this->assertEquals([
                 $tda,
                 $tdc
-        ), $d->getTransitionsTriggeredByEvent('possible-to-handle-more-than-one-from-d'));
-        $this->assertEquals(array(), $a->getTransitionsTriggeredByEvent('b-a'));
-        $this->assertEquals(array(), $a->getTransitionsTriggeredByEvent('even-self'));
-        $this->assertEquals(array(), $a->getTransitionsTriggeredByEvent('event-self'));
-        $this->assertEquals(array(), $b->getTransitionsTriggeredByEvent('bogus'));
-        $this->assertEquals(array(), $a->getTransitionsTriggeredByEvent('bogus'));
-        $this->assertEquals(array(), $c->getTransitionsTriggeredByEvent('bogus'));
-        $this->assertEquals(array(), $c->getTransitionsTriggeredByEvent('event-self'));
-        $this->assertEquals(array(), $c->getTransitionsTriggeredByEvent('b-a'));
+        ], $d->getTransitionsTriggeredByEvent('possible-to-handle-more-than-one-from-d'));
+        $this->assertEquals([], $a->getTransitionsTriggeredByEvent('b-a'));
+        $this->assertEquals([], $a->getTransitionsTriggeredByEvent('even-self'));
+        $this->assertEquals([], $a->getTransitionsTriggeredByEvent('event-self'));
+        $this->assertEquals([], $b->getTransitionsTriggeredByEvent('bogus'));
+        $this->assertEquals([], $a->getTransitionsTriggeredByEvent('bogus'));
+        $this->assertEquals([], $c->getTransitionsTriggeredByEvent('bogus'));
+        $this->assertEquals([], $c->getTransitionsTriggeredByEvent('event-self'));
+        $this->assertEquals([], $c->getTransitionsTriggeredByEvent('b-a'));
     }
 
     /**
@@ -209,7 +209,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $state = new State('a');
         $context = new Context(new Identifier('123','foo-machine'));
         $event = 'foo';
-        $callable = function($entity) {$entity->setEntityId('234');};
+        $callable = function($entity): void {$entity->setEntityId('234');};
         $state->setExitCallable($callable);
         $this->assertEquals('123', $context->getEntityId());
         $state->entryAction($context);
@@ -226,7 +226,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $context = new Context(new Identifier('123','foo-machine'));
         $event = 'foo';
         //increase the id every time the callable is called
-        $callable = function($entity) {$entity->setEntityId(($entity->getEntityId()+1));};
+        $callable = function($entity): void {$entity->setEntityId(($entity->getEntityId()+1));};
         
         //scenario 1: use constructor
         $state = new State('a', State::TYPE_NORMAL, null, null, $callable, $callable);
@@ -255,7 +255,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $state = new State('a');
         $context = new Context(new Identifier('123','foo-machine'));
         $event = 'foo';
-        $callable = function($entity) {$entity->setEntityId('234');};
+        $callable = function($entity): void {$entity->setEntityId('234');};
         $state->setEntryCallable($callable);
         $this->assertEquals('123', $context->getEntityId());
         $state->exitAction($context);

@@ -6,7 +6,7 @@
  * with the autoloader in:
  * <root>/vendor/autoload.php
  */
-$files = array(__DIR__ . '/../../../../vendor/autoload.php', __DIR__ . '/../vendor/autoload.php');
+$files = [__DIR__ . '/../../../../vendor/autoload.php', __DIR__ . '/../vendor/autoload.php'];
 foreach($files as $file) {
 	if(file_exists($file)) {
 		$loader = require_once($file);

@@ -34,24 +34,20 @@ use izzum\statemachine\utils\Utils;
  */
 class ReaderWriterDelegator extends Adapter implements Loader {
     /**
-     * an instance of a Loader, which reads data
-     * @var Loader
-     */
-    private $reader;
-    /**
-     * an instance of an Adapter, which writes data
-     * @var Adapter
-     */
-    private $writer;
-
-    /**
      * @param Loader $reader the Loader instance to decorate
      * @param Adapter $writer the Adapter instance to decorate
      */
-    public function __construct(Loader $reader, Adapter $writer)
+    public function __construct(
+        /**
+         * an instance of a Loader, which reads data
+         */
+        private readonly Loader $reader,
+        /**
+         * an instance of an Adapter, which writes data
+         */
+        private readonly Adapter $writer
+    )
     {
-        $this->reader = $reader;
-        $this->writer = $writer;
     }
     /**
      * gets the reader/Loader
@@ -82,6 +78,7 @@ class ReaderWriterDelegator extends Adapter implements Loader {
         return $this->writer->isPersisted($identifier);
     }
 
+    #[\Override]
     public function processSetState(Identifier $identifier, $state, $message = null)
     {
         return $this->writer->processSetState($identifier, $state, $message);
@@ -92,22 +89,26 @@ class ReaderWriterDelegator extends Adapter implements Loader {
         return $this->writer->processGetState($identifier);
     }
 
+    #[\Override]
     public function add(Identifier $identifier, $state, $message = null)
     {
         return $this->writer->add($identifier, $state, $message);
     }
     
+    #[\Override]
     public function setFailedTransition(Identifier $identifier, Transition $transition, \Exception $e)
     {
         $this->writer->setFailedTransition($identifier, $transition, $e);
     }
     
+    #[\Override]
     public function toString()
     {
         return parent::toString() . " [reader] " . $this->reader->toString() .  " [writer] " . $this->writer->toString();
     }
     
-    public function __toString()
+    #[\Override]
+    public function __toString(): string
     {
         return $this->toString();
     }

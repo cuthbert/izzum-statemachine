@@ -34,7 +34,7 @@ use izzum\rules\IRule;
  * @author Rolf Vreijdenberger
  *
  */
-class Transition {
+class Transition implements \Stringable {
     const RULE_TRUE = '\izzum\rules\TrueRule';
     const RULE_FALSE = '\izzum\rules\FalseRule';
     const RULE_EMPTY = '';
@@ -311,7 +311,7 @@ class Transition {
      */
     public function toString()
     {
-        return get_class($this) . " '" . $this->getName() . "' [event]: '" . $this->event . "'" . " [rule]: '" . $this->rule . "' [command]: '" . $this->command . "'";
+        return static::class . " '" . $this->getName() . "' [event]: '" . $this->event . "'" . " [rule]: '" . $this->rule . "' [command]: '" . $this->command . "'";
     }
 
     /**
@@ -451,7 +451,7 @@ class Transition {
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName();
     }

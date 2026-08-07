@@ -46,30 +46,6 @@ use izzum\statemachine\State;
 class PDO extends Adapter implements Loader {
     
     /**
-     * the pdo connection string
-     * 
-     * @var string
-     */
-    private $dsn;
-    
-    /**
-     *
-     * @var string
-     */
-    private $user;
-    /**
-     *
-     * @var string
-     */
-    private $password;
-    /**
-     * pdo options
-     * 
-     * @var array
-     */
-    private $options;
-    
-    /**
      * the locally cached connections
      * 
      * @var \PDO
@@ -96,12 +72,19 @@ class PDO extends Adapter implements Loader {
      *            optional, defaults to empty array.
      * @link http://php.net/manual/en/pdo.connections.php
      */
-    public function __construct($dsn, $user = null, $password = null, $options = array())
+    public function __construct(
+        /**
+         * the pdo connection string
+         */
+        private $dsn,
+        private $user = null,
+        private $password = null,
+        /**
+         * pdo options
+         */
+        private $options = []
+    )
     {
-        $this->dsn = $dsn;
-        $this->user = $user;
-        $this->password = $password;
-        $this->options = $options;
     }
 
     /**
@@ -234,7 +217,7 @@ class PDO extends Adapter implements Loader {
         $query = 'SELECT se.entity_id FROM ' . $prefix . 'statemachine_entities AS se
                 JOIN ' . $prefix . 'statemachine_states AS ss ON (se.state = ss.state AND
                 se.machine = ss.machine) WHERE se.machine = :machine';
-        $output = array();
+        $output = [];
         try {
             if ($state != null) {
                 $query .= ' AND se.state = :state';
@@ -297,6 +280,7 @@ class PDO extends Adapter implements Loader {
     /**
      * {@inheritDoc}           
      */
+    #[\Override]
     protected function insertState(Identifier $identifier, $state, $message = null)
     {
         
@@ -371,6 +355,7 @@ class PDO extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function updateState(Identifier $identifier, $state, $message = null)
     {
         
@@ -400,6 +385,7 @@ class PDO extends Adapter implements Loader {
     /**
      *{@inheritDoc}
      */
+    #[\Override]
     public function addHistory(Identifier $identifier, $state, $message = null, $is_exception = false)
     {
         $connection = $this->getConnection();
@@ -504,9 +490,9 @@ class PDO extends Adapter implements Loader {
     {
         $rows = $this->getTransitions($machine);
         
-        $output = array();
+        $output = [];
         // array for local caching of states
-        $states = array();
+        $states = [];
         
         foreach ($rows as $row) {
             $state_from = $row ['state_from'];

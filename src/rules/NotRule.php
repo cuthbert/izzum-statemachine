@@ -13,17 +13,10 @@ class NotRule extends Rule {
     
     /**
      *
-     * @var Rule
-     */
-    private $original;
-
-    /**
-     *
      * @param Rule $original            
      */
-    public function __construct(Rule $original)
+    public function __construct(private readonly Rule $original)
     {
-        $this->original = $original;
     }
 
     public function _applies()
@@ -36,6 +29,7 @@ class NotRule extends Rule {
      *
      * @return array
      */
+    #[\Override]
     public function getResults()
     {
         return $this->original->getResults();

@@ -19,7 +19,7 @@ class ExternalDataTest extends \PHPUnit_Framework_TestCase {
         ExternalData::clear();
         
         $test_string = 'test';
-        $test_array = array('test', 'test');
+        $test_array = ['test', 'test'];
         $this->assertFalse(ExternalData::has());
         $this->assertNull(ExternalData::get());
         

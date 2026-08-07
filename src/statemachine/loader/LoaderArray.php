@@ -44,7 +44,7 @@ use izzum\statemachine\persistence\PDO;
  * @author Rolf Vreijdenberger
  *        
  */
-class LoaderArray implements Loader {
+class LoaderArray implements Loader, \Stringable {
     /**
      *
      * @var Transition[]
@@ -56,12 +56,12 @@ class LoaderArray implements Loader {
      * @param Transition[] $transitions
      *            the transitions to be loaded
      */
-    public function __construct($transitions = array())
+    public function __construct($transitions = [])
     {
-        $this->transitions = array();
+        $this->transitions = [];
         foreach ($transitions as $transition) {
             if (!is_a($transition, 'izzum\statemachine\Transition')) {
-                throw new Exception('Expected Transition (or a subclass), found something else: ' . get_class($transition), Exception::BAD_LOADERDATA);
+                throw new Exception('Expected Transition (or a subclass), found something else: ' . $transition::class, Exception::BAD_LOADERDATA);
             }
             $this->add($transition);
         }
@@ -74,8 +74,8 @@ class LoaderArray implements Loader {
     {
         $count = 0;
         $unsorted = $this->getTransitions();
-        $has_regex = array();
-        $has_no_regex = array();
+        $has_regex = [];
+        $has_no_regex = [];
         foreach ($unsorted as $transition) {
             $to = $transition->getStateTo();
             $from = $transition->getStateFrom();
@@ -131,10 +131,10 @@ class LoaderArray implements Loader {
 
     public function toString()
     {
-        return get_class($this);
+        return static::class;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

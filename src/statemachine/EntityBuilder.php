@@ -52,7 +52,7 @@ namespace izzum\statemachine;
  * @author Rolf Vreijdenberger
  *        
  */
-class EntityBuilder {
+class EntityBuilder implements \Stringable {
     
     /**
      * a cached instance of the built entity object
@@ -150,7 +150,7 @@ class EntityBuilder {
      */
     public function toString()
     {
-        return get_class($this);
+        return static::class;
     }
 
     /**
@@ -158,7 +158,7 @@ class EntityBuilder {
      * 
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

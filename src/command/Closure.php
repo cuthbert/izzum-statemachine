@@ -19,27 +19,18 @@ use izzum\command\Command;
 class Closure extends Command {
     /**
      *
-     * @var \Closure
-     */
-    private $closure;
-    
-    /**
-     * an array of arguments to pass as parameters to the closure
-     * 
-     * @var mixed[]
-     */
-    private $arguments;
-
-    /**
-     *
      * @param Closure $closure            
      * @param array $arguments
      *            an optional array of arguments to pass to the closure
      */
-    public function __construct(\Closure $closure, $arguments = array())
+    public function __construct(
+        private readonly \Closure $closure,
+        /**
+         * an array of arguments to pass as parameters to the closure
+         */
+        private $arguments = []
+    )
     {
-        $this->closure = $closure;
-        $this->arguments = $arguments;
     }
 
     protected function _execute()

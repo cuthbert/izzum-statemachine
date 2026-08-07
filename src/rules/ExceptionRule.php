@@ -10,7 +10,7 @@ namespace izzum\rules;
  */
 class ExceptionRule extends Rule {
 
-    protected function _applies()
+    protected function _applies(): never
     {
         throw new Exception('this rule always throws an exception', Exception::CODE_GENERAL);
     }

@@ -17,12 +17,6 @@ class StorageData {
      * @var string
      */
     public $id;
-    /**
-     * the state the transition was made to (the current state)
-     * 
-     * @var string
-     */
-    public $state;
     
     /**
      * the statemachine name
@@ -36,20 +30,19 @@ class StorageData {
      * @var int
      */
     public $timestamp;
-    
-    public $message;
 
     /**
      *
      * @param Identifier $identifier          
      * @param string $state            
      */
-    public function __construct(Identifier $identifier, $state, $message = null)
+    public function __construct(Identifier $identifier, /**
+     * the state the transition was made to (the current state)
+     */
+    public $state, public $message = null)
     {
         $this->id = $identifier->getEntityId();
         $this->machine = $identifier->getMachine();
-        $this->state = $state;
         $this->timestamp = time();
-        $this->message = $message;
     }
 }

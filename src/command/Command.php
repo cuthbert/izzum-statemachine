@@ -18,7 +18,7 @@ use izzum\command\ICommand;
  * @link https://en.wikipedia.org/wiki/Command_pattern
  *      
  */
-abstract class Command implements ICommand {
+abstract class Command implements ICommand, \Stringable {
 
     /**
      * (non-PHPdoc)
@@ -64,10 +64,10 @@ abstract class Command implements ICommand {
     public function toString()
     {
         // includes the namespace
-        return get_class($this);
+        return static::class;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

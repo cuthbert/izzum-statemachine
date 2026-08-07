@@ -41,7 +41,7 @@ use izzum\statemachine\utils\Utils;
  * @link https://php.net/manual/en/function.preg-match.php
  * @link http://regexr.com/ for trying out regular expressions    
  */
-class State {
+class State implements \Stringable {
     
     /**
      * state name if it is unknown (not configured)
@@ -193,7 +193,7 @@ class State {
         $this->setExitCommandName($command_exit_name);
         $this->setEntryCallable($callable_entry);
         $this->setExitCallable($callable_exit);
-        $this->transitions = array();
+        $this->transitions = [];
     }
 
     /**
@@ -289,7 +289,7 @@ class State {
      */
     public function isNormalRegex()
     {
-        return strpos($this->getName(), self::REGEX_PREFIX) === 0;
+        return str_starts_with($this->getName(), self::REGEX_PREFIX);
     }
 
     /**
@@ -300,7 +300,7 @@ class State {
      */
     public function isNegatedRegex()
     {
-        return strpos($this, self::REGEX_PREFIX_NEGATED) === 0;
+        return str_starts_with($this, self::REGEX_PREFIX_NEGATED);
     }
 
     /**
@@ -390,9 +390,9 @@ class State {
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->getName();
+        return (string) $this->getName();
     }
 
     /**
@@ -497,7 +497,7 @@ class State {
      */
     public function getTransitionsTriggeredByEvent($event)
     {
-        $output = array();
+        $output = [];
         foreach ($this->getTransitions() as $transition) {
             if ($transition->isTriggeredBy($event)) {
                 $output [] = $transition;

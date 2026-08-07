@@ -19,34 +19,20 @@ class ExceptionSupressor extends Rule {
     
     /**
      *
-     * @var Rule
-     */
-    private $decoree;
-    
-    /**
-     *
-     * @var boolean
-     */
-    private $supressed_result;
-
-    /**
-     *
      * @param Rule $decoree            
      * @param boolean $supressed_result
      *            what to return in case the decorated rule
      *            throws an error
      */
-    public function __construct(Rule $decoree, $supressed_result = false)
+    public function __construct(private readonly Rule $decoree, private $supressed_result = false)
     {
-        $this->decoree = $decoree;
-        $this->supressed_result = $supressed_result;
     }
 
     public function _applies()
     {
         try {
             $output = (boolean) $this->decoree->applies();
-        } catch(Exception $e) {
+        } catch(Exception) {
             $output = $this->supressed_result;
         }
         return $output;

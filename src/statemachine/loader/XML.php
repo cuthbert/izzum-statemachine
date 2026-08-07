@@ -18,20 +18,18 @@ use izzum\statemachine\Exception;
  * @author Rolf Vreijdenberger
  *
  */
-class XML implements Loader {
-    /**
-     * an xml string
-     * @var string
-     */
-    private $xml;
-
+class XML implements Loader, \Stringable {
     /**
      * 
      * @param string $xml optional a valid xml string according to the schema
      */
-    public function __construct($xml)
+    public function __construct(
+        /**
+         * an xml string
+         */
+        private $xml
+    )
     {
-        $this->xml = $xml;
     }
 
     /**
@@ -95,14 +93,14 @@ class XML implements Loader {
         //accessing xml as an object with the @ error suppresion operator ('shut the fuck up' operator)
         //allows you to get properties, even if they do not exist, without notices.
         //this let's us be a littlebit lazy since we know some nonessential properties could not be there
-        $states = array();
+        $states = [];
         foreach ($data->states->state as $state) {
             $tmp = new State((string) $state->name, (string) $state->type, (string) @$state->entry_command, (string) @$state->exit_command, (string) @$state->entry_callable, (string) @$state->exit_callable);
             $tmp->setDescription((string) @$state->description);
             $states [$tmp->getName()] = $tmp;
         }
         
-        $transitions = array();
+        $transitions = [];
         foreach ($data->transitions->transition as $transition) {
             $tmp = new Transition($states [(string) @$transition->state_from], $states [(string) @$transition->state_to], (string) @$transition->event, (string) @$transition->rule, (string) @$transition->command, (string) @$transition->guard_callable, (string) @$transition->transition_callable);
             $tmp->setDescription((string) @$transition->description);
@@ -115,10 +113,10 @@ class XML implements Loader {
 
     public function toString()
     {
-        return get_class($this);
+        return static::class;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

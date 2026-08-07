@@ -47,7 +47,7 @@ use izzum\rules\Exception;
  * @author Richard Ruiter
  * @link https://en.wikipedia.org/wiki/Separation_of_mechanism_and_policy
  */
-abstract class Rule implements IRule {
+abstract class Rule implements IRule, \Stringable {
     /**
      * contains results that a concrete Rule can set.
      * This allows clients of the Rule to check if certain conditions in
@@ -58,7 +58,7 @@ abstract class Rule implements IRule {
      * 
      * @var RuleResult[]
      */
-    private $result = array();
+    private $result = [];
     
     /**
      * should we cache the result or not?
@@ -195,7 +195,7 @@ abstract class Rule implements IRule {
     public function toString()
     {
         // includes the namespace
-        return get_class($this);
+        return static::class;
     }
 
     /**
@@ -253,7 +253,7 @@ abstract class Rule implements IRule {
      */
     private function clearResult()
     {
-        $this->result = array();
+        $this->result = [];
     }
 
     private function clearCache()
@@ -324,7 +324,7 @@ abstract class Rule implements IRule {
         return $this->use_caching;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

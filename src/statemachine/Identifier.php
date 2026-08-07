@@ -20,7 +20,7 @@ namespace izzum\statemachine;
  * @author Rolf Vreijdenberger
  *        
  */
-class Identifier {
+class Identifier implements \Stringable {
     const NULL_ENTITY_ID = "-1";
     const NULL_STATEMACHINE = 'null-machine';
     
@@ -31,16 +31,6 @@ class Identifier {
      * @var string
      */
     protected $entity_id;
-    
-    /**
-     * the statemachine that governs the state behaviour for this entity (eg
-     * 'order').
-     * this is the name of the statemachine itself and is used in conjunction
-     * with the entity_id to define what a statemachine is about.
-     *
-     * @var string
-     */
-    protected $machine_name;
 
     /**
      * Constructor
@@ -51,12 +41,17 @@ class Identifier {
      * @param string $machine_name
      *            the name of the statemachine (eg: 'order')
      */
-    public function __construct($entity_id, $machine_name)
+    public function __construct($entity_id, /**
+     * the statemachine that governs the state behaviour for this entity (eg
+     * 'order').
+     * this is the name of the statemachine itself and is used in conjunction
+     * with the entity_id to define what a statemachine is about.
+     */
+    protected $machine_name)
     {
         // convert $entity_id to string (it will likely be an int but a string
         // gives more flexibility)
         $this->setEntityId($entity_id);
-        $this->machine_name = $machine_name;
     }
 
     /**
@@ -113,14 +108,14 @@ class Identifier {
      */
     public function toString()
     {
-        return get_class($this) . ' ' . $this->getId(true);
+        return static::class . ' ' . $this->getId(true);
     }
 
     /**
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

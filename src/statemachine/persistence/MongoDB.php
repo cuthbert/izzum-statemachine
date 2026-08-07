@@ -31,22 +31,6 @@ use izzum\statemachine\State;
 class MongoDB extends Adapter implements Loader {
     
     /**
-     * the data source name for a mongo connection
-     * @var string
-     */
-    protected $dns;
-    /**
-     * connection options
-     * @var array
-     */
-    protected $options;
-    /**
-     * the php driver specific options
-     * @var array
-     */
-    protected $driver_options;
-    
-    /**
      * the (settable) mongo client
      * @var \MongoClient
      */
@@ -60,10 +44,21 @@ class MongoDB extends Adapter implements Loader {
      * @param array $driver_options php specifif driver options
      * @link https://php.net/manual/en/mongoclient.construct.php
      */
-    public function __construct($dns = 'mongodb://localhost:27017', $options = array("connect" => true), $driver_options = array()) {
-        $this->dns = $dns;
-        $this->options = $options;
-        $this->driver_options = $driver_options;
+    public function __construct(
+        /**
+         * the data source name for a mongo connection
+         */
+        protected $dns = 'mongodb://localhost:27017',
+        /**
+         * connection options
+         */
+        protected $options = ["connect" => true],
+        /**
+         * the php driver specific options
+         */
+        protected $driver_options = []
+    )
+    {
     }
     
     /**
@@ -102,7 +97,7 @@ class MongoDB extends Adapter implements Loader {
     {
         //statistical approach to building the index on average once every x times
         $check_index_once_in = min(1000, $check_index_once_in);
-        if(rand(1, $check_index_once_in) % $check_index_once_in === 0) {
+        if(random_int(1, $check_index_once_in) % $check_index_once_in === 0) {
             $this->createIndexes();
         }
     }
@@ -114,18 +109,18 @@ class MongoDB extends Adapter implements Loader {
     protected function createIndexes()
     {
         //http://docs.mongodb.org/manual/tutorial/create-a-compound-index/
-        
+
         //querying the history could use different indexes, depending on what you want to know
         //db.history.createIndex({entity_id: 1, machine: 1}, {background: true});
-        $index = array("entity_id" => 1, "machine" => 1);
-        $options = array ("background" => true);
+        $index = ["entity_id" => 1, "machine" => 1];
+        $options =  ["background" => true];
         $this->getClient()->izzum->history->createIndex($index, $options);
         //getting the state for an entity_id/machine should be fast
         //db.states.createIndex({entity_id: 1, machine: 1}, {background: true});
-        $index = array("entity_id" => 1, "machine" => 1);
-        $options = array ("background" => true);
+        $index = ["entity_id" => 1, "machine" => 1];
+        $options =  ["background" => true];
         $this->getClient()->izzum->states->createIndex($index, $options);
-        
+
         //show the existing indexes
         //db.system.indexes.find()
     }
@@ -144,6 +139,7 @@ class MongoDB extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function addHistory(Identifier $identifier, $state, $message = null, $is_exception = false)
     {
         //find in history from mongo shell: db.history.find({"machine" : "test-machine", "state": "done"},{entity_id: 1, state: 1, datetime: 1})
@@ -176,6 +172,7 @@ class MongoDB extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function insertState(Identifier $identifier, $state, $message = null)
     {
         try {
@@ -197,13 +194,14 @@ class MongoDB extends Adapter implements Loader {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function updateState(Identifier $identifier, $state, $message = null)
     {
         try {
             $client = $this->getClient();
             //find the state
             //https://php.net/manual/en/mongocollection.findone.php
-            $query = array("machine" => $identifier->getMachine(), "entity_id" => $identifier->getEntityId());
+            $query = ["machine" => $identifier->getMachine(), "entity_id" => $identifier->getEntityId()];
             $data = $client->izzum->states->findOne($query);
             if($data) {
                 //update the state and timestamp
@@ -237,7 +235,7 @@ class MongoDB extends Adapter implements Loader {
              
              //find the state
              //https://php.net/manual/en/mongocollection.findone.php
-             $query = array("entity_id" => $identifier->getEntityId(), "machine" => $identifier->getMachine());
+             $query = ["entity_id" => $identifier->getEntityId(), "machine" => $identifier->getMachine()];
              $data = $this->getClient()->izzum->states->findOne($query);
              if($data) {
                 $state = $data['state'];
@@ -262,7 +260,7 @@ class MongoDB extends Adapter implements Loader {
         $is_persisted = false;
         try {
             //https://php.net/manual/en/mongocollection.findone.php
-            $query = array("entity_id" => $identifier->getEntityId(), "machine" => $identifier->getMachine());
+            $query = ["entity_id" => $identifier->getEntityId(), "machine" => $identifier->getMachine()];
             $data = $this->getClient()->izzum->states->findOne($query);
             if($data) {
                 $is_persisted = true;
@@ -280,14 +278,14 @@ class MongoDB extends Adapter implements Loader {
     */
     public function getEntityIds($machine, $state = null) 
     {
-        $output = array();
+        $output = [];
         try {
             $client = $this->getClient();
-            $query = array("machine" => $machine);
+            $query = ["machine" => $machine];
             if($state !== null) {
                 $query["state"] = $state;
             }
-            $projection = array("entity_id" => 1);
+            $projection = ["entity_id" => 1];
             //find all in the 'states' collection
             $found = $client->izzum->states->find($query, $projection);
             foreach($found as $data) {
@@ -323,7 +321,7 @@ class MongoDB extends Adapter implements Loader {
         $loader = new JSON(
                     json_encode(
                         $this->getClient()->izzum->configuration->findOne(
-                                array("machines.name" => $statemachine->getContext()->getMachine())
+                                ["machines.name" => $statemachine->getContext()->getMachine()]
                                 )
                             )
                          );
@@ -331,12 +329,14 @@ class MongoDB extends Adapter implements Loader {
         return $count;
     }
     
+    #[\Override]
     public function toString()
     {
-        return get_class($this) . ' ' . $this->dns;;
+        return static::class . ' ' . $this->dns;;
     }
     
-    public function __toString()
+    #[\Override]
+    public function __toString(): string
     {
         return $this->toString();
     }

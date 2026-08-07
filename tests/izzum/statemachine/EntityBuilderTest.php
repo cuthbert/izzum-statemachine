@@ -109,6 +109,7 @@ class EntityBuilderTest extends \PHPUnit_Framework_TestCase {
  * helper class. this reference builder builds a stdClss.
  */
 class EntityBuilderStdClss extends EntityBuilder {
+    #[\Override]
     protected function build(Identifier $identifier)
     {
         $output = new \stdClass();
@@ -122,10 +123,10 @@ class EntityBuilderStdClss extends EntityBuilder {
  * helper class. this reference builder builds a stdClss.
  */
 class EntityBuilderException extends EntityBuilder {
-    private $bool;
-    public function __construct($bool) {
-        $this->bool = $bool;
+    public function __construct(private $bool)
+    {
     }
+    #[\Override]
     protected function build(Identifier $identifier)
     {
         if($this->bool) {

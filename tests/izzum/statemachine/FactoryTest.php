@@ -16,7 +16,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
      */
     public function shouldCreateAndUseSimpleTestFactory() {
         $machine_name = 'factory-test';
-            
+
         //scenario: testing instantiation and some checks
         $factory = new SimpleTestFactory();
         //instantation oke!
@@ -32,7 +32,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($machine, $context->getStateMachine(),'bidirectional association check');
         $this->assertCount(5, $machine->getStates());
         $this->assertCount(6, $machine->getTransitions());
-        
+
         $this->assertTrue(is_a($context->getPersistenceAdapter(), 'izzum\statemachine\persistence\Memory'));
         $this->assertTrue(is_a($context->getBuilder(), 'izzum\statemachine\EntityBuilder'));   
         //echo $machine->toString();
@@ -52,7 +52,7 @@ class SimpleTestFactory extends AbstractFactory{
             //from a backend somewhere.
         
             // 6 transitions, 5 states
-            $transitions = array();
+            $transitions = [];
             $new = new State('new', \izzum\statemachine\State::TYPE_INITIAL);
             $a = new State('a');
             $b = new State('b');

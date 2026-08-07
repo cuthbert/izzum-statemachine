@@ -22,7 +22,7 @@ class Memory extends Adapter {
      *
      * @var StorageData[]
      */
-    private static $registry = array();
+    private static $registry = [];
 
     /**
      * {@inheritDoc}
@@ -35,6 +35,7 @@ class Memory extends Adapter {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function insertState(Identifier $identifier, $state, $message = null)
     {
         $this->setStateInRegistry($identifier, $state, $message);
@@ -43,6 +44,7 @@ class Memory extends Adapter {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function updateState(Identifier $identifier, $state, $message = null)
     {
         $this->setStateInRegistry($identifier, $state, $message);
@@ -77,7 +79,7 @@ class Memory extends Adapter {
      */
     public function getEntityIds($machine, $state = null)
     {
-        $ids = array();
+        $ids = [];
         foreach ($this->getRegistry() as $key => $storage) {
             if (strstr($key, $machine)) {
                 if ($state) {
@@ -106,6 +108,7 @@ class Memory extends Adapter {
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     protected function addHistory(Identifier $identifier, $state, $message = null, $is_exception = false)
     {
         //don't store history in memory, this is a simple adapter and we don't want a memory increase
@@ -149,7 +152,7 @@ class Memory extends Adapter {
      */
     public static function clear()
     {
-        self::$registry = array();
+        self::$registry = [];
     }
 
     public static function get()

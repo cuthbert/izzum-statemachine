@@ -22,20 +22,18 @@ use izzum\statemachine\Exception;
  * @author Rolf Vreijdenberger
  *
  */
-class YAML implements Loader {
-    /**
-     * an undecoded yaml string
-     * @var string
-     */
-    private $yaml;
-
+class YAML implements Loader, \Stringable {
     /**
      *
      * @param string $yaml optional a valid yaml string as specified in assets/yaml/example.yaml
      */
-    public function __construct($yaml)
+    public function __construct(
+        /**
+         * an undecoded yaml string
+         */
+        private $yaml
+    )
     {
-        $this->yaml = $yaml;
     }
 
     /**
@@ -89,14 +87,14 @@ class YAML implements Loader {
         //accessing an array with an @ error suppresion operator ('shut the fuck up' operator),
         //allows you to get properties, even if they do not exist, without notices.
         //this lets us be a little lazy in mapping the array properties to the state and transition properties
-        $states = array();
+        $states = [];
         foreach ($data['states'] as $state) {
             $tmp = new State($state['name'], $state['type'], @$state['entry_command'], @$state['exit_command'], @$state['entry_callable'], @$state['exit_callable']);
             $tmp->setDescription(@$state['description']);
             $states [$tmp->getName()] = $tmp;
         }
 
-        $transitions = array();
+        $transitions = [];
         foreach ($data['transitions'] as $transition) {
             $tmp = new Transition($states [$transition['state_from']], $states [$transition['state_to']], @$transition['event'], @$transition['rule'], @$transition['command'], @$transition['guard_callable'], @$transition['transition_callable']);
             $tmp->setDescription(@$transition['description']);
@@ -110,10 +108,10 @@ class YAML implements Loader {
 
     public function toString()
     {
-        return get_class($this);
+        return static::class;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }
