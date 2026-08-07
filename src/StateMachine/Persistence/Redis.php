@@ -138,8 +138,6 @@ class Redis extends Adapter implements Loader {
      * You can also use a unix domain socket. Just construct without parameters
      * and call 'setUnixDomainSocket' before doing anything else.
      *
-     * @param string $host optional
-     * @param int $port optional
      * @param float $timeout value in seconds. default is 0 meaning unlimited
      * @param string $reserved should be NULL if $retry is specified
      * @param int $retry value in milliseconds
@@ -173,7 +171,6 @@ class Redis extends Adapter implements Loader {
 
     /**
      * set password to authenticate to the redis server
-     * @param string $password
      */
     public function setPassword(string $password): void {
         $this->password = $password;
@@ -202,7 +199,6 @@ class Redis extends Adapter implements Loader {
 
     /**
      * set the key prefix to be used for all redis keys
-     * @param string $prefix
      */
     final public function setPrefix(string $prefix): void {
         if($this->redis) {
@@ -213,24 +209,15 @@ class Redis extends Adapter implements Loader {
 
     /**
      * set the configuration key to be used for storing a json string of machine configurations.
-     * @param string $key
      */
     final public function setConfigurationKey(string $key): void {
         $this->configurationKey = $key;
     }
 
-    /**
-     * get the configuration key used for storing a json string of machine configurations.
-     * @return string $key
-     */
     final public function getConfigurationKey(): string {
         return $this->configurationKey;
     }
 
-    /**
-     * get the prefix for all keys used
-     * @return string
-     */
     final public function getPrefix(): string
     {
         return $this->prefix;
@@ -240,7 +227,6 @@ class Redis extends Adapter implements Loader {
      * Gets a lazy loaded \Redis instance that is connected and optionally authenticated.
      *
      * @throws Exception
-     * @return \Redis
      */
     public function getRedis(): \Redis {
         //lazy loaded connection
@@ -539,9 +525,6 @@ class Redis extends Adapter implements Loader {
     }
 
 
-    /**
-     * do some cleanup
-     */
     public function __destruct()
     {
         try {
@@ -563,7 +546,6 @@ class Redis extends Adapter implements Loader {
      * This makes it useful to test the redis commands or just use this class as an interface to redis.
      * 
      * @param string $name name of the method to route to the active redis connection
-     * @param mixed[] $arguments
      * @return mixed
      */
     public function __call(string $name, array $arguments)

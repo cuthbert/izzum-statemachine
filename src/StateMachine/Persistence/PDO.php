@@ -60,28 +60,15 @@ class PDO extends Adapter implements Loader {
     private $prefix = '';
 
     /**
-     *
      * @param string $dsn
      *            a PDO data source name
      *            example: 'pgsql:host=localhost;port=5432;dbname=izzum'
-     * @param string $user
-     *            optional, defaults to null
-     * @param string $password
-     *            optional, defaults to null
-     * @param array $options
-     *            optional, defaults to empty array.
      * @link http://php.net/manual/en/pdo.connections.php
      */
     public function __construct(
-        /**
-         * the pdo connection string
-         */
         private string $dsn,
         private ?string $user = null,
         private ?string $password = null,
-        /**
-         * pdo options
-         */
         private array $options = []
     )
     {
@@ -90,8 +77,7 @@ class PDO extends Adapter implements Loader {
     /**
      * get the connection to a database via the PDO adapter.
      * The connection retrieved will be reused if one already exists.
-     * 
-     * @return \PDO
+     *
      * @throws Exception
      */
     public function getConnection(): \PDO
@@ -109,8 +95,7 @@ class PDO extends Adapter implements Loader {
     
     /**
      * set the PDO connection explicitely, useful if you want to share the
-     * PDO instance when it is created outside this class. 
-     * @param \PDO $connection
+     * PDO instance when it is created outside this class.
      */
     public function setConnection(\PDO $connection): void
     {
@@ -143,19 +128,12 @@ class PDO extends Adapter implements Loader {
 
     /**
      * set the table prefix to be used
-     *
-     * @param string $prefix
      */
     final public function setPrefix(string $prefix): void
     {
         $this->prefix = $prefix;
     }
 
-    /**
-     * get the table prefix
-     *
-     * @return string
-     */
     final public function getPrefix(): string
     {
         return $this->prefix;
@@ -310,8 +288,6 @@ class PDO extends Adapter implements Loader {
 
     /**
      * collects error information ready to be used as output.
-     * @param \PDOStatement $statement
-     * @return string
      */
     protected function getErrorInfo(\PDOStatement $statement): string
     {
@@ -322,8 +298,6 @@ class PDO extends Adapter implements Loader {
 
     /**
      * hook method
-     * 
-     * @return int|string
      */
     protected function getTimestampForDriver(): int|string
     {
@@ -339,9 +313,6 @@ class PDO extends Adapter implements Loader {
     /**
      * hook method.
      * not all drivers have the same boolean datatype. convert here.
-     * 
-     * @param boolean $boolean
-     * @return boolean|int
      */
     protected function getBooleanForDriver(bool $boolean): bool|int
     {
@@ -428,8 +399,7 @@ class PDO extends Adapter implements Loader {
      * get all the ordered transition and state information for a specific
      * machine.
      * This method is public for testing purposes
-     * 
-     * @param string $machine
+     *
      * @return mixed[][] resultset from postgres
      * @throws Exception
      */
@@ -481,9 +451,7 @@ class PDO extends Adapter implements Loader {
     /**
      * gets all data for transitions.
      * This method is public for testing purposes
-     * 
-     * @param string $machine
-     *            the machine name
+     *
      * @return Transition[]
      */
     public function getLoaderData(string $machine): array
@@ -528,9 +496,6 @@ class PDO extends Adapter implements Loader {
         return $output;
     }
 
-    /**
-     * do some cleanup
-     */
     public function __destruct()
     {
         $this->connection = null;

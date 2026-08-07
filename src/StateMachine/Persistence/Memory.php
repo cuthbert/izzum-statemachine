@@ -50,11 +50,6 @@ class Memory extends Adapter {
         $this->setStateInRegistry($identifier, $state, $message);
     }
 
-    /**
-     *
-     * @param Identifier $identifier
-     * @param string $state
-     */
     protected function setStateInRegistry(Identifier $identifier, string $state, $message = null): void
     {
         $data = new StorageData($identifier, $state, $message);
@@ -115,11 +110,6 @@ class Memory extends Adapter {
         //for a long running process
     }
 
-    /**
-     *
-     * @param string $key
-     * @param StorageData $value
-     */
     protected function writeRegistry(string $key, StorageData $value): void
     {
         self::$registry [$key] = $value;

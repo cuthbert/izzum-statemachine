@@ -23,16 +23,11 @@ use Izzum\StateMachine\State;
  */
 class Session extends Adapter {
     /**
-     *
-     * @param string $namespace
-     *            optional, defaults to izzum
+     * @param string $namespace the namespace of the session
      * @param string $sessionId
      *            optional force a session id, used for testing purposes
      */
-    public function __construct(/**
-     * the namespace of the session
-     */
-    private string $namespace = 'izzum', ?string $sessionId = null)
+    public function __construct(private string $namespace = 'izzum', ?string $sessionId = null)
     {
         if (session_status() === PHP_SESSION_NONE) {
             if ($sessionId !== null) {

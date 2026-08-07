@@ -56,11 +56,9 @@ abstract class Adapter implements \Stringable {
      * entities to feed to the statemachine, for example in a cron job or a
      * message queue.
      *
-     * @param string $machine
-     *            the name of the machine
      * @param string $state
      *            optional: if provided, only those entities in the specific state
-     * @return string[] an array of entity_id's
+     * @return string[]
      */
     abstract public function getEntityIds(string $machine, ?string $state = null): array;
 
@@ -75,8 +73,6 @@ abstract class Adapter implements \Stringable {
      * 
      * this method is public to be able to call it via the ReaderWriterDelegator
      *
-     * @param Identifier $identifier
-     * @param string $state
      * @return boolean true if just added to storage, false if stored before
      */
     public function processSetState(Identifier $identifier, string $state, $message = null)
@@ -95,8 +91,6 @@ abstract class Adapter implements \Stringable {
     /**
      * Adds a history record for a transition
      *
-     * @param Identifier $identifier
-     * @param string $state
      * @param mixed $message string or array/object with relevant fields.
      *            an optional message (which might be exception data or not).
      * @param boolean $isException
@@ -112,21 +106,12 @@ abstract class Adapter implements \Stringable {
         //override in subclasses if needed
     }
 
-    /**
-     * insert state for Identifier into persistance layer.
-     *
-     * @param Identifier $identifier
-     * @param string $state
-     */
     protected function insertState(Identifier $identifier, string $state, $message = null): void
     {
         //override in subclasses
     }
 
     /**
-     * update state for statemachine/entity into persistance layer
-     * @param Identifier $identifier
-     * @param string $state
      * @throws Exception
      */
      protected function updateState(Identifier $identifier, string $state, $message = null): void
@@ -141,7 +126,6 @@ abstract class Adapter implements \Stringable {
      * 
      * this method is public to be able to call it via the ReaderWriterDelegator
      *
-     * @param Identifier $identifier            
      * @return string the current state of the entity represented in the context
      */
     abstract public function processGetState(Identifier $identifier): string;
@@ -149,8 +133,6 @@ abstract class Adapter implements \Stringable {
     /**
      * is the state information already persisted?
      *
-     * @param Identifier $identifier
-     * @return boolean
      * @throws Exception
      */
     abstract public function isPersisted(Identifier $identifier): bool;
@@ -169,7 +151,6 @@ abstract class Adapter implements \Stringable {
      * It can then be manipulated via other methods via this Adapter or via
      * the statemachine itself eg: via 'getEntityIds' etc.
      *
-     * @param Identifier $identifier            
      * @param string $state
      *            the initial state to set, which should be known to
      *            the client of the statemachine the first time a machine is
@@ -196,9 +177,7 @@ abstract class Adapter implements \Stringable {
      * 
      * A template method.
      *
-     * @param Identifier $identifier            
-     * @return string the state
-     * @throw Exception
+     * @throws Exception
      */
     public function getState(Identifier $identifier): string
     {
@@ -222,8 +201,6 @@ abstract class Adapter implements \Stringable {
      *
      * @param Identifier $identifier
      *            (old state can be retrieved via the identifier and this class)
-     * @param string $state
-     *            this is the new state
      * @param string $message optional message. this can be used by the persistence adapter
      *          to be part of the transition history to provide extra information about the transition.
      * @return bool false if already stored before, true if just added
@@ -246,10 +223,6 @@ abstract class Adapter implements \Stringable {
     /**
      * A template method that Stores a failed transition in the storage facility for
      * historical/analytical purposes.
-     *
-     * @param Identifier $identifier            
-     * @param Transition $transition            
-     * @param \Exception $e            
      */
     public function setFailedTransition(Identifier $identifier, Transition $transition, \Exception $e): void
     {
