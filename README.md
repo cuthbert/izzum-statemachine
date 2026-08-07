@@ -18,6 +18,26 @@ It will work seamlessly with existing domain models (like 'Order', 'Customer' et
 
 Bitcoin donations are more than welcome on *[1zzumvx7zVHv3AdWXQ1XUuNKyQonx7uHM](https://blockchain.info/address/1zzumvx7zVHv3AdWXQ1XUuNKyQonx7uHM)*.
 
+### upgrade path to 5.y.z release for php 8.4 from 4.y.z
+5.0.0 requires php 8.4 and renames every namespace to PascalCase. This affects both your php code and any statemachine configuration that stores fully qualified class names as strings.
+
+Rename these prefixes everywhere:
+
+| 4.y.z | 5.y.z |
+| --- | --- |
+| `izzum\command\` | `Izzum\Command\` |
+| `izzum\rules\` | `Izzum\Rules\` |
+| `izzum\statemachine\` | `Izzum\StateMachine\` |
+| `izzum\statemachine\builder\` | `Izzum\StateMachine\Builder\` |
+| `izzum\statemachine\loader\` | `Izzum\StateMachine\Loader\` |
+| `izzum\statemachine\persistence\` | `Izzum\StateMachine\Persistence\` |
+| `izzum\statemachine\utils\` | `Izzum\StateMachine\Utils\` |
+
+- update `use` statements and inline class references in your php code.
+- update the fully qualified rule/command/callable/factory names stored as strings in your database, yaml, xml and json configuration. These are resolved by autoloading at runtime, so a stale name fails only when that transition is actually used.
+- **match the casing exactly.** A partially corrected name such as `Izzum\rules\TrueRule` may appear to work on a case-insensitive filesystem (macOS by default) because composer maps the part after the `Izzum\` prefix straight onto a file path. The same name fails on a case-sensitive filesystem, which is what most linux production hosts use.
+- the MongoDB persistence adapter has been removed. It targeted the long deprecated ext-mongo driver, which has no build for any supported php version. Use the Redis or PDO adapter instead.
+
 ### upgrade path to 4.y.z release for php 7 from 3.y.z
 - upgrade definitions in database/yml/xml/json configuration that use False Rule, True Rule or Null Command: use 'FalseRule', 'TrueRule', 'NullCommand'
 - upgrade references in code that use False Rule, True Rule or Null Command: use 'FalseRule', 'TrueRule', 'NullCommand'
@@ -494,7 +514,21 @@ $machine->run();//stores data in postgres
 ```
 
 ### generating uml diagrams from a statemachine
-TO DESCRIBE
+`Izzum\StateMachine\Utils\PlantUml` turns a fully loaded statemachine into [plantuml](http://www.plantuml.com/plantuml/) source for a state diagram. It reads the states and transitions already on the machine, so load your machine first (via a Loader, a persistence adapter or by adding transitions in php) and then generate.
+
+`PlantUml::createStateDiagram($machine)` returns the diagram as a string; it does not render an image itself. Write it to a file and render it with plantuml, or paste it into the [online plantuml server](http://www.plantuml.com/plantuml/).
+
+The generated diagram includes the state names, their descriptions, entry and exit commands, the transition names and events, the guard rules and transition commands, and the order in which transitions are tried per state. Setting descriptions on your states and transitions via `State::setDescription()` and `Transition::setDescription()` makes the output considerably more readable.
+```php
+$machine = new StateMachine(new Context(new Identifier('198442', 'order')));
+$loader = XML::createFromFile(__DIR__ . '/machines.xml');
+$loader->load($machine);
+
+$plantuml = new PlantUml();
+$output = $plantuml->createStateDiagram($machine);
+file_put_contents('order-machine.plantuml', $output);
+```
+See `examples/trafficlight` for a runnable example that prints a diagram for the traffic light machine.
 
 ### installation
 use [composer](https://getcomposer.org/) to install the project.
@@ -502,7 +536,7 @@ Create a file called composer.json with these lines:
 ```
 {
     "require": {
-        "rolfvreijdenberger/izzum-statemachine": "~4.0"
+        "rolfvreijdenberger/izzum-statemachine": "~5.0"
     }
 }
 ```
