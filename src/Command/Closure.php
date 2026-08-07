@@ -18,7 +18,7 @@ namespace Izzum\Command;
 class Closure extends Command {
     /**
      *
-     * @param Closure $closure            
+     * @param \Closure $closure
      * @param array $arguments
      *            an optional array of arguments to pass to the closure
      */

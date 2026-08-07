@@ -178,7 +178,8 @@ class Transition implements \Stringable {
      * Can this transition be triggered by a certain event?
      * This also matches on the transition name.
      *
-     * @param string $event
+     * @param string|null $event not enforced by a native type, since callers
+     *        may pass through arbitrary/unchecked event values
      * @return boolean
      */
     public function isTriggeredBy($event)

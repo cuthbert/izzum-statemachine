@@ -123,7 +123,8 @@ class Redis extends Adapter implements Loader {
 
     /**
      * connected and optionally authenticated redis connection.
-     * @var \Redis
+     * lazily instantiated, and reset to null on disconnect/failed connect.
+     * @var \Redis|null
      */
     private $redis;
 

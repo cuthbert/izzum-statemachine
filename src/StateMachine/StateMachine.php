@@ -179,7 +179,7 @@ class StateMachine implements \Stringable {
      * The context instance that provides the context for the statemachine to
      * operate in.
      *
-     * @var Context
+     * @var Context|null
      */
     private $context;
     
@@ -206,7 +206,7 @@ class StateMachine implements \Stringable {
     /**
      * the current state
      *
-     * @var State
+     * @var State|null
      */
     private $state;
     
@@ -864,7 +864,7 @@ class StateMachine implements \Stringable {
      */
     public function setContext(Context $context)
     {
-        if ($this->getContext()) {
+        if ($this->context) {
             // context already exists.
             if ($this->getContext()->getMachine() !== $context->getMachine()) {
                 throw new Exception(sprintf("Trying to set context for a different machine. currently '%s' and new '%s'", $this->getContext()->getMachine(), $context->getMachine()), Exception::SM_CONTEXT_DIFFERENT_MACHINE);

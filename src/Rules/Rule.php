@@ -72,8 +72,8 @@ abstract class Rule implements IRule, \Stringable {
     /**
      * if the result is cached, it will be put in this variable
      * after the applies method has run
-     * 
-     * @var boolean
+     *
+     * @var boolean|null
      */
     private $cache;
 
@@ -85,7 +85,9 @@ abstract class Rule implements IRule, \Stringable {
      * should
      * be thrown instead of a boolean value
      *
-     * @return boolean
+     * @return mixed a concrete implementation must return a boolean; this is not
+     *         enforced by a native return type since it's validated at runtime by
+     *         applies()
      * @throws \Exception
      */
     abstract protected function _applies();

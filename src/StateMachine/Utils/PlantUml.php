@@ -77,7 +77,7 @@ SKINS;
     /**
      * creates plantuml state output for a statemachine
      *
-     * @param string $machine            
+     * @param StateMachine $machine
      * @return string plant uml code, this can be used to render an image
      * @link http://www.plantuml.com/plantuml/
      * @link http://plantuml.sourceforge.net/state.html

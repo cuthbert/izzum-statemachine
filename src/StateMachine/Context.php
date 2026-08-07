@@ -152,7 +152,7 @@ class Context implements \Stringable {
      * @param string $state 
      * @param string $message optional message. this can be used by the persistence adapter
      *          to be part of the transition history to provide extra information about the transition.            
-     * @return boolan true if there was never any state persisted for this
+     * @return bool true if there was never any state persisted for this
      *         machine before (just added for the
      *         first time), false otherwise
      */

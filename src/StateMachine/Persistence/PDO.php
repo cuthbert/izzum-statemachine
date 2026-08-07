@@ -46,8 +46,9 @@ class PDO extends Adapter implements Loader {
     
     /**
      * the locally cached connections
-     * 
-     * @var \PDO
+     *
+     * lazily instantiated, and reset to null on destruction.
+     * @var \PDO|null
      */
     private $connection;
     
@@ -427,8 +428,8 @@ class PDO extends Adapter implements Loader {
      * machine.
      * This method is public for testing purposes
      * 
-     * @param string $machine            
-     * @return [][] resultset from postgres
+     * @param string $machine
+     * @return mixed[][] resultset from postgres
      * @throws Exception
      */
     public function getTransitions($machine)

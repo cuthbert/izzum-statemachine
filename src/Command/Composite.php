@@ -39,8 +39,8 @@ class Composite extends Command implements IComposite {
      * this method can be used to add multiple commands that will be used in the
      * execute() method
      * 
-     * @param
-     *            command a concrete command that implements the ICommand
+     * @param ICommand $command
+     *            a concrete command that implements the ICommand
      *            interface
      */
     public function add(ICommand $command)

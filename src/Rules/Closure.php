@@ -15,7 +15,7 @@ namespace Izzum\Rules;
 class Closure extends Rule {
     /**
      *
-     * @param Closure $closure            
+     * @param \Closure $closure
      * @param mixed[] $arguments
      *            an optional array of arguments to pass to the closure
      */

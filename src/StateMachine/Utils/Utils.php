@@ -63,17 +63,19 @@ class Utils {
     }
 
     /**
-     * @param callable $callable
+     * @param mixed $callable the value being checked for callability; not
+     *        statically guaranteed to be callable, since that is exactly what
+     *        this method validates
      * @param string $type a type description of the callable eg: State::CALLABLE_ENTRY
      * @param string $info extra info for exception message purposes
      * @param Context $context optional: the context the callable is called in
-     * @return Exception if the callable does not pass the check
+     * @return Exception|null the exception if the callable does not pass the check, null otherwise
      */
     private static function getExceptionForCheckingCallable($callable, $type, $info, $context = null)
     {
         try {
             self::checkCallable($callable, $type, $info, $context);
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             return $e;
         }
         return null;
@@ -81,7 +83,9 @@ class Utils {
 
 
     /**
-     * @param callable $callable
+     * @param mixed $callable the value being checked for callability; not
+     *        statically guaranteed to be callable, since that is exactly what
+     *        this method validates
      * @param string $type a type description of the callable eg: State::CALLABLE_ENTRY
      * @param string $info extra info for exception message purposes
      * @param Context $context optional: the context the callable is called in
@@ -108,7 +112,7 @@ class Utils {
      *            the state from which the transition is made
      * @param string $to
      *            the state to which the transition will be made
-     * @return string <state_from>_to_<state_to>
+     * @return string a string formatted as "state_from_to_state_to"
      */
     public static function getTransitionName($from, $to)
     {

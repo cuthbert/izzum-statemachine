@@ -27,7 +27,9 @@ class MongoDB extends Adapter implements Loader {
     
     /**
      * the (settable) mongo client
-     * @var \MongoClient
+     *
+     * lazily instantiated.
+     * @var \MongoClient|null
      */
     private $client;
     

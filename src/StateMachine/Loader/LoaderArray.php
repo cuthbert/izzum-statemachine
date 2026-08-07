@@ -52,8 +52,10 @@ class LoaderArray implements Loader, \Stringable {
 
     /**
      *
-     * @param Transition[] $transitions
-     *            the transitions to be loaded
+     * @param mixed[] $transitions
+     *            the transitions to be loaded; each element is validated to be
+     *            a Transition (or subclass) at runtime, since this is not
+     *            enforced by a native type
      */
     public function __construct($transitions = [])
     {

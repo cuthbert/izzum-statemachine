@@ -226,7 +226,7 @@ abstract class Adapter implements \Stringable {
      *            this is the new state
      * @param string $message optional message. this can be used by the persistence adapter
      *          to be part of the transition history to provide extra information about the transition.
-     * @return boolan false if already stored before, true if just added
+     * @return bool false if already stored before, true if just added
      * @throws Exception
      */
     public function setState(Identifier $identifier, $state, $message = null)

@@ -337,7 +337,7 @@ class State implements \Stringable {
      * run from ('state from').
      *
      * @param Transition $transition            
-     * @return boolan yes in case the transition was not on the State already or in case of an invalid transition
+     * @return bool yes in case the transition was not on the State already or in case of an invalid transition
      */
     public function addTransition(Transition $transition)
     {
