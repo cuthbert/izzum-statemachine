@@ -1,10 +1,10 @@
 <?php
 namespace izzum\examples\trafficlight;
-use izzum\statemachine\AbstractFactory;
-use izzum\statemachine\persistence\Memory;
-use izzum\statemachine\loader\LoaderArray;
-use izzum\statemachine\State;
-use izzum\statemachine\Transition;
+use Izzum\StateMachine\AbstractFactory;
+use Izzum\StateMachine\Persistence\Memory;
+use Izzum\StateMachine\Loader\LoaderArray;
+use Izzum\StateMachine\State;
+use Izzum\StateMachine\Transition;
 /**
  * the Factory to build the statemachines for TrafficLight domain models.
  * It extends the AbstractFactory and implements all the methods we need

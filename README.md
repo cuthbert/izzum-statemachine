@@ -212,7 +212,7 @@ echo $machine->getCurrentState();//still in the same state
 ```
 
 ### guard conditions 2. using business rules
-[A business rule](https://en.wikipedia.org/wiki/Business_rule) is used by creating a Rule class (a subclass of `\izzum\rules\Rule`) and by setting the fully qualified class name as a string on the Transition. The Rule class is dynamically instantiated only when necessary for checking the transition and wil have the domain model (provided by the Context via the EntityBuilder) injected in it's constructor. The Rule should have a `Rule::applies()` method that will return a boolean value that will be calculated by querying the domain model or any other data source (eg: services, apis, database etc).
+[A business rule](https://en.wikipedia.org/wiki/Business_rule) is used by creating a Rule class (a subclass of `\Izzum\Rules\Rule`) and by setting the fully qualified class name as a string on the Transition. The Rule class is dynamically instantiated only when necessary for checking the transition and wil have the domain model (provided by the Context via the EntityBuilder) injected in it's constructor. The Rule should have a `Rule::applies()` method that will return a boolean value that will be calculated by querying the domain model or any other data source (eg: services, apis, database etc).
 
 The `FalseRule` rule is provided as an example. you should write your own specifcally for your problem domain. See `examples/trafficlight` for an implementation using rules and a domain object with an EntityBuilder.
 
@@ -223,7 +223,7 @@ Multiple rules can be chained together (using [logical conjunction](https://en.w
 Testing is facilitated because you can inject [test doubles](https://en.wikipedia.org/wiki/Test_double) (mocks/stubs) in your Rule.
 ```php
 $forbidden = new State('forbidden');
-$rule = '\izzum\rules\FalseRule';
+$rule = '\Izzum\Rules\FalseRule';
 $transition = new Transition($new, $forbidden, 'thoushaltnotpass', $rule);
 // or: $transition->setRuleName($rule);
 $machine->addTransition($transition);
@@ -246,7 +246,7 @@ class IsAllowedToShip extends Rule {
 The configuration of a Transition with a rule should be done by providing a fully qualified classname.
 The php application must be able to find the class via autoloading (which is a wrapper around including files)
 ```php
-$rule = '\izzum\rules\IsAllowedToShip';
+$rule = '\Izzum\Rules\IsAllowedToShip';
 $transition = new Transition($action, new State('shipping'), 'ship', $rule);
 ```
 The advantage of using Rules as guards is that there is no coupling between your domain model and the statemachine, making your application code much cleaner and more testable.
@@ -327,7 +327,7 @@ The general transition logic sequence is as follows
 
 
 ### logic actions 2. commands
-A [command](https://en.wikipedia.org/wiki/Command_pattern) is used by creating a seperate Command class (a subclass of `\izzum\command\Command`) and by setting it's fully qualified class name as a string on the transition or states. 
+A [command](https://en.wikipedia.org/wiki/Command_pattern) is used by creating a seperate Command class (a subclass of `\Izzum\Command\Command`) and by setting it's fully qualified class name as a string on the transition or states. 
 
 The Command class is dynamically instantiated only when necessary for performing the logic and wil have the domain model (provided by the Context via the EntityBuilder) injected in it's constructor. The Command should have a `Command::execute()` method that will perform the logic by *potentially operating on the domain model* or any other data source (eg: services, apis, database etc).
 The `NullCommand` command is provided as an example. you should write your own specifcally for your problem domain. See `examples/trafficlight` for an implementation using commands and a domain object with an EntityBuilder.
@@ -352,7 +352,7 @@ Class OrderDelivery extends Command {
 public function __construct(Order $order) { $this->order = $order;}
   protected function _execute() { $this->order->deliver(); }
 }
-$command = '\izzum\command\OrderDelivery';
+$command = '\Izzum\Command\OrderDelivery';
 //assume we are using the rule from the example
 $transition = new Transition($action, new State('shipping'), 'ship', $rule, $command);
 
@@ -429,7 +429,7 @@ Loader itself is an interface with one simple method: `Loader::load($statemachin
 
 ### loading statemachine configurations: examples for XML, JSON, YAML
 XML example:
-see `assets/xml` for an example xml file definition and the xml schema to use with the loader. The loader is `izzum\loader\XML`.
+see `assets/xml` for an example xml file definition and the xml schema to use with the loader. The loader is `Izzum\StateMachine\Loader\XML`.
 ```php
 $statemachine = new StateMachine(new Context(new Identifier('198442' , 't-shirt-production-facility-machine')));
 $file = __DIR__ . '/machines.xml';
@@ -438,7 +438,7 @@ $loader->load($statemachine);
 $statemachine->runToCompletion();
 ```
 JSON example
-see `assets/json` for an example json file definition and the json schema to use with the loader. The loader is `izzum\loader\JSON`.
+see `assets/json` for an example json file definition and the json schema to use with the loader. The loader is `Izzum\StateMachine\Loader\JSON`.
 ```php
 $statemachine = new StateMachine(new Context(new Identifier('btc-data-generator' , 'blockchain-parsing-machine')));
 $file = __DIR__ . '/machines.json';
@@ -448,7 +448,7 @@ $statemachine->runToCompletion();
 ```
 
 YAML example
-see `assets/json` for an example yaml file definition. The loader is `izzum\loader\YAML`.
+see `assets/json` for an example yaml file definition. The loader is `Izzum\StateMachine\Loader\YAML`.
 ```php
 $statemachine = new StateMachine(new Context(new Identifier('wolverine' , 'mutant-machine')));
 $file = __DIR__ . '/machines.yaml';
@@ -473,7 +473,7 @@ For MongoDB you would store the JSON data (which will internally be converted to
 For Redis you would store the JSON string in the `<configurable-prefix>:configuration:<machine-name>` key if you want to use multiple configurations in different keys. Alternatively, you can store the JSON string in the `<configurable-prefix>:configuration` key if you want to store multiple configurations in one key. The adapter will automatically find the configuration by matching the machine name in the specific key and will fallback to the default key.
 
 For both Adapters it will be easier to maintain multiple machines if you put 1 machine definition in one JSON string.
-see the `tests\izzum\statemachine\persistence\RedisTest` and `tests\izzum\statemachine\persistence\MongoDBTest` for some more details.
+see the `tests\Izzum\StateMachine\Persistence\RedisTest` and `tests\Izzum\StateMachine\Persistence\MongoDBTest` for some more details.
 ```php
 $redis = new Redis('127.0.0.1', 6379);
 $machine = new StateMachine(new Context(new Identifier(1988442, 'crazy-machine'), null, $redis));

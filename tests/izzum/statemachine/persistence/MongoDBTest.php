@@ -1,11 +1,11 @@
 <?php
-namespace izzum\statemachine\persistence;
+namespace Izzum\StateMachine\Persistence;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\StateMachine;
-use izzum\statemachine\Context;
-use izzum\statemachine\Identifier;
+use Izzum\StateMachine\StateMachine;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Identifier;
 /**
  * this test makes use of an active mongod server instance on the localhost listening
  * on port 27017 (the defaults) and database izzum (which will be flused on each test).

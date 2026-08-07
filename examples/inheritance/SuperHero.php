@@ -1,13 +1,13 @@
 <?php
 namespace izzum\examples\inheritance;
-use izzum\statemachine\StateMachine;
-use izzum\statemachine\Transition;
-use izzum\statemachine\Context;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\State;
-use izzum\statemachine\builder\ModelBuilder;
-use izzum\statemachine\builder\izzum\statemachine\builder;
-use izzum\statemachine\utils\Utils;
+use Izzum\StateMachine\StateMachine;
+use Izzum\StateMachine\Transition;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Identifier;
+use Izzum\StateMachine\State;
+use Izzum\StateMachine\Builder\ModelBuilder;
+use Izzum\StateMachine\Builder\Izzum\StateMachine\Builder;
+use Izzum\StateMachine\Utils\Utils;
 /**
  * Example class that uses the 'inheritance mode' as one of the four usage models for the statemachine.
  * The other three usage models being standalone, composition and delegation.
@@ -29,10 +29,10 @@ class SuperHero extends StateMachine {
 		
 		//define the states and the state types, and some entry states
 		$start = new State('start', State::TYPE_INITIAL);
-		$callback_dress_normal_for_entering_state = $this->changeIntoNormalClothes(...);
-		$normal = new State('normal', State::TYPE_NORMAL, null, null, $callback_dress_normal_for_entering_state);
-		$callback_entering_superhero_state = $this->changeIntoCostume(...);
-		$super = new State('superhero', State::TYPE_NORMAL, null, null, $callback_entering_superhero_state);
+		$callbackDressNormalForEnteringState = $this->changeIntoNormalClothes(...);
+		$normal = new State('normal', State::TYPE_NORMAL, null, null, $callbackDressNormalForEnteringState);
+		$callbackEnteringSuperheroState = $this->changeIntoCostume(...);
+		$super = new State('superhero', State::TYPE_NORMAL, null, null, $callbackEnteringSuperheroState);
 		$posing = new State('posing');
 		$fighting = new State('fighting');
 		$resqueing = new State('resqueing');
@@ -67,8 +67,8 @@ class SuperHero extends StateMachine {
 	    $this->printMyAwesomeness(true);
 	}
 	
-	private function printMyAwesomeness($as_superhero = true) {
-	    $name = $as_superhero ? $this->alias : $this->name;
+	private function printMyAwesomeness($asSuperhero = true) {
+	    $name = $asSuperhero ? $this->alias : $this->name;
 	    $output = $name . " says: ";
 	    if(count($this->statistics) == 0) $output .= "... nothing done yet.";
 	    foreach($this->statistics as $key=>$value) {

@@ -1,8 +1,8 @@
 <?php
-namespace izzum\statemachine;
+namespace Izzum\StateMachine;
 use PHPUnit\Framework\TestCase;
 use Codeception\Attribute\Group;
-use izzum\statemachine\persistence\Memory;
+use Izzum\StateMachine\Persistence\Memory;
 
 /**
  * 
@@ -18,66 +18,66 @@ class ContextTest extends TestCase {
      */
     public function testFactoryDefault()
     {
-        $entity_id = "id123";
+        $entityId = "id123";
         $machine = "test-machine";
-        $identifier = new Identifier($entity_id, $machine);
+        $identifier = new Identifier($entityId, $machine);
         
         // only mandatory parameters
         $o = new Context($identifier);
-        $this->assertStringContainsString($entity_id, $o->getId());
+        $this->assertStringContainsString($entityId, $o->getId());
         $this->assertStringContainsString($machine, $o->getId());
-        $this->assertStringContainsString($entity_id, $o->getId(false));
+        $this->assertStringContainsString($entityId, $o->getId(false));
         $this->assertStringContainsString($machine, $o->getId(false));
-        $this->assertStringContainsString($entity_id, $o->getId(true));
+        $this->assertStringContainsString($entityId, $o->getId(true));
         $this->assertStringContainsString($machine, $o->getId(true));
         
-        $this->assertEquals($entity_id, $o->getEntityId());
+        $this->assertEquals($entityId, $o->getEntityId());
         $this->assertEquals($machine, $o->getMachine());
         $this->assertNull($o->getStateMachine());
         // defaulting to database readers and writers
-        $this->assertTrue(is_a($o->getPersistenceAdapter(), 'izzum\statemachine\persistence\Memory'));
-        $this->assertTrue(is_a($o->getBuilder(), 'izzum\statemachine\EntityBuilder'));
+        $this->assertTrue(is_a($o->getPersistenceAdapter(), 'Izzum\StateMachine\Persistence\Memory'));
+        $this->assertTrue(is_a($o->getBuilder(), 'Izzum\StateMachine\EntityBuilder'));
         $this->assertEquals($o->getIdentifier(), $o->getEntity());
 
         $this->assertEquals($o->getIdentifier(), $identifier);
 
-        $this->assertStringContainsString($entity_id, $o->toString());
+        $this->assertStringContainsString($entityId, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
-        $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());
+        $this->assertStringContainsString('Izzum\StateMachine\Context', $o->toString());
         
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
     }
 
     public function testConversionOfContextIdToString()
     {
-        $entity_id = 1;
+        $entityId = 1;
         $machine = 'test';
-        $identifier = new Identifier($entity_id, $machine);
+        $identifier = new Identifier($entityId, $machine);
         $o = new Context($identifier);
-        $this->assertEquals($entity_id, $o->getEntityId());
+        $this->assertEquals($entityId, $o->getEntityId());
         $this->assertEquals("1", $o->getEntityId());
     }
 
     public function testFull()
     {
-        $entity_id = "id";
+        $entityId = "id";
         $machine = "test machine";
-        $identifier = new Identifier($entity_id, $machine);
+        $identifier = new Identifier($entityId, $machine);
         $builder = new EntityBuilder();
         $io = new Memory();
         
         // all parameters
         $o = new Context($identifier, $builder, $io);
-        $this->assertEquals($entity_id, $o->getEntityId());
+        $this->assertEquals($entityId, $o->getEntityId());
         $this->assertEquals($machine, $o->getMachine());
         $this->assertNull($o->getStateMachine());
-        $this->assertTrue(is_a($o->getPersistenceAdapter(), 'izzum\statemachine\persistence\Memory'));
-        $this->assertTrue(is_a($o->getBuilder(), 'izzum\statemachine\EntityBuilder'));
+        $this->assertTrue(is_a($o->getPersistenceAdapter(), 'Izzum\StateMachine\Persistence\Memory'));
+        $this->assertTrue(is_a($o->getBuilder(), 'Izzum\StateMachine\EntityBuilder'));
         $this->assertEquals($o->getIdentifier(), $o->getEntity());
 
-        $this->assertStringContainsString($entity_id, $o->toString());
+        $this->assertStringContainsString($entityId, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
-        $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());
+        $this->assertStringContainsString('Izzum\StateMachine\Context', $o->toString());
         
         // even though we have a valid reader, the state machine does not exist.
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
@@ -104,24 +104,24 @@ class ContextTest extends TestCase {
      */
     public function testContext()
     {
-        $entity_id = "id1";
+        $entityId = "id1";
         $machine = "test machine";
-        $identifier = new Identifier($entity_id, $machine);
+        $identifier = new Identifier($entityId, $machine);
         $builder = new EntityBuilder();
         $io = new Memory();
         
         // all parameters
         $o = new Context($identifier, $builder, $io);
-        $this->assertEquals($entity_id, $o->getEntityId());
+        $this->assertEquals($entityId, $o->getEntityId());
         $this->assertEquals($machine, $o->getMachine());
         $this->assertNull($o->getStateMachine());
-        $this->assertTrue(is_a($o->getPersistenceAdapter(), 'izzum\statemachine\persistence\Memory'));
-        $this->assertTrue(is_a($o->getBuilder(), 'izzum\statemachine\EntityBuilder'));
+        $this->assertTrue(is_a($o->getPersistenceAdapter(), 'Izzum\StateMachine\Persistence\Memory'));
+        $this->assertTrue(is_a($o->getBuilder(), 'Izzum\StateMachine\EntityBuilder'));
         $this->assertEquals($identifier, $o->getEntity());
 
-        $this->assertStringContainsString($entity_id, $o->toString());
+        $this->assertStringContainsString($entityId, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
-        $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());
+        $this->assertStringContainsString('Izzum\StateMachine\Context', $o->toString());
         
         // even though we have a valid reader, the state machine does not exist.
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());

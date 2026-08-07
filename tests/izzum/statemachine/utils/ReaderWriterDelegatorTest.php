@@ -1,16 +1,16 @@
 <?php
-namespace izzum\statemachine\utils;
+namespace Izzum\StateMachine\Utils;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\persistence\Memory;
-use izzum\statemachine\Transition;
-use izzum\statemachine\State;
-use izzum\statemachine\StateMachine;
-use izzum\statemachine\Context;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\Exception;
-use izzum\statemachine\loader\XML;
+use Izzum\StateMachine\Persistence\Memory;
+use Izzum\StateMachine\Transition;
+use Izzum\StateMachine\State;
+use Izzum\StateMachine\StateMachine;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Identifier;
+use Izzum\StateMachine\Exception;
+use Izzum\StateMachine\Loader\XML;
 
 /**
  * 

@@ -1,12 +1,12 @@
 <?php
 namespace izzum\examples\inheritance;
-use izzum\statemachine\Context;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\State;
-use izzum\statemachine\Transition;
-use izzum\statemachine\StateMachine;
-use izzum\statemachine\persistence\Session;
-use izzum\statemachine\utils\Utils;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Identifier;
+use Izzum\StateMachine\State;
+use Izzum\StateMachine\Transition;
+use Izzum\StateMachine\StateMachine;
+use Izzum\StateMachine\Persistence\Session;
+use Izzum\StateMachine\Utils\Utils;
 
 /**
  * Example script that uses the 'standalone mode' as one of the four usage models for the statemachine.
@@ -52,7 +52,7 @@ $machine->run();
 
 //get some data to put in the output
 $current = $machine->getCurrentState();
-$next_transitions = implode(',', $current->getTransitions());
+$nextTransitions = implode(',', $current->getTransitions());
 $next = $current->getTransitions()[0]->getStateTo();
 //generate the ouput
 $output = <<<EOT
@@ -88,7 +88,7 @@ $output = <<<EOT
             The current state for the machine is <span style="color:$current">'$current'</span>
             <br />
             <br />
-            The next transition is '$next_transitions' and the next color of the rainbow will be 
+            The next transition is '$nextTransitions' and the next color of the rainbow will be 
             <a href="http://en.wikipedia.org/wiki/$next" title="see wikipedia for $next" style="color: $next">
             $next. Click to see wikipedia info for the color $next.
             </a>

@@ -1,10 +1,10 @@
 <?php
-namespace izzum\statemachine\builder;
+namespace Izzum\StateMachine\Builder;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\builder\ModelBuilder;
-use izzum\statemachine\Identifier;
+use Izzum\StateMachine\Builder\ModelBuilder;
+use Izzum\StateMachine\Identifier;
 /**
  * 
  * @author rolf

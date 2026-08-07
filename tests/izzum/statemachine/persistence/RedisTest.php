@@ -1,14 +1,14 @@
 <?php
-namespace izzum\statemachine\persistence;
+namespace Izzum\StateMachine\Persistence;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\StateMachine;
-use izzum\statemachine\Context;
-use izzum\statemachine\Exception;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\State;
-use izzum\statemachine\Transition;
+use Izzum\StateMachine\StateMachine;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Exception;
+use Izzum\StateMachine\Identifier;
+use Izzum\StateMachine\State;
+use Izzum\StateMachine\Transition;
 /**
  * this test makes use of an active redis instance on the localhost listening
  * on port 6379 (the defaults) and database 15 (which will be flused on each test)

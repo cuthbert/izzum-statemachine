@@ -1,17 +1,17 @@
 <?php
-namespace izzum\statemachine\utils;
+namespace Izzum\StateMachine\Utils;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\command\Command;
-use izzum\statemachine\builder\ModelBuilder;
-use izzum\statemachine\Transition;
-use izzum\statemachine\State;
-use izzum\statemachine\StateMachine;
-use izzum\statemachine\Context;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\Exception;
-use izzum\statemachine\loader\LoaderArray;
+use Izzum\Command\Command;
+use Izzum\StateMachine\Builder\ModelBuilder;
+use Izzum\StateMachine\Transition;
+use Izzum\StateMachine\State;
+use Izzum\StateMachine\StateMachine;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Identifier;
+use Izzum\StateMachine\Exception;
+use Izzum\StateMachine\Loader\LoaderArray;
 
 /**
  * @author rolf
@@ -23,7 +23,7 @@ class UtilsTest extends TestCase {
     #[Test]
     public function shouldGetCommandWithEntity(){
     
-    	$command_name = 'izzum\statemachine\utils\IncreaseId';
+    	$commandName = 'Izzum\StateMachine\Utils\IncreaseId';
     	$entity = new \stdClass();
     	$entity->id = 0;
     	$entity->event = null;
@@ -31,8 +31,8 @@ class UtilsTest extends TestCase {
     	$context = new Context(new Identifier('1','test'), new ModelBuilder($entity));
     	$event = null;
     	
-    	$command = Utils::getCommand($command_name, $context);
-    	$this->assertTrue(is_a($command, 'izzum\command\Composite'));
+    	$command = Utils::getCommand($commandName, $context);
+    	$this->assertTrue(is_a($command, 'Izzum\Command\Composite'));
     	$this->assertStringContainsString('IncreaseId', $command->toString());
     	$this->assertEquals(0, $entity->id);
     	$command->execute();
@@ -126,7 +126,7 @@ class UtilsTest extends TestCase {
     public function shouldGetCompositeCommand(){
     
     	//id should be increased three times
-    	$command_name = 'izzum\statemachine\utils\IncreaseId,izzum\statemachine\utils\IncreaseId,izzum\statemachine\utils\IncreaseId';
+    	$commandName = 'Izzum\StateMachine\Utils\IncreaseId,Izzum\StateMachine\Utils\IncreaseId,Izzum\StateMachine\Utils\IncreaseId';
     	$entity = new \stdClass();
     	$entity->id = 0;
     	$entity->event = null;
@@ -134,8 +134,8 @@ class UtilsTest extends TestCase {
     	$context = new Context(new Identifier('1','test'), new ModelBuilder($entity));
     	$event = 'event';
     
-    	$command = Utils::getCommand($command_name, $context);
-    	$this->assertTrue(is_a($command, 'izzum\command\Composite'));
+    	$command = Utils::getCommand($commandName, $context);
+    	$this->assertTrue(is_a($command, 'Izzum\Command\Composite'));
     	$this->assertStringContainsString('IncreaseId', $command->toString());
     	$this->assertEquals(0, $entity->id);
     	$command->execute();
@@ -147,27 +147,27 @@ class UtilsTest extends TestCase {
     #[Test]
     public function shouldGetNullCommand(){
     
-    	$command_name = '';
+    	$commandName = '';
     	$context = new Context(new Identifier('1','test'));
     	 
-    	$command = Utils::getCommand($command_name, $context);
-    	$this->assertTrue(is_a($command, 'izzum\command\NullCommand'));
+    	$command = Utils::getCommand($commandName, $context);
+    	$this->assertTrue(is_a($command, 'Izzum\Command\NullCommand'));
     	
-    	$command_name = null;
+    	$commandName = null;
     	$context = new Context(new Identifier('1','test'));
     	
-    	$command = Utils::getCommand($command_name, $context);
-    	$this->assertTrue(is_a($command, 'izzum\command\NullCommand'));
+    	$command = Utils::getCommand($commandName, $context);
+    	$this->assertTrue(is_a($command, 'Izzum\Command\NullCommand'));
     	 
     }
     
     #[Test]
     public function shouldGetExceptionForInvalidCommand(){
-    	$command_name = 'izzum\statemachine\utils\CannotCreate';
+    	$commandName = 'Izzum\StateMachine\Utils\CannotCreate';
     	$context = new Context(new Identifier('1','test'));
     	
     	try {
-    		$command = Utils::getCommand($command_name, $context);
+    		$command = Utils::getCommand($commandName, $context);
     		$this->fail('should not come here, command should throw exception on failure');
     	} catch (Exception $e) {
     		$this->assertEquals(Exception::COMMAND_CREATION_FAILURE, $e->getCode());
@@ -180,11 +180,11 @@ class UtilsTest extends TestCase {
     #[Test]
     public function shouldGetExceptionForNonExistingCommand(){
     
-    	$command_name = 'bogus';
+    	$commandName = 'bogus';
     	$context = new Context(new Identifier('1','test'));
     
     	try {
-    		$command = Utils::getCommand($command_name, $context);
+    		$command = Utils::getCommand($commandName, $context);
     		$this->fail('should not come here, command does not exist');
     	} catch (Exception $e) {
     		$this->assertEquals(Exception::COMMAND_CREATION_FAILURE, $e->getCode());
@@ -203,7 +203,7 @@ class UtilsTest extends TestCase {
         } catch (\Exception $e) {
             $this->assertEquals(1, $e->getCode());
             $this->assertEquals('test', $e->getMessage());
-            $this->assertTrue(is_a($e, '\izzum\statemachine\Exception'));
+            $this->assertTrue(is_a($e, '\Izzum\StateMachine\Exception'));
         }
         
     }

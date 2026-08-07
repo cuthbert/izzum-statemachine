@@ -1,7 +1,7 @@
 <?php
 namespace izzum\examples\trafficlight;
-use izzum\statemachine\EntityBuilder;
-use \izzum\statemachine\Identifier;
+use Izzum\StateMachine\EntityBuilder;
+use \Izzum\StateMachine\Identifier;
 /**
  * The builder for our Context object.
  * It returns the TrafficLight domain object and will cache it

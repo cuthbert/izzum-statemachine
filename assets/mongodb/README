@@ -3,7 +3,7 @@ MongoDB is an open-source document database (nosql)
 The MongoDB persistence adapter can be used and configured for your mongo instances.
 It uses a php basis extension (module). 
 
-the MongoDB implementation for a backend persistence adapter is in izzum\statemachine\persistence\MongoDB
+the MongoDB implementation for a backend persistence adapter is in Izzum\StateMachine\Persistence\MongoDB
 See that file's comments for more information on how to use it and where to find more information.
 a screenshot is present in this directory that contains a view on the data stored.
 

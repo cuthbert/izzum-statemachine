@@ -1,6 +1,6 @@
 <?php
 namespace izzum\examples\trafficlight;
-use izzum\statemachine\utils\PlantUml;
+use Izzum\StateMachine\Utils\PlantUml;
 
 require_once ('../autoload.php');
 /**

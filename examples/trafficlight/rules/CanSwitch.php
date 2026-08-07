@@ -1,6 +1,6 @@
 <?php
 namespace izzum\examples\trafficlight\rules;
-use izzum\rules\Rule;
+use Izzum\Rules\Rule;
 use izzum\examples\trafficlight\TrafficLight;
 /**
  * This rule checks if a traffic light can switch.

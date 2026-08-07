@@ -1,12 +1,12 @@
 <?php
-namespace izzum\statemachine\loader;
+namespace Izzum\StateMachine\Loader;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\StateMachine;
-use izzum\statemachine\Context;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\Exception;
+use Izzum\StateMachine\StateMachine;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Identifier;
+use Izzum\StateMachine\Exception;
 
 /**
  *
@@ -146,8 +146,8 @@ class JSONTest extends TestCase {
         {
           "name": "b",
           "type": "normal",
-          "entry_command": "izzum\\\\command\\\\NullCommand",
-          "exit_command": "izzum\\\\command\\\\NullCommand",
+          "entry_command": "Izzum\\\\Command\\\\NullCommand",
+          "exit_command": "Izzum\\\\Command\\\\NullCommand",
           "entry_callable": "Static::method",
           "exit_callable": "Static::method",
           "description": "state b description"
@@ -155,8 +155,8 @@ class JSONTest extends TestCase {
         {
           "name": "done",
           "type": "final",
-          "entry_command": "izzum\\\\command\\\\NullCommand",
-          "exit_command": "izzum\\\\command\\\\NullCommand",
+          "entry_command": "Izzum\\\\Command\\\\NullCommand",
+          "exit_command": "Izzum\\\\Command\\\\NullCommand",
           "entry_callable": "Static::method",
           "exit_callable": null,
           "description": "state done description"
@@ -166,8 +166,8 @@ class JSONTest extends TestCase {
         {
           "state_from": "a",
           "state_to": "b",
-          "rule": "izzum\\\\rules\\\\TrueRule",
-          "command": "izzum\\\\command\\\\NullCommand",
+          "rule": "Izzum\\\\Rules\\\\TrueRule",
+          "command": "Izzum\\\\Command\\\\NullCommand",
           "guard_callable": "Static::guard",
           "transition_callable": "Static::method",
           "event": "ab",

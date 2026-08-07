@@ -1,6 +1,6 @@
 <?php
 namespace izzum\examples\trafficlight\command;
-use izzum\command\Command;
+use Izzum\Command\Command;
 use izzum\examples\trafficlight\TrafficLight;
 /**
  * Switcher functions as a superclass for all our

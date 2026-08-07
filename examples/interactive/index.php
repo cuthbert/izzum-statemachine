@@ -1,10 +1,10 @@
 <?php
 namespace izzum\examples\interactive;
-use izzum\statemachine\Context;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\State;
-use izzum\statemachine\Transition;
-use izzum\statemachine\StateMachine;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Identifier;
+use Izzum\StateMachine\State;
+use Izzum\StateMachine\Transition;
+use Izzum\StateMachine\StateMachine;
 require_once('../autoload.php');
 /**
  * Example script that uses the 'standalone mode' as one of the four usage models for the statemachine.

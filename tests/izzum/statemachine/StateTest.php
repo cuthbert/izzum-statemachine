@@ -1,5 +1,5 @@
 <?php
-namespace izzum\statemachine;
+namespace Izzum\StateMachine;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -118,9 +118,9 @@ class StateTest extends TestCase {
     {
         // scenario 1
         $context = new Context(new Identifier('1', 'test'));
-        $command_name = 'izzum\command\ExceptionCommand';
-        $state = new State('a', State::TYPE_INITIAL, $command_name);
-        $this->assertEquals($command_name, $state->getEntryCommandName());
+        $commandName = 'Izzum\Command\ExceptionCommand';
+        $state = new State('a', State::TYPE_INITIAL, $commandName);
+        $this->assertEquals($commandName, $state->getEntryCommandName());
         $this->assertEquals('', $state->getExitCommandName());
         
         try {
@@ -135,9 +135,9 @@ class StateTest extends TestCase {
         
         // scenario 2
         $context = new Context(new Identifier('1', 'test'));
-        $command_name = 'izzum\command\ExceptionCommand';
-        $state = new State('a', State::TYPE_INITIAL, State::COMMAND_EMPTY, $command_name);
-        $this->assertEquals($command_name, $state->getExitCommandName());
+        $commandName = 'Izzum\Command\ExceptionCommand';
+        $state = new State('a', State::TYPE_INITIAL, State::COMMAND_EMPTY, $commandName);
+        $this->assertEquals($commandName, $state->getExitCommandName());
         $this->assertEquals('', $state->getEntryCommandName());
         
         // null command
@@ -156,9 +156,9 @@ class StateTest extends TestCase {
     {
         // scenario 1
         $context = new Context(new Identifier('1', 'test'));
-        $command_name = 'izzum\command\bogus';
-        $state = new State('a', State::TYPE_INITIAL, $command_name);
-        $this->assertEquals($command_name, $state->getEntryCommandName());
+        $commandName = 'Izzum\Command\bogus';
+        $state = new State('a', State::TYPE_INITIAL, $commandName);
+        $this->assertEquals($commandName, $state->getEntryCommandName());
         $this->assertEquals('', $state->getExitCommandName());
         
         try {
@@ -173,9 +173,9 @@ class StateTest extends TestCase {
         
         // scenario 2
         $context = new Context(new Identifier('1', 'test'));
-        $command_name = 'izzum\command\bogus';
-        $state = new State('a', State::TYPE_INITIAL, State::COMMAND_EMPTY, $command_name);
-        $this->assertEquals($command_name, $state->getExitCommandName());
+        $commandName = 'Izzum\Command\bogus';
+        $state = new State('a', State::TYPE_INITIAL, State::COMMAND_EMPTY, $commandName);
+        $this->assertEquals($commandName, $state->getExitCommandName());
         $this->assertEquals('', $state->getEntryCommandName());
         
         // null command

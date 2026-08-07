@@ -1,11 +1,11 @@
 <?php
-namespace izzum\statemachine;
+namespace Izzum\StateMachine;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\Transition;
-use izzum\statemachine\Exception;
-use izzum\rules\Exception as ExceptionInRulePackage;
+use Izzum\StateMachine\Transition;
+use Izzum\StateMachine\Exception;
+use Izzum\Rules\Exception as ExceptionInRulePackage;
 
 /**
  *
@@ -20,8 +20,8 @@ class TransitionTest extends TestCase {
     {
         $from = new State('a');
         $to = new State('b');
-        $rule = 'izzum\rules\TrueRule';
-        $command = 'izzum\command\NullCommand';
+        $rule = 'Izzum\Rules\TrueRule';
+        $command = 'Izzum\Command\NullCommand';
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule, $command);
         $this->assertEquals($from . '_to_' . $to, $transition->getName());
@@ -30,8 +30,8 @@ class TransitionTest extends TestCase {
         $this->assertStringContainsString($transition->getName(), $transition->toString());
         $command = $transition->getCommand($object);
         $rule = $transition->getRule($object);
-        $this->assertTrue(is_a($command, 'izzum\command\Composite'), $command::class);
-        $this->assertTrue(is_a($rule, 'izzum\rules\AndRule'));
+        $this->assertTrue(is_a($command, 'Izzum\Command\Composite'), $command::class);
+        $this->assertTrue(is_a($rule, 'Izzum\Rules\AndRule'));
 
 
         $this->assertEquals('', $transition->getDescription());
@@ -56,8 +56,8 @@ class TransitionTest extends TestCase {
     {
         $a = new State('a');
         $b = new State('b');
-        $a_copy = new State('a');
-        $b_copy = new State('b');
+        $aCopy = new State('a');
+        $bCopy = new State('b');
         $event = 'my-event';
         $rule = 'foo-rule';
         $command = 'foo-command';
@@ -67,10 +67,10 @@ class TransitionTest extends TestCase {
         $t = new Transition($a, $b, $event, $rule, $command, $gc, $tc);
         $t->setDescription($description);
 
-        $copy = $t->getCopy($a_copy, $b_copy);
+        $copy = $t->getCopy($aCopy, $bCopy);
 
-        $this->assertNotSame($a, $a_copy);
-        $this->assertNotSame($b, $b_copy);
+        $this->assertNotSame($a, $aCopy);
+        $this->assertNotSame($b, $bCopy);
         $this->assertNotSame($copy, $t);
 
         $this->assertEquals($description, $copy->getDescription());
@@ -153,8 +153,8 @@ class TransitionTest extends TestCase {
         $from = new State('a');
         $to = new State('b');
         $context = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
-        $rule = 'izzum\rules\ExceptionOnConstructionRule';
-        $command = 'izzum\command\ExceptionOnConstructionCommand';
+        $rule = 'Izzum\Rules\ExceptionOnConstructionRule';
+        $command = 'Izzum\Command\ExceptionOnConstructionCommand';
         $transition = new Transition($from, $to, null, $rule, $command);
         try {
             $transition->getRule($context);
@@ -204,8 +204,8 @@ class TransitionTest extends TestCase {
     {
         $from = new State('a');
         $to = new State('b');
-        $rule = 'izzum\rules\FalseRule';
-        $command = 'izzum\command\SimpleCommand'; // declared in this file
+        $rule = 'Izzum\Rules\FalseRule';
+        $command = 'Izzum\Command\SimpleCommand'; // declared in this file
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule, $command);
         $this->assertEquals($from . '_to_' . $to, $transition->getName());
@@ -214,9 +214,9 @@ class TransitionTest extends TestCase {
         $this->assertStringContainsString($transition->getName(), $transition->toString());
         $command = $transition->getCommand($object);
         $rule = $transition->getRule($object);
-        $this->assertTrue(is_a($command, 'izzum\command\Composite'));
-        $this->assertStringContainsString('izzum\command\SimpleCommand', $command->toString());
-        $this->assertTrue(is_a($rule, 'izzum\rules\AndRule'));
+        $this->assertTrue(is_a($command, 'Izzum\Command\Composite'));
+        $this->assertStringContainsString('Izzum\Command\SimpleCommand', $command->toString());
+        $this->assertTrue(is_a($rule, 'Izzum\Rules\AndRule'));
         $this->assertFalse($rule->applies());
     }
 
@@ -226,14 +226,14 @@ class TransitionTest extends TestCase {
         $from = new State('a');
         $to = new State('b');
         $rule = Transition::RULE_EMPTY;
-        $command = 'izzum\command\SimpleCommand,izzum\command\NullCommand';
+        $command = 'Izzum\Command\SimpleCommand,Izzum\Command\NullCommand';
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule, $command);
         $command = $transition->getCommand($object);
-        $this->assertTrue(is_a($command, 'izzum\command\Composite'));
-        $this->assertStringContainsString('izzum\command\SimpleCommand', $command->toString());
-        $this->assertStringContainsString('izzum\command\NullCommand', $command->toString());
-        $this->assertEquals('izzum\command\Composite consisting of: [izzum\command\SimpleCommand, izzum\command\NullCommand]', $command->toString());
+        $this->assertTrue(is_a($command, 'Izzum\Command\Composite'));
+        $this->assertStringContainsString('Izzum\Command\SimpleCommand', $command->toString());
+        $this->assertStringContainsString('Izzum\Command\NullCommand', $command->toString());
+        $this->assertEquals('Izzum\Command\Composite consisting of: [Izzum\Command\SimpleCommand, Izzum\Command\NullCommand]', $command->toString());
     }
 
     #[Test]
@@ -241,14 +241,14 @@ class TransitionTest extends TestCase {
     {
         $from = new State('a');
         $to = new State('b');
-        $rule = 'izzum\rules\TrueRule,izzum\rules\FalseRule';
-        $command = 'izzum\command\SimpleCommand'; // declared in this file
+        $rule = 'Izzum\Rules\TrueRule,Izzum\Rules\FalseRule';
+        $command = 'Izzum\Command\SimpleCommand'; // declared in this file
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule);
         $rule = $transition->getRule($object);
-        $this->assertTrue(is_a($rule, 'izzum\rules\AndRule'));
+        $this->assertTrue(is_a($rule, 'Izzum\Rules\AndRule'));
         $this->assertFalse($rule->applies());
-        $this->assertEquals('((izzum\rules\TrueRule and izzum\rules\TrueRule) and izzum\rules\FalseRule)', $rule->toString());
+        $this->assertEquals('((Izzum\Rules\TrueRule and Izzum\Rules\TrueRule) and Izzum\Rules\FalseRule)', $rule->toString());
     }
 
     #[Test]
@@ -256,8 +256,8 @@ class TransitionTest extends TestCase {
     {
         $from = new State('a');
         $to = new State('b');
-        $rule = 'izzum\rules\BOGUS';
-        $command = 'izzum\command\BOGUS';
+        $rule = 'Izzum\Rules\BOGUS';
+        $command = 'Izzum\Command\BOGUS';
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule, $command);
         $this->assertEquals($from . '_to_' . $to, $transition->getName());
@@ -283,8 +283,8 @@ class TransitionTest extends TestCase {
     {
         $from = new State('a');
         $to = new State('b');
-        $rule = 'izzum\rules\TrueRule';
-        $command = 'izzum\command\NullCommand';
+        $rule = 'Izzum\Rules\TrueRule';
+        $command = 'Izzum\Command\NullCommand';
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule, $command);
         $this->assertTrue($transition->can($object));
@@ -296,8 +296,8 @@ class TransitionTest extends TestCase {
     {
         $from = new State('a');
         $to = new State('b');
-        $rule = 'izzum\rules\FalseRule';
-        $command = 'izzum\command\NullCommand';
+        $rule = 'Izzum\Rules\FalseRule';
+        $command = 'Izzum\Command\NullCommand';
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule, $command);
         $this->assertFalse($transition->can($object));
@@ -311,10 +311,10 @@ class TransitionTest extends TestCase {
         $event = 'foo';
         $a = new State('a');
         $b = new State('b');
-        $guard_callable = (fn($entity) => false);
+        $guardCallable = (fn($entity) => false);
 
         //scenario 1. inject in constructor
-        $t = new Transition($a, $b, $event, null, null, $guard_callable);
+        $t = new Transition($a, $b, $event, null, null, $guardCallable);
         $this->assertFalse($t->can($context));
         $t->setGuardCallable(Transition::CALLABLE_NULL);
         $this->assertTrue($t->can($context));
@@ -322,13 +322,13 @@ class TransitionTest extends TestCase {
         //scenario 2. do not inject in constructor
         $t = new Transition($a, $b, $event);
         $this->assertTrue($t->can($context));
-        $t->setGuardCallable($guard_callable);
+        $t->setGuardCallable($guardCallable);
         $this->assertFalse($t->can($context));
 
 
         //scenario 3. callable does not return a boolean
-        $guard_callable = function($entity): void {};
-        $t = new Transition($a, $b, $event, null, null, $guard_callable);
+        $guardCallable = function($entity): void {};
+        $t = new Transition($a, $b, $event, null, null, $guardCallable);
         $this->assertFalse($t->can($context));
     }
 
@@ -340,8 +340,8 @@ class TransitionTest extends TestCase {
         $a = new State('a');
         $b = new State('b');
         $x = 0;
-        $transition_callable = function($entity): void  {$entity->setEntityId('234');};
-        $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
+        $transitionCallable = function($entity): void  {$entity->setEntityId('234');};
+        $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         $this->assertEquals('123', $context->getEntityId());
         $t->process($context);
         $this->assertEquals('234', $context->getEntityId());
@@ -363,8 +363,8 @@ class TransitionTest extends TestCase {
 
 
         //scenario 1: Closure without variables from the parent scope
-        $transition_callable = function($entity): void  {$entity->setEntityId('234');};
-        $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
+        $transitionCallable = function($entity): void  {$entity->setEntityId('234');};
+        $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         $this->assertEquals('123', $context->getEntityId());
         $t->process($context);
         $this->assertEquals('234', $context->getEntityId());
@@ -372,8 +372,8 @@ class TransitionTest extends TestCase {
 
         //scenario 2: Closure with Inheriting variables from the parent scope
         $x = 4;
-        $transition_callable = function($entity) use (&$x): void { $x+=1;};
-        $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
+        $transitionCallable = function($entity) use (&$x): void { $x+=1;};
+        $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         $this->assertEquals(4, $x);
         $t->process($context);
         $this->assertEquals(5, $x);
@@ -387,18 +387,18 @@ class TransitionTest extends TestCase {
 
         //scenario 4: instance method invocation (method as string)
         $helper = new CallableHelper();
-        $transition_callable = $helper->increaseInstanceId(...);
-        $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
-        $this->assertEquals(0, $helper->instance_id);
+        $transitionCallable = $helper->increaseInstanceId(...);
+        $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
+        $this->assertEquals(0, $helper->instanceId);
         $t->process($context);
-        $this->assertEquals(1, $helper->instance_id);
+        $this->assertEquals(1, $helper->instanceId);
         $t->process($context);
-        $this->assertEquals(2, $helper->instance_id);
+        $this->assertEquals(2, $helper->instanceId);
 
         //scenario 5: static method invocation in array (use fully qualified name)
         $helper = new CallableHelper();
-        $transition_callable = ['izzum\statemachine\CallableHelper', 'increaseId'];
-        $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
+        $transitionCallable = ['Izzum\StateMachine\CallableHelper', 'increaseId'];
+        $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         $this->assertEquals(0, CallableHelper::$id);
         $t->process($context);
         $this->assertEquals(1, CallableHelper::$id);
@@ -406,8 +406,8 @@ class TransitionTest extends TestCase {
         //scenario 6: static method invocation in string (use fully qualified name)
         //THIS IS THE WAY TO be able to specify a callable in a configuration file.
         $helper = new CallableHelper();
-        $transition_callable = 'izzum\statemachine\CallableHelper::increaseId';
-        $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
+        $transitionCallable = 'Izzum\StateMachine\CallableHelper::increaseId';
+        $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         $this->assertEquals(1, CallableHelper::$id);
         $t->process($context);
         $this->assertEquals(2, CallableHelper::$id);
@@ -439,8 +439,8 @@ class TransitionTest extends TestCase {
 
 
         //scenario 5: static method invocation in array (use fully qualified name)
-        $transition_callable = ['Foo', 'Bar'];
-        $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
+        $transitionCallable = ['Foo', 'Bar'];
+        $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         try {
             $t->process($context);
             $this->fail('should not come here');
@@ -450,8 +450,8 @@ class TransitionTest extends TestCase {
 
         //scenario 6: static method invocation in string (use fully qualified name)
         //THIS IS THE WAY TO be able to specify a callable in a configuration file.
-        $transition_callable = 'Foo::Bar';
-        $t = new Transition($a, $b, $event, null, null, null, $transition_callable);
+        $transitionCallable = 'Foo::Bar';
+        $t = new Transition($a, $b, $event, null, null, null, $transitionCallable);
         try {
             $t->process($context);
             $this->fail('should not come here');
@@ -460,8 +460,8 @@ class TransitionTest extends TestCase {
         }
 
         //guard should fail
-        $guard_callable = 'Foo::Bar';
-        $t = new Transition($a, $b, $event, null, null, $guard_callable, $transition_callable);
+        $guardCallable = 'Foo::Bar';
+        $t = new Transition($a, $b, $event, null, null, $guardCallable, $transitionCallable);
         try {
             $t->can($context);
             $this->fail('should not come here');
@@ -477,8 +477,8 @@ class TransitionTest extends TestCase {
     {
         $from = new State('a');
         $to = new State('b');
-        $rule = 'izzum\rules\ExceptionRule';
-        $command = 'izzum\command\NullCommand';
+        $rule = 'Izzum\Rules\ExceptionRule';
+        $command = 'Izzum\Command\NullCommand';
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule, $command);
         try {
@@ -496,8 +496,8 @@ class TransitionTest extends TestCase {
     {
         $from = new State('a');
         $to = new State('b');
-        $rule = 'izzum\rules\TrueRule';
-        $command = 'izzum\command\ExceptionCommand';
+        $rule = 'Izzum\Rules\TrueRule';
+        $command = 'Izzum\Command\ExceptionCommand';
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $transition = new Transition($from, $to, null, $rule, $command);
         try {
@@ -512,28 +512,28 @@ class TransitionTest extends TestCase {
 class CallableHelper {
     //used to check that callables using static/instance method invocation work
     public static $id = 0;
-    public $instance_id = 0;
+    public $instanceId = 0;
     public static function increaseId($entity) {
         self::$id++;
     }
 
     public function increaseInstanceId($entity) {
-        $this->instance_id++;
+        $this->instanceId++;
     }
 }
 
-namespace izzum\command;
+namespace Izzum\Command;
 
-class SimpleCommand extends \izzum\command\Command {
+class SimpleCommand extends \Izzum\Command\Command {
 
     protected function _execute()
     {
         // nothing
     }
 }
-namespace izzum\command;
+namespace Izzum\Command;
 
-class ExceptionOnConstructionCommand extends \izzum\command\Command {
+class ExceptionOnConstructionCommand extends \Izzum\Command\Command {
 
     public function __construct()
     {
@@ -545,9 +545,9 @@ class ExceptionOnConstructionCommand extends \izzum\command\Command {
         // nothing
     }
 }
-namespace izzum\rules;
+namespace Izzum\Rules;
 
-class ExceptionOnConstructionRule extends \izzum\rules\Rule {
+class ExceptionOnConstructionRule extends \Izzum\Rules\Rule {
 
     public function __construct()
     {

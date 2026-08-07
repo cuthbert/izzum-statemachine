@@ -1,9 +1,9 @@
 <?php
-namespace izzum\statemachine\utils;
+namespace Izzum\StateMachine\Utils;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\utils\ExternalData;
+use Izzum\StateMachine\Utils\ExternalData;
 
 /**
  * @author rolf
@@ -18,24 +18,24 @@ class ExternalDataTest extends TestCase {
         //cleanup
         ExternalData::clear();
         
-        $test_string = 'test';
-        $test_array = ['test', 'test'];
+        $testString = 'test';
+        $testArray = ['test', 'test'];
         $this->assertFalse(ExternalData::has());
         $this->assertNull(ExternalData::get());
         
-        ExternalData::set($test_string);
+        ExternalData::set($testString);
         $this->assertTrue(ExternalData::has());
-        $this->assertEquals($test_string, ExternalData::get());
-        $this->assertEquals($test_string, ExternalData::get(), 'call it twice, still has context');
+        $this->assertEquals($testString, ExternalData::get());
+        $this->assertEquals($testString, ExternalData::get(), 'call it twice, still has context');
         
         ExternalData::clear();
         $this->assertFalse(ExternalData::has());
         $this->assertNull(ExternalData::get());
         
-        ExternalData::set($test_array);
+        ExternalData::set($testArray);
         $this->assertTrue(ExternalData::has());
-        $this->assertEquals($test_array, ExternalData::get());
-        $this->assertEquals($test_array, ExternalData::get(), 'call it twice, still has context');
+        $this->assertEquals($testArray, ExternalData::get());
+        $this->assertEquals($testArray, ExternalData::get(), 'call it twice, still has context');
         
         //cleanup
         ExternalData::clear();

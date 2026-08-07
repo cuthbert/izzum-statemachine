@@ -1,15 +1,15 @@
 <?php
-namespace izzum\statemachine;
+namespace Izzum\StateMachine;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\Transition;
-use izzum\statemachine\Exception;
-use izzum\statemachine\Context;
-use izzum\statemachine\persistence\Memory;
-use izzum\statemachine\utils\PlantUml;
-use izzum\statemachine\loader\LoaderArray;
-use izzum\statemachine\builder\ModelBuilder;
+use Izzum\StateMachine\Transition;
+use Izzum\StateMachine\Exception;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\Persistence\Memory;
+use Izzum\StateMachine\Utils\PlantUml;
+use Izzum\StateMachine\Loader\LoaderArray;
+use Izzum\StateMachine\Builder\ModelBuilder;
 
 /**
  * 
@@ -85,51 +85,51 @@ class StateMachineTest extends TestCase {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($object);
         
-        $s_new = new State(State::STATE_NEW, State::TYPE_INITIAL);
-        $s_a = new State('a', State::TYPE_NORMAL);
-        $s_b = new State('b', State::TYPE_NORMAL);
-        $s_c = new State('c', State::TYPE_NORMAL);
-        $s_d = new State('d', State::TYPE_NORMAL);
-        $s_done = new State(State::STATE_DONE, State::TYPE_FINAL);
+        $sNew = new State(State::STATE_NEW, State::TYPE_INITIAL);
+        $sA = new State('a', State::TYPE_NORMAL);
+        $sB = new State('b', State::TYPE_NORMAL);
+        $sC = new State('c', State::TYPE_NORMAL);
+        $sD = new State('d', State::TYPE_NORMAL);
+        $sDone = new State(State::STATE_DONE, State::TYPE_FINAL);
         
-        $t_new_to_a = new Transition($s_new, $s_a, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_a_to_b = new Transition($s_a, $s_b, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_b_to_c = new Transition($s_b, $s_c, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_b_to_d = new Transition($s_b, $s_d, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
-        $t_c_to_d = new Transition($s_c, $s_d, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_d_done = new Transition($s_d, $s_done, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tNewToA = new Transition($sNew, $sA, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tAToB = new Transition($sA, $sB, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tBToC = new Transition($sB, $sC, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tBToD = new Transition($sB, $sD, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
+        $tCToD = new Transition($sC, $sD, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tDDone = new Transition($sD, $sDone, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
         
-        $this->assertEquals(1, $machine->addTransition($t_new_to_a));
+        $this->assertEquals(1, $machine->addTransition($tNewToA));
         $this->assertCount(2, $machine->getStates());
         $this->assertCount(1, $machine->getTransitions());
         
-        $this->assertEquals(1, $machine->addTransition($t_a_to_b));
+        $this->assertEquals(1, $machine->addTransition($tAToB));
         $this->assertCount(3, $machine->getStates());
         $this->assertCount(2, $machine->getTransitions());
         
-        $machine->addTransition($t_b_to_c);
+        $machine->addTransition($tBToC);
         $this->assertCount(4, $machine->getStates());
         $this->assertCount(3, $machine->getTransitions());
         
-        $machine->addTransition($t_b_to_d);
+        $machine->addTransition($tBToD);
         $this->assertCount(5, $machine->getStates());
         $this->assertCount(4, $machine->getTransitions());
         
-        $machine->addTransition($t_c_to_d);
+        $machine->addTransition($tCToD);
         $this->assertCount(5, $machine->getStates());
         $this->assertCount(5, $machine->getTransitions());
         
-        $machine->addTransition($t_d_done);
+        $machine->addTransition($tDDone);
         $this->assertCount(6, $machine->getStates());
         $this->assertCount(6, $machine->getTransitions());
         
         // same, should not be added again
-        $this->assertEquals(0, $machine->addTransition($t_d_done));
+        $this->assertEquals(0, $machine->addTransition($tDDone));
         $this->assertCount(6, $machine->getStates());
         $this->assertCount(6, $machine->getTransitions());
         
         // same, should not be added again
-        $this->assertEquals(0,$machine->addTransition($t_b_to_c));
+        $this->assertEquals(0,$machine->addTransition($tBToC));
         $this->assertCount(6, $machine->getStates());
         $this->assertCount(6, $machine->getTransitions());
     }
@@ -158,7 +158,7 @@ class StateMachineTest extends TestCase {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($object);
         
-        $regex_from_all = new State('regex:/.+/'); // regex: all states
+        $regexFromAll = new State('regex:/.+/'); // regex: all states
         $a = new State('a', State::TYPE_INITIAL);
         $done = new State('done', State::TYPE_FINAL);
         $b = new State('b');
@@ -170,7 +170,7 @@ class StateMachineTest extends TestCase {
         $machine->addTransition(new Transition($b, $c));
         $machine->addTransition(new Transition($c, $d));
         $machine->addTransition(new Transition($d, $e));
-        $this->assertEquals(4, $machine->addTransition(new Transition($regex_from_all, $done)), '5 to done, but a to done was already added');
+        $this->assertEquals(4, $machine->addTransition(new Transition($regexFromAll, $done)), '5 to done, but a to done was already added');
         // echo "TRANSITIONS" . PHP_EOL;
         // echo implode(',', $machine->getTransitions());
         $this->assertNotNull($machine->getTransition('a_to_b'));
@@ -193,18 +193,18 @@ class StateMachineTest extends TestCase {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($object);
     
-        $regex_all = new State('regex:/.+/'); // regex: all states
+        $regexAll = new State('regex:/.+/'); // regex: all states
         $a = new State('a', State::TYPE_INITIAL);
         $b = new State('b');
         $c = new State('c');
         $this->assertCount(0, $machine->getStates());
-        $this->assertEquals(0, $machine->addTransition(new Transition($regex_all, $regex_all), true), 'no valid states known to the machine');
+        $this->assertEquals(0, $machine->addTransition(new Transition($regexAll, $regexAll), true), 'no valid states known to the machine');
         $this->assertTrue($machine->addState($a));
         $this->assertTrue($machine->addState($b));
         $this->assertTrue($machine->addState($c));
-        $this->assertFalse($machine->addState($regex_all), 'no regex states allowed');
+        $this->assertFalse($machine->addState($regexAll), 'no regex states allowed');
         $this->assertCount(3, $machine->getStates());
-        $this->assertEquals(9, $machine->addTransition(new Transition($regex_all, $regex_all), true), 'create full mesh with self transitions');
+        $this->assertEquals(9, $machine->addTransition(new Transition($regexAll, $regexAll), true), 'create full mesh with self transitions');
 
         $this->assertNotNull($machine->getTransition('a_to_a'));
         $this->assertNotNull($machine->getTransition('a_to_b'));
@@ -224,17 +224,17 @@ class StateMachineTest extends TestCase {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($object);
     
-        $regex_all = new State('regex:/.+/'); // regex: all states
+        $regexAll = new State('regex:/.+/'); // regex: all states
         $a = new State('a', State::TYPE_INITIAL);
         $b = new State('b');
         $c = new State('c');
         $this->assertCount(0, $machine->getStates());
-        $this->assertEquals(0, $machine->addTransition(new Transition($regex_all, $regex_all)), 'no valid states known to the machine');
+        $this->assertEquals(0, $machine->addTransition(new Transition($regexAll, $regexAll)), 'no valid states known to the machine');
         $this->assertTrue($machine->addState($a));
         $this->assertTrue($machine->addState($b));
         $this->assertTrue($machine->addState($c));
         $this->assertCount(3, $machine->getStates());
-        $this->assertEquals(6, $machine->addTransition(new Transition($regex_all, $regex_all)), 'create mesh with self transitions');
+        $this->assertEquals(6, $machine->addTransition(new Transition($regexAll, $regexAll)), 'create mesh with self transitions');
     
         $this->assertNull($machine->getTransition('a_to_a'));
         $this->assertNotNull($machine->getTransition('a_to_b'));
@@ -254,7 +254,7 @@ class StateMachineTest extends TestCase {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($object);
     
-        $regex_all = new State('regex:/.+/'); // regex: all states
+        $regexAll = new State('regex:/.+/'); // regex: all states
         $a = new State('a', State::TYPE_INITIAL);
         $b = new State('b');
         $c = new State('c');
@@ -267,7 +267,7 @@ class StateMachineTest extends TestCase {
         $this->assertFalse($machine->addState($b));
         $this->assertFalse($machine->addState($c));
         $this->assertCount(3, $machine->getStates());
-        $this->assertFalse($machine->addState($regex_all), 'cannot add regex state');
+        $this->assertFalse($machine->addState($regexAll), 'cannot add regex state');
         $this->assertCount(3, $machine->getStates());
     }
     
@@ -278,14 +278,14 @@ class StateMachineTest extends TestCase {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new SubClassedStateMachine($object);
     
-        $regex_all = new State('regex:/.+/'); // regex: all states
+        $regexAll = new State('regex:/.+/'); // regex: all states
         $a = new State('a', State::TYPE_INITIAL);
         $b = new State('b');
         $c = new State('c');
         $machine->addState($a);
         $machine->addState($b);
         $machine->addState($c);
-        $machine->addTransition(new Transition($regex_all, $regex_all));//full mesh
+        $machine->addTransition(new Transition($regexAll, $regexAll));//full mesh
         $this->assertCount(6, $machine->getTransitions());
         $this->assertTrue($machine->transition('a_to_b'));
         $this->assertEquals('b', $machine->getCurrentState());
@@ -299,7 +299,7 @@ class StateMachineTest extends TestCase {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($object);
     
-        $regex_to_all = new State('regex:/.+/'); // regex: to all states
+        $regexToAll = new State('regex:/.+/'); // regex: to all states
         $a = new State('a', State::TYPE_INITIAL);
         $done = new State('done', State::TYPE_FINAL);
         $b = new State('b');
@@ -311,7 +311,7 @@ class StateMachineTest extends TestCase {
         $machine->addTransition(new Transition($b, $c));
         $machine->addTransition(new Transition($c, $d));
         $machine->addTransition(new Transition($d, $e));
-        $machine->addTransition(new Transition($a, $regex_to_all));
+        $machine->addTransition(new Transition($a, $regexToAll));
         $this->assertNotNull($machine->getTransition('a_to_b'));
         $this->assertNotNull($machine->getTransition('a_to_done'), 'already exists');
         $this->assertNotNull($machine->getTransition('b_to_c'));
@@ -332,8 +332,8 @@ class StateMachineTest extends TestCase {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($object);
     
-        $regex_to = new State('regex:/.+/'); // regex: to all states
-        $regex_from = new State('regex:/.+/'); // regex: from all states
+        $regexTo = new State('regex:/.+/'); // regex: to all states
+        $regexFrom = new State('regex:/.+/'); // regex: from all states
         $a = new State('a', State::TYPE_INITIAL);
         $done = new State('done', State::TYPE_FINAL);
         $b = new State('b');
@@ -341,7 +341,7 @@ class StateMachineTest extends TestCase {
         $machine->addTransition(new Transition($a, $b));
         $machine->addTransition(new Transition($b, $c));
         $machine->addTransition(new Transition($c, $done));
-        $machine->addTransition(new Transition($regex_from, $regex_to));
+        $machine->addTransition(new Transition($regexFrom, $regexTo));
         $this->assertNotNull($machine->getTransition('a_to_b'));
         $this->assertNotNull($machine->getTransition('b_to_c'));
         $this->assertNotNull($machine->getTransition('c_to_done'));
@@ -371,19 +371,19 @@ class StateMachineTest extends TestCase {
         $states = $machine->getStates();
         $this->assertCount(6, $states);
         $this->assertCount(6, $transitions);
-        $transition_1 = $machine->getTransition('a_to_b');
-        $sa = $transition_1->getStateFrom();
+        $transition1 = $machine->getTransition('a_to_b');
+        $sa = $transition1->getStateFrom();
         $this->assertEquals('a', $sa->getName());
-        $sb = $transition_1->getStateTo();
+        $sb = $transition1->getStateTo();
         $this->assertEquals('b', $sb->getName());
-        $this->assertEquals('a_to_b', $transition_1->getName());
+        $this->assertEquals('a_to_b', $transition1->getName());
         
-        $transition_2 = $machine->getTransition('b_to_c');
-        $sbb = $transition_2->getStateFrom();
+        $transition2 = $machine->getTransition('b_to_c');
+        $sbb = $transition2->getStateFrom();
         $this->assertEquals('b', $sbb->getName());
-        $sc = $transition_2->getStateTo();
+        $sc = $transition2->getStateTo();
         $this->assertEquals('c', $sc->getName());
-        $this->assertEquals('b_to_c', $transition_2->getName());
+        $this->assertEquals('b_to_c', $transition2->getName());
         
         $this->assertEquals($sb, $sbb, 'referencing the same object');
         $this->assertNotEquals($sa, $sb);
@@ -391,12 +391,12 @@ class StateMachineTest extends TestCase {
         
         $sat = $sa->getTransitions();
         $sat0 = $sat [0];
-        $this->assertEquals($sat0, $transition_1, 'bidirectional association');
+        $this->assertEquals($sat0, $transition1, 'bidirectional association');
         $sbbt = $sbb->getTransitions();
         $sbbt0 = $sbbt [0];
-        $this->assertEquals($sbbt0, $transition_2, 'bidirectional association');
+        $this->assertEquals($sbbt0, $transition2, 'bidirectional association');
         $sbbt1 = $sbbt [1];
-        $this->assertNotEquals($sbbt1, $transition_2, 'no association, transition not on state');
+        $this->assertNotEquals($sbbt1, $transition2, 'no association, transition not on state');
     }
     
     #[Test]
@@ -497,26 +497,26 @@ class StateMachineTest extends TestCase {
 
     protected function addTransitionsToMachine(StateMachine $machine)
     {
-        $s_new = new State(State::STATE_NEW, State::TYPE_INITIAL);
-        $s_a = new State('a', State::TYPE_NORMAL);
-        $s_b = new State('b', State::TYPE_NORMAL);
-        $s_c = new State('c', State::TYPE_NORMAL);
-        $s_d = new State('d', State::TYPE_NORMAL);
-        $s_done = new State(State::STATE_DONE, State::TYPE_FINAL);
+        $sNew = new State(State::STATE_NEW, State::TYPE_INITIAL);
+        $sA = new State('a', State::TYPE_NORMAL);
+        $sB = new State('b', State::TYPE_NORMAL);
+        $sC = new State('c', State::TYPE_NORMAL);
+        $sD = new State('d', State::TYPE_NORMAL);
+        $sDone = new State(State::STATE_DONE, State::TYPE_FINAL);
         
-        $t_new_to_a = new Transition($s_new, $s_a, 'newAAH', Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_a_to_b = new Transition($s_a, $s_b, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_b_to_c = new Transition($s_b, $s_c, 'goBC', Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_b_to_d = new Transition($s_b, $s_d, 'goBD', Transition::RULE_FALSE, Transition::COMMAND_NULL);
-        $t_c_to_d = new Transition($s_c, $s_d, 'goCD', Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_d_done = new Transition($s_d, $s_done, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tNewToA = new Transition($sNew, $sA, 'newAAH', Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tAToB = new Transition($sA, $sB, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tBToC = new Transition($sB, $sC, 'goBC', Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tBToD = new Transition($sB, $sD, 'goBD', Transition::RULE_FALSE, Transition::COMMAND_NULL);
+        $tCToD = new Transition($sC, $sD, 'goCD', Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tDDone = new Transition($sD, $sDone, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
         
-        $machine->addTransition($t_new_to_a);
-        $machine->addTransition($t_a_to_b);
-        $machine->addTransition($t_b_to_c);
-        $machine->addTransition($t_b_to_d);
-        $machine->addTransition($t_c_to_d);
-        $machine->addTransition($t_d_done);
+        $machine->addTransition($tNewToA);
+        $machine->addTransition($tAToB);
+        $machine->addTransition($tBToC);
+        $machine->addTransition($tBToD);
+        $machine->addTransition($tCToD);
+        $machine->addTransition($tDDone);
     }
 
     public function testMultipleTransitionsFromOneStateAndAlsoWithEvents()
@@ -524,33 +524,33 @@ class StateMachineTest extends TestCase {
         $context = new Context(new Identifier(54321, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($context);
         
-        $s_new = new State(State::STATE_NEW, State::TYPE_INITIAL);
-        $s_a = new State('a', State::TYPE_NORMAL);
-        $s_b = new State('b', State::TYPE_NORMAL);
-        $s_c = new State('c', State::TYPE_NORMAL);
-        $s_d = new State('d', State::TYPE_NORMAL);
-        $s_done = new State(State::STATE_DONE, State::TYPE_FINAL);
+        $sNew = new State(State::STATE_NEW, State::TYPE_INITIAL);
+        $sA = new State('a', State::TYPE_NORMAL);
+        $sB = new State('b', State::TYPE_NORMAL);
+        $sC = new State('c', State::TYPE_NORMAL);
+        $sD = new State('d', State::TYPE_NORMAL);
+        $sDone = new State(State::STATE_DONE, State::TYPE_FINAL);
         
-        $t_new_to_a = new Transition($s_new, $s_a, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
-        $t_new_to_done = new Transition($s_new, $s_done, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
-        $t_new_to_b = new Transition($s_new, $s_b, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
-        $t_new_to_c = new Transition($s_new, $s_c, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_new_to_d = new Transition($s_new, $s_d, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
+        $tNewToA = new Transition($sNew, $sA, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
+        $tNewToDone = new Transition($sNew, $sDone, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
+        $tNewToB = new Transition($sNew, $sB, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
+        $tNewToC = new Transition($sNew, $sC, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tNewToD = new Transition($sNew, $sD, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
         // set an event name. since this transition is not allowed, the event
         // based transition should fail later.
-        $t_new_to_d->setEvent('event-foo-bar');
-        $t_d_to_done = new Transition($s_d, $s_done, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $t_c_to_done = new Transition($s_c, $s_done, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
-        $t_c_to_d = new Transition($s_c, $s_d, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tNewToD->setEvent('event-foo-bar');
+        $tDToDone = new Transition($sD, $sDone, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
+        $tCToDone = new Transition($sC, $sDone, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
+        $tCToD = new Transition($sC, $sD, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
         
-        $machine->addTransition($t_new_to_a);
-        $machine->addTransition($t_new_to_done);
-        $machine->addTransition($t_new_to_b);
-        $machine->addTransition($t_new_to_c);
-        $machine->addTransition($t_new_to_d);
-        $machine->addTransition($t_d_to_done);
-        $machine->addTransition($t_c_to_done);
-        $machine->addTransition($t_c_to_d);
+        $machine->addTransition($tNewToA);
+        $machine->addTransition($tNewToDone);
+        $machine->addTransition($tNewToB);
+        $machine->addTransition($tNewToC);
+        $machine->addTransition($tNewToD);
+        $machine->addTransition($tDToDone);
+        $machine->addTransition($tCToDone);
+        $machine->addTransition($tCToD);
         
         // path should be: new->c->d->done;
         $this->assertCount(8, $machine->getTransitions());
@@ -576,7 +576,7 @@ class StateMachineTest extends TestCase {
         $this->assertEquals($machine->getCurrentState(), 'new');
         $this->assertTrue($machine->run());
         $this->assertEquals($machine->getCurrentState(), 'c');
-        $t_c_to_d->setEvent('event-c-to-d');
+        $tCToD->setEvent('event-c-to-d');
         // do event based transition
         $this->assertTrue($machine->handle('event-c-to-d'));
         $this->assertEquals($machine->getCurrentState(), 'd');
@@ -600,9 +600,9 @@ class StateMachineTest extends TestCase {
     #[Test]
     public function shouldBeAbleToSwitchContext()
     {
-        $context_1 = new Context(new Identifier(1, Identifier::NULL_STATEMACHINE));
-        $machine = new StateMachine($context_1);
-        $this->assertEquals($context_1, $machine->getContext());
+        $context1 = new Context(new Identifier(1, Identifier::NULL_STATEMACHINE));
+        $machine = new StateMachine($context1);
+        $this->assertEquals($context1, $machine->getContext());
         
         try {
             $this->assertEquals($machine->getCurrentState()->getName(), State::STATE_NEW);
@@ -623,12 +623,12 @@ class StateMachineTest extends TestCase {
         
         // new context object, reuse statemachine
         $identifier = new Identifier(123, Identifier::NULL_STATEMACHINE);
-        $context_2 = new Context($identifier);
-        $context_2->setState(State::STATE_NEW);
-        $machine->setContext($context_2);
+        $context2 = new Context($identifier);
+        $context2->setState(State::STATE_NEW);
+        $machine->setContext($context2);
         $this->assertEquals($machine->getCurrentState()->getName(), State::STATE_NEW);
         $this->assertTrue($machine->getCurrentState()->isInitial());
-        $this->assertEquals($context_2, $machine->getContext());
+        $this->assertEquals($context2, $machine->getContext());
         $total = $machine->runToCompletion();
         $this->assertEquals(5, $total);
         $this->assertEquals($machine->getCurrentState()->getName(), State::STATE_DONE);
@@ -636,9 +636,9 @@ class StateMachineTest extends TestCase {
         
         // switch to different machine for context
         try {
-            $context_3 = new Context(new Identifier(123, 'different machine'));
-            $context_3->setState(State::STATE_DONE);
-            $machine->setContext($context_3);
+            $context3 = new Context(new Identifier(123, 'different machine'));
+            $context3->setState(State::STATE_DONE);
+            $machine->setContext($context3);
             $this->fail("cannot switch context with different machine");
         } catch(Exception $ex) {
             $this->assertEquals(Exception::SM_CONTEXT_DIFFERENT_MACHINE, $ex->getCode());
@@ -804,11 +804,11 @@ class StateMachineTest extends TestCase {
         $context = new Context(new Identifier(54321, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($context);
         
-        $s_new = new State(State::STATE_NEW, State::TYPE_INITIAL);
-        $s_a = new State('a', State::TYPE_NORMAL);
+        $sNew = new State(State::STATE_NEW, State::TYPE_INITIAL);
+        $sA = new State('a', State::TYPE_NORMAL);
         
-        $t_new_to_a = new Transition($s_new, $s_a, null, 'izzum\rules\ExceptionRule', Transition::COMMAND_NULL);
-        $machine->addTransition($t_new_to_a);
+        $tNewToA = new Transition($sNew, $sA, null, 'Izzum\Rules\ExceptionRule', Transition::COMMAND_NULL);
+        $machine->addTransition($tNewToA);
         
         try {
             $machine->run();
@@ -840,26 +840,26 @@ class StateMachineTest extends TestCase {
         $id = 123;
         $context = new Context(new Identifier($id, $machine));
         $machine = new StateMachine($context);
-        $s_new = new State(State::STATE_NEW, State::TYPE_INITIAL);
-        $s_a = new State('order-confirmation', State::TYPE_NORMAL);
-        $s_b = new State('technical-delivery', State::TYPE_NORMAL);
-        $s_c = new State('contract-creation', State::TYPE_NORMAL);
-        $s_d = new State('services-activation', State::TYPE_NORMAL);
-        $s_done = new State(State::STATE_DONE, State::TYPE_FINAL);
+        $sNew = new State(State::STATE_NEW, State::TYPE_INITIAL);
+        $sA = new State('order-confirmation', State::TYPE_NORMAL);
+        $sB = new State('technical-delivery', State::TYPE_NORMAL);
+        $sC = new State('contract-creation', State::TYPE_NORMAL);
+        $sD = new State('services-activation', State::TYPE_NORMAL);
+        $sDone = new State(State::STATE_DONE, State::TYPE_FINAL);
         
-        $t_new_to_a = new Transition($s_new, $s_a, null, Transition::RULE_TRUE, 'izzum\command\ValidateOrder');
-        $t_a_to_b = new Transition($s_a, $s_b, null, 'izzum\rules\IsReadyForDelivery', 'izzum\command\SendConfirmation');
-        $t_b_to_c = new Transition($s_b, $s_c, null, Transition::RULE_TRUE, 'izzum\command\TechnicalDelivery');
-        $t_b_to_d = new Transition($s_b, $s_d, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
-        $t_c_to_d = new Transition($s_c, $s_d, null, 'izzum\rules\ReadyForContract', 'izzum\command\CreateContract');
-        $t_d_done = new Transition($s_d, $s_done, null, Transition::RULE_TRUE, 'izzum\command\ActivateServices');
+        $tNewToA = new Transition($sNew, $sA, null, Transition::RULE_TRUE, 'Izzum\Command\ValidateOrder');
+        $tAToB = new Transition($sA, $sB, null, 'Izzum\Rules\IsReadyForDelivery', 'Izzum\Command\SendConfirmation');
+        $tBToC = new Transition($sB, $sC, null, Transition::RULE_TRUE, 'Izzum\Command\TechnicalDelivery');
+        $tBToD = new Transition($sB, $sD, null, Transition::RULE_FALSE, Transition::COMMAND_NULL);
+        $tCToD = new Transition($sC, $sD, null, 'Izzum\Rules\ReadyForContract', 'Izzum\Command\CreateContract');
+        $tDDone = new Transition($sD, $sDone, null, Transition::RULE_TRUE, 'Izzum\Command\ActivateServices');
         
-        $machine->addTransition($t_new_to_a);
-        $machine->addTransition($t_a_to_b);
-        $machine->addTransition($t_b_to_c);
-        $machine->addTransition($t_b_to_d);
-        $machine->addTransition($t_c_to_d);
-        $machine->addTransition($t_d_done);
+        $machine->addTransition($tNewToA);
+        $machine->addTransition($tAToB);
+        $machine->addTransition($tBToC);
+        $machine->addTransition($tBToD);
+        $machine->addTransition($tCToD);
+        $machine->addTransition($tDDone);
         
         $plant = new PlantUml();
         $result = $plant->createStateDiagram($machine);
@@ -876,7 +876,7 @@ class StateMachineTest extends TestCase {
         
         $new = new State('new', State::TYPE_INITIAL, State::COMMAND_EMPTY, State::COMMAND_NULL);
         $new->setDescription("the initial state");
-        $initialize = new State('initialize', State::TYPE_NORMAL, "izzum\command\InitializeCommand");
+        $initialize = new State('initialize', State::TYPE_NORMAL, "Izzum\Command\InitializeCommand");
         $cup = new State('cup');
         $cup->setDescription("a cup to hold coffee");
         $coffee = new State('coffee');
@@ -887,20 +887,20 @@ class StateMachineTest extends TestCase {
         $milk->setDescription("added milk");
         $spoon = new State('spoon');
         $spoon->setDescription("use a spoon to stir");
-        $done = new State('done', State::TYPE_FINAL, "izzum\command\AnEntryCommand");
+        $done = new State('done', State::TYPE_FINAL, "Izzum\Command\AnEntryCommand");
         
-        $ni = new Transition($new, $initialize, null, Transition::RULE_TRUE, 'izzum\command\Initialize');
+        $ni = new Transition($new, $initialize, null, Transition::RULE_TRUE, 'Izzum\Command\Initialize');
         $ni->setDescription("initialize the coffee machine");
         $transitions [] = $ni;
-        $transitions [] = new Transition($initialize, $cup, null, Transition::RULE_TRUE, 'izzum\command\DropCup');
-        $transitions [] = new Transition($cup, $coffee, null, Transition::RULE_TRUE, 'izzum\command\AddCoffee');
-        $transitions [] = new Transition($coffee, $sugar, null, 'izzum\rules\WantsSugar', 'izzum\command\AddSugar');
+        $transitions [] = new Transition($initialize, $cup, null, Transition::RULE_TRUE, 'Izzum\Command\DropCup');
+        $transitions [] = new Transition($cup, $coffee, null, Transition::RULE_TRUE, 'Izzum\Command\AddCoffee');
+        $transitions [] = new Transition($coffee, $sugar, null, 'Izzum\Rules\WantsSugar', 'Izzum\Command\AddSugar');
         $transitions [] = new Transition($sugar, $coffee, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $transitions [] = new Transition($coffee, $milk, null, 'izzum\rules\WantsMilk', 'izzum\command\AddMilk');
+        $transitions [] = new Transition($coffee, $milk, null, 'Izzum\Rules\WantsMilk', 'Izzum\Command\AddMilk');
         $transitions [] = new Transition($milk, $coffee, null, Transition::RULE_TRUE, Transition::COMMAND_NULL);
-        $transitions [] = new Transition($coffee, $spoon, null, 'izzum\rules\MilkOrSugar', 'izzum\command\AddSpoon');
-        $transitions [] = new Transition($coffee, $done, null, 'izzum\rules\CoffeeTakenOut', 'izzum\command\Cleanup');
-        $transitions [] = new Transition($spoon, $done, null, 'izzum\rules\CoffeeTakenOut', 'izzum\command\CleanUp');
+        $transitions [] = new Transition($coffee, $spoon, null, 'Izzum\Rules\MilkOrSugar', 'Izzum\Command\AddSpoon');
+        $transitions [] = new Transition($coffee, $done, null, 'Izzum\Rules\CoffeeTakenOut', 'Izzum\Command\Cleanup');
+        $transitions [] = new Transition($spoon, $done, null, 'Izzum\Rules\CoffeeTakenOut', 'Izzum\Command\CleanUp');
         
         $loader = new LoaderArray($transitions);
         $loader->load($machine);
@@ -1014,7 +1014,7 @@ class CallableHandler {
     }
 }
 
-namespace izzum\statemachine;
+namespace Izzum\StateMachine;
 /**
  * helper class that implements the 'hook' methods
  * @author rolf

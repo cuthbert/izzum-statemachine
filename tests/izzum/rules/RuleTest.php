@@ -1,13 +1,13 @@
 <?php
 use PHPUnit\Framework\TestCase;
 use Codeception\Attribute\Group;
-use izzum\rules\Rule;
-use izzum\rules\TrueRule;
-use izzum\rules\FalseRule;
-use izzum\rules\Closure;
-use izzum\rules\ExceptionRule;
-use izzum\rules\Exception;
-use izzum\rules\RuleResult;
+use Izzum\Rules\Rule;
+use Izzum\Rules\TrueRule;
+use Izzum\Rules\FalseRule;
+use Izzum\Rules\Closure;
+use Izzum\Rules\ExceptionRule;
+use Izzum\Rules\Exception;
+use Izzum\Rules\RuleResult;
 
 /**
  * This class should test the core rule mechanism.
@@ -47,7 +47,7 @@ class RuleTest extends TestCase
      */
     public function testRuleNullResult()
     {
-        $rule = $this->getMockBuilder('izzum\rules\Rule')
+        $rule = $this->getMockBuilder('Izzum\Rules\Rule')
                 ->disableOriginalConstructor()
                 ->onlyMethods(['_applies'])
                 ->getMock();
@@ -67,7 +67,7 @@ class RuleTest extends TestCase
      */
     public function testRuleStringResult()
     {
-        $rule = $this->getMockBuilder('izzum\rules\Rule')
+        $rule = $this->getMockBuilder('Izzum\Rules\Rule')
                 ->disableOriginalConstructor()
                 ->onlyMethods(['_applies'])
                 ->getMock();
@@ -87,7 +87,7 @@ class RuleTest extends TestCase
      */
     public function testRuleInt0Result()
     {
-        $rule = $this->getMockBuilder('izzum\rules\Rule')
+        $rule = $this->getMockBuilder('Izzum\Rules\Rule')
                 ->disableOriginalConstructor()
                 ->onlyMethods(['_applies'])
                 ->getMock();
@@ -107,7 +107,7 @@ class RuleTest extends TestCase
      */
     public function testRuleInt1Result()
     {
-        $rule = $this->getMockBuilder('izzum\rules\Rule')
+        $rule = $this->getMockBuilder('Izzum\Rules\Rule')
                 ->disableOriginalConstructor()
                 ->onlyMethods(['_applies'])
                 ->getMock();
@@ -134,7 +134,7 @@ class RuleTest extends TestCase
      */
     public function testAppliesMethodIsFinal()
     {
-        $rule = $this->getMockBuilder('izzum\rules\Rule')
+        $rule = $this->getMockBuilder('Izzum\Rules\Rule')
                 ->disableOriginalConstructor()
                 ->onlyMethods(['applies', '_applies'])
                 ->getMock();
@@ -268,7 +268,7 @@ class RuleTest extends TestCase
      */
     public function testRuleSuppressorFalse()
     {
-        $rule = $this->getMockBuilder('izzum\rules\Rule')
+        $rule = $this->getMockBuilder('Izzum\Rules\Rule')
                 ->disableOriginalConstructor()
                 ->onlyMethods(['_applies'])
                 ->getMock();
@@ -277,7 +277,7 @@ class RuleTest extends TestCase
                 ->method('_applies')
                 ->willThrowException(new Exception('not good'));
 
-        $supressedrule = new izzum\rules\ExceptionSupressor($rule, false);
+        $supressedrule = new Izzum\Rules\ExceptionSupressor($rule, false);
         $this->assertFalse($supressedrule->applies());
     }
 
@@ -286,7 +286,7 @@ class RuleTest extends TestCase
      */
     public function testRuleSuppressorTrue()
     {
-        $rule = $this->getMockBuilder('izzum\rules\Rule')
+        $rule = $this->getMockBuilder('Izzum\Rules\Rule')
                 ->disableOriginalConstructor()
                 ->onlyMethods(['_applies'])
                 ->getMock();
@@ -295,7 +295,7 @@ class RuleTest extends TestCase
                 ->method('_applies')
                 ->willThrowException(new Exception('not good'));
 
-        $supressedrule = new izzum\rules\ExceptionSupressor($rule, true);
+        $supressedrule = new Izzum\Rules\ExceptionSupressor($rule, true);
         $this->assertTrue($supressedrule->applies());
     }
 

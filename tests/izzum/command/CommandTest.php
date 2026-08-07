@@ -2,12 +2,12 @@
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\command\Command;
-use izzum\command\NullCommand;
-use izzum\command\Exception;
-use izzum\command\ExceptionCommand;
-use izzum\command\Composite;
-use izzum\command\Closure;
+use Izzum\Command\Command;
+use Izzum\Command\NullCommand;
+use Izzum\Command\Exception;
+use Izzum\Command\ExceptionCommand;
+use Izzum\Command\Composite;
+use Izzum\Command\Closure;
 /**
  * This class tests the basic workings of the Core Command package.
  * Since all commands build upon the Core, these tests should cover all
@@ -27,8 +27,8 @@ class CommandTest extends TestCase {
         $command = new AddToListCommand($list);
 
         //check basics
-        $this->assertFalse(in_array('izzum\command\IComposite', class_implements($command)));
-        $this->assertTrue(in_array('izzum\command\ICommand', class_implements($command)));
+        $this->assertFalse(in_array('Izzum\Command\IComposite', class_implements($command)));
+        $this->assertTrue(in_array('Izzum\Command\ICommand', class_implements($command)));
 
         //check that execute does something
         $this->assertEquals(0, count($list));
@@ -59,7 +59,7 @@ class CommandTest extends TestCase {
            $this->fail("command should throw an exception");
         } catch (\Exception $e)
         {
-            $this->assertTrue(is_a($e, 'izzum\command\Exception'), "should be of type izzum\Exception");
+            $this->assertTrue(is_a($e, 'Izzum\Command\Exception'), "should be of type Izzum\Command\Exception");
             $this->assertTrue(is_a($e, 'Exception'));
             $this->assertEquals($message, $e->getMessage());
             $this->assertEquals($code, $e->getCode());
@@ -94,8 +94,8 @@ class CommandTest extends TestCase {
         $composite = new Composite();
 
         //test basics of this command
-        $this->assertTrue(in_array('izzum\command\IComposite', class_implements($composite)));
-        $this->assertTrue(in_array('izzum\command\ICommand', class_implements($composite)));
+        $this->assertTrue(in_array('Izzum\Command\IComposite', class_implements($composite)));
+        $this->assertTrue(in_array('Izzum\Command\ICommand', class_implements($composite)));
 
         $list = [];
         //create 3 commands with a reference to the same list
@@ -173,7 +173,7 @@ class CommandTest extends TestCase {
         {
             $this->assertEquals(111, $e->getCode());
             $this->assertEquals('test', $e->getMessage());
-            $this->assertEquals("izzum\command\Exception", $e::class);
+            $this->assertEquals("Izzum\Command\Exception", $e::class);
         }
     }
 

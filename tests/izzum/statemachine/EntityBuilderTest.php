@@ -1,5 +1,5 @@
 <?php
-namespace izzum\statemachine;
+namespace Izzum\StateMachine;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
@@ -16,30 +16,30 @@ class EntityBuilderTest extends TestCase {
     {
         //create Entity in default state. this is enough to pass it 
         //to the builder
-        $object_1 = new Identifier(-1, 'order');
-        $object_2 = new Identifier(-2, 'order');
-        $this->assertNotEquals($object_1, $object_2);
+        $object1 = new Identifier(-1, 'order');
+        $object2 = new Identifier(-2, 'order');
+        $this->assertNotEquals($object1, $object2);
         
         
         
         //scenario: call it twice with same object
         $builder = new EntityBuilder();
-        $result_1 = $builder->getEntity($object_1);
-        $this->assertEquals($object_1, $result_1);
+        $result1 = $builder->getEntity($object1);
+        $this->assertEquals($object1, $result1);
         //same result when we call it again (should be cached, but we can only test
         //this when we override the protected build() method of the builder).
-        $result_2 = $builder->getEntity($object_1);
-        $this->assertEquals($object_1, $result_2);
-        $this->assertEquals($result_1, $result_2, 'obviously');
-        $this->assertEquals('izzum\statemachine\EntityBuilder', $builder->toString());
+        $result2 = $builder->getEntity($object1);
+        $this->assertEquals($object1, $result2);
+        $this->assertEquals($result1, $result2, 'obviously');
+        $this->assertEquals('Izzum\StateMachine\EntityBuilder', $builder->toString());
         
         //scenario: call it with different objects
         $builder = new EntityBuilder();
-        $result_1 = $builder->getEntity($object_1);
-        $this->assertEquals($object_1, $result_1);
+        $result1 = $builder->getEntity($object1);
+        $this->assertEquals($object1, $result1);
         //different result when we call it again
-        $result_2 = $builder->getEntity($object_2);
-        $this->assertEquals($object_2, $result_2);
+        $result2 = $builder->getEntity($object2);
+        $this->assertEquals($object2, $result2);
         
         $this->assertStringContainsString('EntityBuilder', $builder . '', '__toString()');
     }
@@ -52,33 +52,33 @@ class EntityBuilderTest extends TestCase {
     {
         //create Entity in default state. this is enough to pass it
         //to the builder
-        $object_1 = new Identifier(-1, 'order');
-        $object_2 = new Identifier(-2, 'order');
-        $this->assertNotEquals($object_1, $object_2);
+        $object1 = new Identifier(-1, 'order');
+        $object2 = new Identifier(-2, 'order');
+        $this->assertNotEquals($object1, $object2);
         
         
         //scenario: call it with same objects to check CACHING! on the differently
         //returned references
         $builder = new EntityBuilderStdClss();
-        $result_1 = $builder->getEntity($object_1);
-        $this->assertNotEquals($object_1, $result_1, 'returns something different than input');
+        $result1 = $builder->getEntity($object1);
+        $this->assertNotEquals($object1, $result1, 'returns something different than input');
         //check values
-        $this->assertEquals($object_1->getEntityId(), $result_1->entity_id);
-        $this->assertEquals($object_1->getMachine(), $result_1->machine);
+        $this->assertEquals($object1->getEntityId(), $result1->entity_id);
+        $this->assertEquals($object1->getMachine(), $result1->machine);
         //expect same result when we call it again
-        $result_2 = $builder->getEntity($object_1);
-        $this->assertEquals($object_1->getEntityId(), $result_2->entity_id);
-        $this->assertEquals($object_1->getMachine(), $result_2->machine);
+        $result2 = $builder->getEntity($object1);
+        $this->assertEquals($object1->getEntityId(), $result2->entity_id);
+        $this->assertEquals($object1->getMachine(), $result2->machine);
         //identity is exactly the same (same cached object)
-        $this->assertEquals($result_1, $result_2, 'same identity because cached');
-        $this->assertEquals('izzum\statemachine\EntityBuilderStdClss', $builder->toString());
+        $this->assertEquals($result1, $result2, 'same identity because cached');
+        $this->assertEquals('Izzum\StateMachine\EntityBuilderStdClss', $builder->toString());
         
         //scenario: call it twice with different object
         $builder = new EntityBuilderStdClss();
-        $result_1 = $builder->getEntity($object_1);
+        $result1 = $builder->getEntity($object1);
         //different result when we call it again
-        $result_2 = $builder->getEntity($object_2);
-        $this->assertNotEquals($result_1, $result_2);
+        $result2 = $builder->getEntity($object2);
+        $this->assertNotEquals($result1, $result2);
         
     }
     

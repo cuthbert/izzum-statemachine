@@ -1,15 +1,15 @@
 <?php
-namespace izzum\statemachine\persistence;
+namespace Izzum\StateMachine\Persistence;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\Context;
-use izzum\statemachine\EntityBuilder;
-use izzum\statemachine\State;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\StateMachine;
-use izzum\statemachine\Exception;
-use izzum\statemachine\utils\PlantUml;
+use Izzum\StateMachine\Context;
+use Izzum\StateMachine\EntityBuilder;
+use Izzum\StateMachine\State;
+use Izzum\StateMachine\Identifier;
+use Izzum\StateMachine\StateMachine;
+use Izzum\StateMachine\Exception;
+use Izzum\StateMachine\Utils\PlantUml;
 
 /**
  * @author rolf
@@ -43,7 +43,7 @@ class PersistenceTest extends TestCase {
         $io = new Memory();
         $state = $io->getState($object);
         $this->assertEquals(State::STATE_UNKNOWN, $state,'default reader should return unknown if not present');
-        $this->assertEquals('izzum\statemachine\persistence\Memory', $io->toString());
+        $this->assertEquals('Izzum\StateMachine\Persistence\Memory', $io->toString());
 
 
 
@@ -54,7 +54,7 @@ class PersistenceTest extends TestCase {
 
         $result = $io->setState($object, "test");
         $this->assertFalse($result, 'default writer returns false when data is present');
-        $this->assertEquals('izzum\statemachine\persistence\Memory', $io->toString());
+        $this->assertEquals('Izzum\StateMachine\Persistence\Memory', $io->toString());
 
         $result = $io->getState($object);
         $this->assertEquals('test', $result);
@@ -155,7 +155,7 @@ class PersistenceTest extends TestCase {
         //$io = new Session('izzum', '123ab');
         $io = new Session();
         $this->assertAddGetEntityIdsSet($io);
-        $this->assertEquals('izzum\statemachine\persistence\Session', $io->toString());
+        $this->assertEquals('Izzum\StateMachine\Persistence\Session', $io->toString());
 
 
 
@@ -217,7 +217,7 @@ class PersistenceTest extends TestCase {
      * helper method for different backend adapters
      * that use a database (postgres, pdo)
      */
-    protected function assertPersistenceAdapterPDO(PDO $adapter, string $machine, bool $output_plant = false): void {
+    protected function assertPersistenceAdapterPDO(PDO $adapter, string $machine, bool $outputPlant = false): void {
 
         $type = $adapter->getType();
         echo PHP_EOL;
@@ -257,8 +257,8 @@ class PersistenceTest extends TestCase {
         $this->assertCount(0, $ids);
 
         //diverse tests for the persistance of a non existing fully random id
-        $random_id = random_int(1,999999999) . "-" . microtime();
-        $identifier = new Identifier($random_id, $machine);
+        $randomId = random_int(1,999999999) . "-" . microtime();
+        $identifier = new Identifier($randomId, $machine);
         $context = new Context($identifier, null, $adapter);
         try {
             $this->assertEquals(State::STATE_UNKNOWN, $context->getState());
@@ -287,7 +287,7 @@ class PersistenceTest extends TestCase {
         $this->assertCount(0, $sm->getTransitions());
         $this->assertCount(0, $sm->getStates());
         $adapter->load($sm);
-        if($output_plant) {
+        if($outputPlant) {
         	$plant = new PlantUml();
         	$output = $plant->createStateDiagram($sm);
         	echo PHP_EOL;
@@ -304,19 +304,19 @@ class PersistenceTest extends TestCase {
         }
         $this->assertCount(9, $sm->getTransitions());
         $this->assertCount(6, $sm->getStates());
-        $count_done = count($adapter->getEntityIds($machine, 'done'));
+        $countDone = count($adapter->getEntityIds($machine, 'done'));
 
         //take the happy flow to completion
         $total = $sm->runToCompletion();
         $this->assertEquals(4, $total);
-        $this->assertCount($count_done + 1, $adapter->getEntityIds($machine, 'done'));
+        $this->assertCount($countDone + 1, $adapter->getEntityIds($machine, 'done'));
 
 
         //create a new context to take the unhappy flow
-        $random_id = random_int(1, 999999999) . "-" . microtime();
-        $identifier = new Identifier($random_id, $machine);
-        $other_context = new Context($identifier, null, $adapter);
-        $sm->setContext($other_context);
+        $randomId = random_int(1, 999999999) . "-" . microtime();
+        $identifier = new Identifier($randomId, $machine);
+        $otherContext = new Context($identifier, null, $adapter);
+        $sm->setContext($otherContext);
         $this->assertCount(9, $sm->getTransitions());
         $this->assertCount(6, $sm->getStates());
         //load again, not necessary, but should not be a problem either
@@ -341,17 +341,17 @@ class PersistenceTest extends TestCase {
         //do this directly on adapter to see if will actually insert into the history
         //and entity tables
         $this->assertFalse($adapter->setState($identifier, 'new'), 'it is already persisted');
-        $this->assertEquals($other_context->getState(), 'new');
+        $this->assertEquals($otherContext->getState(), 'new');
         $this->assertFalse($adapter->setState($identifier, 'excellent'), 'it is already persisted');
-        $this->assertEquals($other_context->getState(), 'excellent');
+        $this->assertEquals($otherContext->getState(), 'excellent');
 
 
 
         //create a new context to take the unhappy flow
-        $random_id = random_int(1, 999999999) . "-" . microtime();
-        $identifier = new Identifier($random_id, $machine);
-        $other_context = new Context($identifier, null, $adapter);
-        $sm->setContext($other_context);
+        $randomId = random_int(1, 999999999) . "-" . microtime();
+        $identifier = new Identifier($randomId, $machine);
+        $otherContext = new Context($identifier, null, $adapter);
+        $sm->setContext($otherContext);
         $this->assertFalse($adapter->isPersisted($identifier));
         $sm->add("adding it to the backend");
 
@@ -361,9 +361,9 @@ class PersistenceTest extends TestCase {
         $count = count($adapter->getEntityIds($machine, 'bad'));
         $sm->transition('new_to_bad');
         $this->assertCount($count + 1, $adapter->getEntityIds($machine, 'bad'));
-        $this->assertTrue(in_array($random_id, $adapter->getEntityIds($machine, 'bad')));
-        $this->assertTrue(in_array($random_id, $adapter->getEntityIds($machine)));
-        $this->assertFalse(in_array($random_id, $adapter->getEntityIds($machine, 'new')));
+        $this->assertTrue(in_array($randomId, $adapter->getEntityIds($machine, 'bad')));
+        $this->assertTrue(in_array($randomId, $adapter->getEntityIds($machine)));
+        $this->assertFalse(in_array($randomId, $adapter->getEntityIds($machine, 'new')));
 
         try {
             $sm->run();

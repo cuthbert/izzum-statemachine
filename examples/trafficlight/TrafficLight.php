@@ -15,7 +15,7 @@ class TrafficLight {
     //possible color
     private $color;
     //the time since the last switch
-    private $switch_time;
+    private $switchTime;
     //define the times allocated for each color to be on
     const TIME_RED = 4,
           TIME_ORANGE = 2,
@@ -32,7 +32,7 @@ class TrafficLight {
     
     protected function setSwitchTime()
     {
-        $this->switch_time = time();
+        $this->switchTime = time();
     }
     
     public function setGreen() {
@@ -81,7 +81,7 @@ class TrafficLight {
     }
     
     protected function onColorFor($time) {
-        $difference = $this->switch_time + $time;
+        $difference = $this->switchTime + $time;
         if(time() >= $difference) {
             return true;
         }
@@ -90,7 +90,7 @@ class TrafficLight {
     
     public function toString() {
         return sprintf("trafficlight[%s] on color [%s] for [%s] seconds", 
-                $this->id, $this->color, time() - $this->switch_time) .
+                $this->id, $this->color, time() - $this->switchTime) .
             PHP_EOL;
     }  
 }
