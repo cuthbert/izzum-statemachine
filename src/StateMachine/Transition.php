@@ -99,9 +99,6 @@ class Transition implements \Stringable {
     protected ?string $description = null;
 
     /**
-     *
-     * @param State $stateFrom
-     * @param State $stateTo
      * @param string|null $event
      *            optional: an event name by which this transition can be
      *            triggered
@@ -179,7 +176,6 @@ class Transition implements \Stringable {
      *
      * @param string|null $event not enforced by a native type, since callers
      *        may pass through arbitrary/unchecked event values
-     * @return boolean
      */
     public function isTriggeredBy($event): bool
     {
@@ -189,9 +185,6 @@ class Transition implements \Stringable {
     /**
      * is a transition possible? Check the guard Rule with the domain object
      * injected.
-     *
-     * @param Context $context
-     * @return boolean
      */
     public function can(Context $context): bool
     {
@@ -210,9 +203,6 @@ class Transition implements \Stringable {
     /**
      * Process the transition for the statemachine and execute the associated
      * Command with the domain object injected.
-     *
-     * @param Context $context
-     * @return void
      */
     public function process(Context $context): void
     {
@@ -231,7 +221,6 @@ class Transition implements \Stringable {
     /**
      * calls the $callable as part of the transition
      * @param callable $callable
-     * @param Context $context
      * @throws Exception in case of an invalid callable
      */
     protected function callCallable($callable, Context $context, string $type = 'n/a'): bool {
@@ -247,8 +236,6 @@ class Transition implements \Stringable {
      * returns the associated Rule for this Transition,
      * configured with a 'reference' (stateful) object
      *
-     * @param Context $context
-     *            the associated Context for a our statemachine
      * @return IRule a Rule or chained AndRule if the rule input was a ','
      *         seperated string of rules.
      * @throws Exception
@@ -293,8 +280,6 @@ class Transition implements \Stringable {
      * In case there have been multiple commands as input (',' seperated), this
      * method will return a Composite command.
      *
-     * @param Context $context
-     * @return \Izzum\Command\ICommand
      * @throws Exception
      */
     public function getCommand(Context $context): ICommand
@@ -302,30 +287,16 @@ class Transition implements \Stringable {
         return Utils::getCommand($this->command, $context);
     }
 
-    /**
-     *
-     * @return string
-     */
     public function toString(): string
     {
         return static::class . " '" . $this->getName() . "' [event]: '" . $this->event . "'" . " [rule]: '" . $this->rule . "' [command]: '" . $this->command . "'";
     }
 
-    /**
-     * get the state this transition points from
-     *
-     * @return State
-     */
     public function getStateFrom(): State
     {
         return $this->stateFrom;
     }
 
-    /**
-     * get the state this transition points to
-     *
-     * @return State
-     */
     public function getStateTo(): State
     {
         return $this->stateTo;
@@ -335,8 +306,6 @@ class Transition implements \Stringable {
      * get the transition name.
      * the transition name is always unique for a statemachine
      * since it constists of <state_from>_to_<state_to>
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -350,8 +319,6 @@ class Transition implements \Stringable {
      * transition.
      * This can actually be a ',' seperated string of multiple commands that
      * will be executed as a composite.
-     *
-     * @return string
      */
     public function getCommandName(): string
     {
@@ -383,8 +350,6 @@ class Transition implements \Stringable {
 
     /**
      * set the description of the transition (for uml generation for example)
-     *
-     * @param string|null $description
      */
     public function setDescription(?string $description): static
     {
@@ -392,11 +357,6 @@ class Transition implements \Stringable {
         return $this;
     }
 
-    /**
-     * get the description for this transition (if any)
-     *
-     * @return string|null
-     */
     public function getDescription(): ?string
     {
         return $this->description;
@@ -406,8 +366,6 @@ class Transition implements \Stringable {
      * set the event name by which this transition can be triggered.
      * In case the event name is null or an empty string, it defaults to the
      * transition name.
-     *
-     * @param string|null $event
      */
     public function setEvent(?string $event): static
     {
@@ -418,11 +376,6 @@ class Transition implements \Stringable {
         return $this;
     }
 
-    /**
-     * get the event name by which this transition can be triggered
-     *
-     * @return string
-     */
     public function getEvent(): string
     {
         return $this->event;
@@ -437,10 +390,6 @@ class Transition implements \Stringable {
      *
      * Override this method in a subclass to add other fields. By using 'new
      * static' we are already instantiating a possible subclass.
-     *
-     *
-     * @param State $from
-     * @param State $to
      */
     public function getCopy(State $from, State $to): static
     {
@@ -450,10 +399,6 @@ class Transition implements \Stringable {
         return $copy;
     }
 
-    /**
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->getName();

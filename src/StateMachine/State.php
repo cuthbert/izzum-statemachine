@@ -232,31 +232,16 @@ class State implements \Stringable {
         return $this;
     }
 
-    /**
-     * is it an initial state
-     * 
-     * @return boolean
-     */
     public function isInitial(): bool
     {
         return $this->type === self::TYPE_INITIAL;
     }
 
-    /**
-     * is it a normal state
-     * 
-     * @return boolean
-     */
     public function isNormal(): bool
     {
         return $this->type === self::TYPE_NORMAL;
     }
 
-    /**
-     * is it a final state
-     * 
-     * @return boolean
-     */
     public function isFinal(): bool
     {
         return $this->type === self::TYPE_FINAL;
@@ -268,7 +253,6 @@ class State implements \Stringable {
      *      "regex:<regular-expression-here>"
      *      "not-regex:<regular-expression-here>"
      *
-     * @return boolean
      * @link https://php.net/manual/en/function.preg-match.php
      * @link http://regexr.com/ for trying out regular expressions
      */
@@ -281,8 +265,6 @@ class State implements \Stringable {
     /**
      * is this state a normal regex type of state?
      * "regex:<regular-expression-here>"
-     *
-     * @return boolean
      */
     public function isNormalRegex(): bool
     {
@@ -292,19 +274,12 @@ class State implements \Stringable {
     /**
      * is this state a negated regex type of state?
      * "not-regex:<regular-expression-here>"
-     *
-     * @return boolean
      */
     public function isNegatedRegex(): bool
     {
         return str_starts_with($this, self::REGEX_PREFIX_NEGATED);
     }
 
-    /**
-     * get the state type
-     * 
-     * @return string
-     */
     public function getType(): string
     {
 
@@ -312,11 +287,6 @@ class State implements \Stringable {
         return $this->type;
     }
 
-    /**
-     * set the state type
-     *
-     * @param string $type
-     */
     protected function setType(string $type): static
     {
         //if a client mistakenly creates a regex State (a name of [not-]<regex:>), but with a non-regex type,
@@ -336,7 +306,6 @@ class State implements \Stringable {
      * for State and Transition from a Transition instance on the state the transition will be allowed to 
      * run from ('state from').
      *
-     * @param Transition $transition            
      * @return bool yes in case the transition was not on the State already or in case of an invalid transition
      */
     public function addTransition(Transition $transition): bool
@@ -355,9 +324,7 @@ class State implements \Stringable {
     }
 
     /**
-     * get all outgoing transitions
-     * 
-     * @return Transition[] an array of transitions
+     * @return Transition[]
      */
     public function getTransitions(): array
     {
@@ -365,39 +332,22 @@ class State implements \Stringable {
         return $this->transitions;
     }
 
-    /**
-     * gets the name of this state
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * sets the name of this state
-     * @param string $name
-     */
     protected function setName(string $name): static
     {
         $this->name = trim($name);
         return $this;
     }
 
-    /**
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return (string) $this->getName();
     }
 
-    /**
-     * Do we have a transition from this state with a certain name?
-     * 
-     * @param string $transitionName            
-     * @return boolean
-     */
     public function hasTransition(string $transitionName): bool
     {
         $has = false;
@@ -414,7 +364,6 @@ class State implements \Stringable {
      * An action executed every time a state is entered.
      * An entry action will not be executed for an 'initial' state.
      *
-     * @param Context $context            
      * @throws Exception
      */
     public function entryAction(Context $context): void
@@ -427,7 +376,6 @@ class State implements \Stringable {
     /**
      * calls a $callable if it exists, with the arguments $context->getEntity()
      * @param callable $callable
-     * @param Context $context
      * @param string $type the type of callable (self::CALLABLE_ENTRY | self::CALLABLE_EXIT)
      */
     protected function callCallable($callable, Context $context, string $type = 'n/a'): void
@@ -443,7 +391,6 @@ class State implements \Stringable {
      * An exit action will not be executed for a 'final' state since a machine
      * will not leave a 'final' state.
      *
-     * @param Context $context            
      * @throws Exception
      */
     public function exitAction(Context $context): void
@@ -454,9 +401,6 @@ class State implements \Stringable {
     }
 
     /**
-     * helper method
-     * 
-     * @param ICommand $command            
      * @throws Exception
      */
     protected function execute(ICommand $command): void
@@ -474,10 +418,6 @@ class State implements \Stringable {
      * returns the associated Command for the entry/exit action.
      * the Command will be configured with the domain model via dependency injection
      *
-     * @param string $commandName
-     *            entry or exit command name
-     * @param Context $context            
-     * @return ICommand
      * @throws Exception
      */
     protected function getCommand(string $commandName, Context $context): ICommand
@@ -505,8 +445,6 @@ class State implements \Stringable {
 
     /**
      * get the fully qualified command name for entry of the state
-     * 
-     * @return string
      */
     public function getEntryCommandName(): string
     {
@@ -515,8 +453,6 @@ class State implements \Stringable {
 
     /**
      * get the fully qualified command name for exit of the state
-     *
-     * @return string
      */
     public function getExitCommandName(): string
     {
@@ -524,8 +460,7 @@ class State implements \Stringable {
     }
 
     /**
-     * set the exit command name
-     * @param string $name a fully qualified command name
+     * @param string|null $name a fully qualified command name
      */
     public function setExitCommandName(?string $name): static
     {
@@ -534,8 +469,7 @@ class State implements \Stringable {
     }
 
     /**
-     * set the entry command name
-     * @param string $name a fully qualified command name
+     * @param string|null $name a fully qualified command name
      */
     public function setEntryCommandName(?string $name): static
     {
@@ -545,8 +479,6 @@ class State implements \Stringable {
 
     /**
      * set the description of the state (for uml generation for example)
-     *
-     * @param string|null $description
      */
     public function setDescription(?string $description): static
     {
@@ -554,11 +486,6 @@ class State implements \Stringable {
         return $this;
     }
 
-    /**
-     * get the description for this state (if any)
-     *
-     * @return string|null
-     */
     public function getDescription(): ?string
     {
         return $this->description;
