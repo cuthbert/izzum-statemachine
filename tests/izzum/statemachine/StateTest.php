@@ -1,21 +1,21 @@
 <?php
 namespace izzum\statemachine;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\utils\EntityNull;
 use izzum\command\ExceptionCommand;
 use izzum\command\Command;
 
 /**
- * @group statemachine
- * @group state
  * 
  * @author rolf
  *        
  */
-class StateTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'state')]
+class StateTest extends TestCase {
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWorkAsExpectedAndDoCorrectBiDirectionalAssociation()
     {
         $name = 'a';
@@ -53,9 +53,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($state->addTransition($t1), 'already present');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldReturnType()
     {
         $name = 'state-izzum';
@@ -78,9 +76,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($state->isRegex());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldReturnTransitionForEvent()
     {
         $a = new State('a');
@@ -121,9 +117,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([], $c->getTransitionsTriggeredByEvent('b-a'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldExecuteEntryAndExitAction()
     {
         // scenario 1
@@ -161,9 +155,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shoulFailInvalidAction()
     {
         // scenario 1
@@ -201,9 +193,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldExitWithCallable()
     {
         $state = new State('a');
@@ -218,9 +208,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('234', $context->getEntityId());
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToSetCallable()
     {
         $context = new Context(new Identifier('123','foo-machine'));
@@ -247,9 +235,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('127', $context->getEntityId());
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldEnterWithCallable()
     {
         $state = new State('a');
@@ -264,9 +250,7 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('234', $context->getEntityId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldFailEntryAndExitWithNonCallable()
     {
         $state = new State('a');
@@ -291,10 +275,8 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         }
     }
     
-    /**
-     * @test
-     * @group regex
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldReturnRegexState(){
         $name = 'regex:.*';
         $regex = new State($name, State::TYPE_REGEX);
@@ -313,10 +295,8 @@ class StateTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($regex->isNormalRegex());
     }
     
-    /**
-     * @test
-     * @group regex
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldNotReturnRegexState(){
         $name = 'rege:.*';
         $regex = new State($name);

@@ -1,5 +1,8 @@
 <?php
 namespace izzum\statemachine\utils;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\utils\EntityNull;
 use izzum\command\ExceptionCommand;
 use izzum\command\Command;
@@ -15,16 +18,13 @@ use izzum\statemachine\loader\Loader;
 use izzum\statemachine\loader\LoaderArray;
 
 /**
- * @group statemachine
- * @group state
  * @author rolf
  *
  */
-class UtilsTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'state')]
+class UtilsTest extends TestCase {
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetCommandWithEntity(){
     
     	$command_name = 'izzum\statemachine\utils\IncreaseId';
@@ -37,7 +37,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     	
     	$command = Utils::getCommand($command_name, $context);
     	$this->assertTrue(is_a($command, 'izzum\command\Composite'));
-    	$this->assertContains('IncreaseId', $command->toString());
+    	$this->assertStringContainsString('IncreaseId', $command->toString());
     	$this->assertEquals(0, $entity->id);
     	$command->execute();
     	$this->assertEquals(1, $entity->id);
@@ -45,8 +45,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * https://github.com/rolfvreijdenberger/izzum-statemachine/issues/7
-     * @test
      */
+    #[Test]
     public function shouldPassConfigurationCheckForBasicMachine()
     {
         $transitions = [];
@@ -66,8 +66,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * https://github.com/rolfvreijdenberger/izzum-statemachine/issues/7
-     * @test
      */
+    #[Test]
     public function shouldPassConfigurationCheckForMachineWithGoodCallables()
     {
         $transitions = [];
@@ -96,8 +96,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * https://github.com/rolfvreijdenberger/izzum-statemachine/issues/7
-     * @test
      */
+    #[Test]
     public function shouldFailConfigurationCheckForMachineWithBadCallables()
     {
         $transitions = [];
@@ -129,9 +129,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     }
     
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetCompositeCommand(){
     
     	//id should be increased three times
@@ -145,7 +143,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     
     	$command = Utils::getCommand($command_name, $context);
     	$this->assertTrue(is_a($command, 'izzum\command\Composite'));
-    	$this->assertContains('IncreaseId', $command->toString());
+    	$this->assertStringContainsString('IncreaseId', $command->toString());
     	$this->assertEquals(0, $entity->id);
     	$command->execute();
     	$this->assertEquals(3, $entity->id);
@@ -153,9 +151,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     	$this->assertEquals(6, $entity->id);
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetNullCommand(){
     
     	$command_name = '';
@@ -172,9 +168,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     	 
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetExceptionForInvalidCommand(){
     	$command_name = 'izzum\statemachine\utils\CannotCreate';
     	$context = new Context(new Identifier('1','test'));
@@ -184,15 +178,13 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     		$this->fail('should not come here, command should throw exception on failure');
     	} catch (Exception $e) {
     		$this->assertEquals(Exception::COMMAND_CREATION_FAILURE, $e->getCode());
-    		$this->assertContains('cannot create', $e->getMessage());
-    		$this->assertContains('objects to construction', $e->getMessage());
+    		$this->assertStringContainsString('cannot create', $e->getMessage());
+    		$this->assertStringContainsString('objects to construction', $e->getMessage());
     		//echo $e->getMessage() . PHP_EOL;
     	}
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldGetExceptionForNonExistingCommand(){
     
     	$command_name = 'bogus';
@@ -203,14 +195,12 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     		$this->fail('should not come here, command does not exist');
     	} catch (Exception $e) {
     		$this->assertEquals(Exception::COMMAND_CREATION_FAILURE, $e->getCode());
-    		$this->assertContains('class does not exist', $e->getMessage());
+    		$this->assertStringContainsString('class does not exist', $e->getMessage());
     		//echo $e->getMessage() . PHP_EOL;
     	}
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWrapException()
     {
         $e = new \Exception('test', 0);
@@ -225,9 +215,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
         
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldReturnCorrectTransitionName(){
         $from = 'state-from';
         $to = 'state-to';
@@ -235,10 +223,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     }
     
     
-    /**
-     * @test
-     * @group regex
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldMatchValidRegexAndNegatedRegex(){
         $name = 'regex:/.*/';//only allow regexes between regex begin and end markers
         $regex = new State($name);
@@ -282,10 +268,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse(Utils::matchesRegex($regex, $bad));
     }
     
-    /**
-     * @test
-     * @group regex
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldReturnArrayOfMatchedStates(){
         
         $a = new State('a');

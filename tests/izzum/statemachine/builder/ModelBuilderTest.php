@@ -1,20 +1,20 @@
 <?php
 namespace izzum\statemachine\builder;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\builder\ModelBuilder;
 use izzum\statemachine\Identifier;
 /**
  * 
- * @group statemachine
- * @group builder
  * @author rolf
  *
  */
-class ModelBuilderTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'builder')]
+class ModelBuilderTest extends TestCase {
     
   
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldUseModelBuilderCorrectly()
     {
     	$identifier = new Identifier(-1, 'order');

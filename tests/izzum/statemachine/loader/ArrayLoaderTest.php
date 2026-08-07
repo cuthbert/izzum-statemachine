@@ -1,5 +1,8 @@
 <?php
 namespace izzum\statemachine\loader;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\Transition;
 use izzum\statemachine\State;
 use izzum\statemachine\StateMachine;
@@ -12,11 +15,11 @@ use izzum\statemachine\loader\LoaderArray;
 use izzum\statemachine\utils\Utils;
 /**
  * Tests the loading mechanisms objects
- * @group statemachine
  * @author rolf
  *
  */
-class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine')]
+class ArrayLoaderTest extends TestCase {
     
     
     
@@ -24,8 +27,8 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
     {
         //scenario: test loader supported stuff
         $loader = new LoaderArray();
-        $this->assertContains('LoaderArray', $loader->toString());
-        $this->assertContains('LoaderArray', $loader .'', '__toString');
+        $this->assertStringContainsString('LoaderArray', $loader->toString());
+        $this->assertStringContainsString('LoaderArray', $loader .'', '__toString');
         $this->assertEquals(0, $loader->count());
 
         
@@ -52,9 +55,7 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
         }
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldLoadStateMachine()
     {
         $transitions = [];
@@ -74,9 +75,7 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
         $this->assertCount(3, $machine->getStates());
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldAddToLoader()
     {
     	$transitions = [];
@@ -100,9 +99,7 @@ class ArrayLoaderTest extends \PHPUnit_Framework_TestCase {
     	$this->assertEquals(3, $loader->count());
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldAddRegexesLoaderOnlyWhenStatesAreSet()
     {
         

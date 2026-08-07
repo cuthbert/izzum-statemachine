@@ -1,19 +1,19 @@
 <?php
 namespace izzum\statemachine;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\utils\Utils;
 
 
 /**
- * @group statemachine
- * @group factory
  * @author rolf
  *
  */
-class FactoryTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'factory')]
+class FactoryTest extends TestCase {
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldCreateAndUseSimpleTestFactory() {
         $machine_name = 'factory-test';
 

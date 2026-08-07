@@ -1,5 +1,8 @@
 <?php
 namespace izzum\statemachine\persistence;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\StateMachine;
 use izzum\statemachine\Context;
 use izzum\statemachine\Exception;
@@ -14,19 +17,13 @@ use izzum\statemachine\Transition;
  * a system that has been setup properly with that module and with an instance of
  * the mongod server running
  *
- * @group persistence
- * @group loader
- * @group mongodb
- * @group mongodb_less_than_php7
- * @group not-on-production
  * @author rolf
  *
  */
-class MongoDBTest extends \PHPUnit_Framework_TestCase {
+#[Group('persistence', 'loader', 'mongodb', 'mongodb_less_than_php7', 'not-on-production')]
+class MongoDBTest extends TestCase {
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToStoreAndRetrieveData()
     {
 
@@ -102,9 +99,7 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldDoMoreTests()
     {
         $this->markTestIncomplete('need more tests for actual database contents');

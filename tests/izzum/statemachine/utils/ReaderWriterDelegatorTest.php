@@ -1,5 +1,8 @@
 <?php
 namespace izzum\statemachine\utils;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\persistence\Memory;
 use izzum\statemachine\Transition;
 use izzum\statemachine\State;
@@ -13,18 +16,14 @@ use izzum\statemachine\loader\XML;
 use izzum\statemachine\utils\Utils;
 
 /**
- * @group statemachine
- * @group loader
- * @group xml
  * 
  * @author rolf
  *        
  */
-class ReaderWriterDelegatorTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'loader', 'xml')]
+class ReaderWriterDelegatorTest extends TestCase {
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldLoadAndWriteViaDelegator()
     {
         $loader = XML::createFromFile(__DIR__ . '/../loader/fixture-example.xml');
@@ -52,9 +51,7 @@ class ReaderWriterDelegatorTest extends \PHPUnit_Framework_TestCase {
 
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBehave()
     {
         $loader = XML::createFromFile(__DIR__ . '/../../../../assets/xml/example.xml');
@@ -64,10 +61,10 @@ class ReaderWriterDelegatorTest extends \PHPUnit_Framework_TestCase {
         
         $this->assertSame($loader, $delegator->getReader());
         $this->assertSame($writer, $delegator->getWriter());
-        $this->assertContains('Memory', $delegator->toString());
-        $this->assertContains('XML', $delegator->toString());
-        $this->assertContains('Memory', $delegator . '');
-        $this->assertContains('XML', $delegator . '');
+        $this->assertStringContainsString('Memory', $delegator->toString());
+        $this->assertStringContainsString('XML', $delegator->toString());
+        $this->assertStringContainsString('Memory', $delegator . '');
+        $this->assertStringContainsString('XML', $delegator . '');
         $this->assertCount(0, $delegator->getEntityIds('test'));
         $this->assertFalse($delegator->isPersisted(new Identifier('123', 'bogus')));
         $delegator->setFailedTransition(new Identifier('foo', 'bar'), new Transition(new State('foo'), new State('bar')), new \Exception('bogus'));

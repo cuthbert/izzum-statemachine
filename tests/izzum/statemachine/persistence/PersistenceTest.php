@@ -1,5 +1,8 @@
 <?php
 namespace izzum\statemachine\persistence;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\Context;
 use izzum\statemachine\EntityBuilder;
 use izzum\statemachine\State;
@@ -14,13 +17,11 @@ use izzum\statemachine\utils\PlantUml;
 use izzum\statemachine\persistence\PDO;
 
 /**
- * @group persistence
- * @group pdo
- * @group session
  * @author rolf
  *
  */
-class PersistenceTest extends \PHPUnit_Framework_TestCase {
+#[Group('persistence', 'pdo', 'session')]
+class PersistenceTest extends TestCase {
 
 
     public function testStorageData()
@@ -79,7 +80,7 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
         //scenario
         $this->assert_Add_GetEntityIds_Set($io);
 
-        $this->assertContains('Memory' , $io . '', '__toSring()');
+        $this->assertStringContainsString('Memory' , $io . '', '__toSring()');
 
 
     }
@@ -149,15 +150,14 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
         Memory::clear();
         $result = $io->setState($identifier, "TEST");
         $this->assertEquals("null-machine_-1_TEST", $result, 'concatenated stuff');
-        $this->assertContains('MemoryEntityConcatenator', $io->toString());
+        $this->assertStringContainsString('MemoryEntityConcatenator', $io->toString());
     }
 
     /**
      * not working in travis-ci because output already started. ob_flush is not
      * working
-     * @group uses-sessions
-     * @group not-on-production
      */
+    #[Group('uses-sessions', 'not-on-production')]
     public function testSessionAdapter()
     {
         //I have verified (by forcing a session id) that sessions actually
@@ -181,13 +181,11 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
     }
 
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         parent::tearDownAfterClass();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowExceptions()
     {
         $context = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -393,10 +391,8 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
     /**
      * this test will only run when the \assets\sql\postgresql.sql file has been
      * executed on a postgres backend, providing test data.
-     * @group not-on-production
-     * @group pdo
-     * @group postgresql
      */
+    #[Group('not-on-production', 'pdo', 'postgresql')]
     public function testPDOAdapterPOSTGRES()
     {
         $machine = 'izzum';
@@ -407,15 +403,14 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
         $this->assertPersistenceAdapterPDO($adapter, $machine, false);
     }
 
-      /**
+    /**
      * this test will only run when the \assets\sql\sqlite.sql file has been
      * executed on a sqlite backend, providing test data
      *
      * create file 'sqlite.db' in 'tests' directory (# sqlite3 sqlite.db) and load the assets\sql\sqlite.sql file
      *
-     * @group not-on-production
-     * @group sqlite
      */
+    #[Group('not-on-production', 'sqlite')]
     public function testPDOAdapterSQLITE()
     {
         //create file 'sqlite.db' in 'tests' directory and load the assets/sql/sqlite.sql file
@@ -436,9 +431,8 @@ class PersistenceTest extends \PHPUnit_Framework_TestCase {
     /**
      * this test will only run when the \assets\sql\mysql.sql file has been
      * executed on a mysql backend, providing test data.
-     * @group not-on-production
-     * @group mysql
      */
+    #[Group('not-on-production', 'mysql')]
     public function testPDOAdapterMYSQL()
     {
         $dsn = 'mysql:host=localhost;dbname=test';

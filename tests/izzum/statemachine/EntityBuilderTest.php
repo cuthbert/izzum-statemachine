@@ -1,15 +1,17 @@
 <?php
 namespace izzum\statemachine;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\builder\ModelBuilder;
 /**
  * Tests the public methods of builders.
  * 
- * @group statemachine
- * @group EntityBuilder
  * @author rolf
  *
  */
-class EntityBuilderTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'EntityBuilder')]
+class EntityBuilderTest extends TestCase {
     
     public function testDefaultBuilder()
     {
@@ -40,7 +42,7 @@ class EntityBuilderTest extends \PHPUnit_Framework_TestCase {
         $result_2 = $builder->getEntity($object_2);
         $this->assertEquals($object_2, $result_2);
         
-        $this->assertContains('EntityBuilder', $builder . '', '__toString()');
+        $this->assertStringContainsString('EntityBuilder', $builder . '', '__toString()');
     }
     
     /**
@@ -81,9 +83,7 @@ class EntityBuilderTest extends \PHPUnit_Framework_TestCase {
         
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowException()
     {
         $identifier = new Identifier(-1, 'order');

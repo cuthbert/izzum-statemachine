@@ -1,18 +1,18 @@
 <?php
 namespace izzum\statemachine\utils;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\utils\ExternalData;
 
 /**
- * @group statemachine
- * @group ExternalData
  * @author rolf
  *
  */
-class ExternalDataTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'ExternalData')]
+class ExternalDataTest extends TestCase {
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWorkAsExpectedViaPublicMethods()
     {
         //cleanup

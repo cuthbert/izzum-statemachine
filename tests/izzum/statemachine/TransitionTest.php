@@ -1,21 +1,21 @@
 <?php
 namespace izzum\statemachine;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\Transition;
 use izzum\statemachine\Exception;
 use izzum\rules\Exception as ExceptionInRulePackage;
 
 /**
- * @group statemachine
- * @group transition
  *
  * @author rolf
  *
  */
-class TransitionTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'transition')]
+class TransitionTest extends TestCase {
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWorkWhenCallingPublicMethods()
     {
         $from = new State('a');
@@ -27,7 +27,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($from . '_to_' . $to, $transition->getName());
         $this->assertEquals($from, $transition->getStateFrom());
         $this->assertEquals($to, $transition->getStateTo());
-        $this->assertContains($transition->getName(), $transition->toString());
+        $this->assertStringContainsString($transition->getName(), $transition->toString());
         $command = $transition->getCommand($object);
         $rule = $transition->getRule($object);
         $this->assertTrue(is_a($command, 'izzum\command\Composite'), $command::class);
@@ -53,9 +53,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($transition->getName(), $transition->getEvent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToCopy()
     {
         $a = new State('a');
@@ -87,9 +85,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($tc, $copy->getTransitionCallable());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldSetBiDirectionalReferenceOnFromStateOnlyForInitialOrNormalStates()
     {
         $a = new State('a', State::TYPE_INITIAL);
@@ -143,9 +139,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertCount(0, $d->getTransitions());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldHaveBidirectionalAssociation()
     {
         $from = new State('a');
@@ -155,9 +149,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($to->hasTransition($transition->getName()), 'not on an incoming transition');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowExceptionWhenRuleAndCommandNotCreated()
     {
         $from = new State('a');
@@ -181,9 +173,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldReturnTrueRuleAndNullCommandWhenRuleEmpty()
     {
         $from = new State('a');
@@ -194,9 +184,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(is_a($transition->getCommand($context), Transition::COMMAND_NULL));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWorkWhenCallingPublicMethodsWithOptionalConstructorParams()
     {
         $from = new State('a');
@@ -206,16 +194,14 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($from . '_to_' . $to, $transition->getName());
         $this->assertEquals($from, $transition->getStateFrom());
         $this->assertEquals($to, $transition->getStateTo());
-        $this->assertContains($transition->getName(), $transition->toString());
+        $this->assertStringContainsString($transition->getName(), $transition->toString());
         $command = $transition->getCommand($object);
         $rule = $transition->getRule($object);
         $this->assertTrue(is_a($command, Transition::COMMAND_NULL));
         $this->assertTrue(is_a($rule, Transition::RULE_TRUE));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWorkWhenCallingPublicMethodsWithNonDefaultConstructorValues()
     {
         $from = new State('a');
@@ -227,18 +213,16 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($from . '_to_' . $to, $transition->getName());
         $this->assertEquals($from, $transition->getStateFrom());
         $this->assertEquals($to, $transition->getStateTo());
-        $this->assertContains($transition->getName(), $transition->toString());
+        $this->assertStringContainsString($transition->getName(), $transition->toString());
         $command = $transition->getCommand($object);
         $rule = $transition->getRule($object);
         $this->assertTrue(is_a($command, 'izzum\command\Composite'));
-        $this->assertContains('izzum\command\SimpleCommand', $command->toString());
+        $this->assertStringContainsString('izzum\command\SimpleCommand', $command->toString());
         $this->assertTrue(is_a($rule, 'izzum\rules\AndRule'));
         $this->assertFalse($rule->applies());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWorkWithMultipleCommands()
     {
         $from = new State('a');
@@ -249,14 +233,12 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $transition = new Transition($from, $to, null, $rule, $command);
         $command = $transition->getCommand($object);
         $this->assertTrue(is_a($command, 'izzum\command\Composite'));
-        $this->assertContains('izzum\command\SimpleCommand', $command->toString());
-        $this->assertContains('izzum\command\NullCommand', $command->toString());
+        $this->assertStringContainsString('izzum\command\SimpleCommand', $command->toString());
+        $this->assertStringContainsString('izzum\command\NullCommand', $command->toString());
         $this->assertEquals('izzum\command\Composite consisting of: [izzum\command\SimpleCommand, izzum\command\NullCommand]', $command->toString());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWorkWhenUsingMultipleRules()
     {
         $from = new State('a');
@@ -271,9 +253,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('((izzum\rules\TrueRule and izzum\rules\TrueRule) and izzum\rules\FalseRule)', $rule->toString());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldExpectExceptionsWhenCallingPublicMethodsWithNonDefaultConstructorValues()
     {
         $from = new State('a');
@@ -285,7 +265,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($from . '_to_' . $to, $transition->getName());
         $this->assertEquals($from, $transition->getStateFrom());
         $this->assertEquals($to, $transition->getStateTo());
-        $this->assertContains($transition->getName(), $transition->toString());
+        $this->assertStringContainsString($transition->getName(), $transition->toString());
         try {
             $command = $transition->getCommand($object);
             $this->fail('should not come here');
@@ -300,9 +280,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAllowedAndAbleToProcess()
     {
         $from = new State('a');
@@ -315,9 +293,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $transition->process($object);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldNotBeAllowedToButAbleToProcess()
     {
         $from = new State('a');
@@ -330,9 +306,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $transition->process($object);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldNotBeAllowedToTransitionByCallable()
     {
         $context = new Context(new Identifier('123','foo-machine'));
@@ -360,9 +334,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($t->can($context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldTransitionWithCallable()
     {
         $context = new Context(new Identifier('123','foo-machine'));
@@ -377,9 +349,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('234', $context->getEntityId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldAcceptMultipleCallableTypes()
     {
         //there are diverse ways to use callables: closures, anonymous function, instance methods
@@ -459,8 +429,8 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * https://github.com/rolfvreijdenberger/izzum-statemachine/issues/7
-     * @test
      */
+    #[Test]
     public function shouldFailWithBadCallableDefinitions()
     {
 
@@ -504,9 +474,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
 
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowExceptionFromAppliedRule()
     {
         $from = new State('a');
@@ -525,9 +493,7 @@ class TransitionTest extends \PHPUnit_Framework_TestCase {
         $transition->process($object);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowExceptionFromAppliedCommand()
     {
         $from = new State('a');

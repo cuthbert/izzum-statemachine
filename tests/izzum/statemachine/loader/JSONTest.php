@@ -1,5 +1,8 @@
 <?php
 namespace izzum\statemachine\loader;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\persistence\Memory;
 use izzum\statemachine\Transition;
 use izzum\statemachine\State;
@@ -13,18 +16,14 @@ use izzum\statemachine\loader\LoaderArray;
 use izzum\statemachine\utils\Utils;
 
 /**
- * @group statemachine
- * @group loader
- * @group json
  *
  * @author rolf
  *
  */
-class JSONTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'loader', 'json')]
+class JSONTest extends TestCase {
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldLoadTransitionsFromFile()
     {
         $machine = new StateMachine(new Context(new Identifier('json-test', 'test-machine')));
@@ -36,23 +35,19 @@ class JSONTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(4, $count);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBehave()
     {
         $machine = new StateMachine(new Context(new Identifier('json-test', 'test-machine')));
         $loader = JSON::createFromFile(__DIR__ . '/../../../../assets/json/example.json');
         $count = $loader->load($machine);
-        $this->assertContains('bdone', $loader->getJSON());
-        $this->assertContains('json-schema', $loader->getJSONSchema());
-        $this->assertContains('JSON', $loader->toString());
-        $this->assertContains('JSON', $loader . '' , '__toString()');
+        $this->assertStringContainsString('bdone', $loader->getJSON());
+        $this->assertStringContainsString('json-schema', $loader->getJSONSchema());
+        $this->assertStringContainsString('JSON', $loader->toString());
+        $this->assertStringContainsString('JSON', $loader . '' , '__toString()');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowExceptionForNonExistentFileLoading()
     {
         $machine = new StateMachine(new Context(new Identifier('json-test', 'json-machine')));
@@ -61,18 +56,17 @@ class JSONTest extends \PHPUnit_Framework_TestCase {
             $this->fail('should not come here');
         }catch(Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
-            $this->assertContains('bogus', $e->getMessage());
-            $this->assertContains('does not exist', $e->getMessage());
+            $this->assertStringContainsString('bogus', $e->getMessage());
+            $this->assertStringContainsString('does not exist', $e->getMessage());
         }
     }
 
     /**
-     * @test
-     * @group not-on-production
-     * @group filepermissions
      * this has been tested locally with a file with permissions of 220 (no read permissions) and it passes.
      * github/travis builds do not play well with this so if you want to run this, create the file with those permissions
      */
+    #[Group('not-on-production', 'filepermissions')]
+    #[Test]
     public function shouldThrowExceptionForNoReadPermissions()
     {
         $machine = new StateMachine(new Context(new Identifier('json-test', 'json-machine')));
@@ -81,13 +75,11 @@ class JSONTest extends \PHPUnit_Framework_TestCase {
             $this->fail('should not come here');
         }catch(Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
-            $this->assertContains('Failed to read', $e->getMessage());
+            $this->assertStringContainsString('Failed to read', $e->getMessage());
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowExceptionForBadJsonData()
     {
         $machine = new StateMachine(new Context(new Identifier('json-test', 'json-machine')));
@@ -97,13 +89,11 @@ class JSONTest extends \PHPUnit_Framework_TestCase {
             $this->fail('should not come here');
         }catch(Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
-            $this->assertContains('decode', $e->getMessage());
+            $this->assertStringContainsString('decode', $e->getMessage());
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowExceptionForNoMachineData()
     {
         $machine = new StateMachine(new Context(new Identifier('json-test', 'json-machine')));
@@ -113,14 +103,12 @@ class JSONTest extends \PHPUnit_Framework_TestCase {
             $this->fail('should not come here');
         }catch(Exception $e) {
             $this->assertEquals(Exception::BAD_LOADERDATA, $e->getCode());
-            $this->assertContains('no machine data', $e->getMessage());
+            $this->assertStringContainsString('no machine data', $e->getMessage());
         }
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldLoadTransitionsFromJSONString()
     {
         $machine = new StateMachine(new Context(new Identifier('json-test', 'json-machine')));

@@ -1,4 +1,6 @@
 <?php
+use PHPUnit\Framework\TestCase;
+use Codeception\Attribute\Group;
 use izzum\rules\Rule;
 use izzum\rules\TrueRule;
 use izzum\rules\FalseRule;
@@ -14,12 +16,9 @@ use izzum\rules\RuleResult;
 /**
  * This class should test the core rule mechanism.
  *
- * @group rule
- * @group rules
- * @group all
  */
-
-class RuleTest extends PHPUnit_Framework_TestCase
+#[Group('rule', 'rules', 'all')]
+class RuleTest extends TestCase
 {
 
     public function testBooleanRule()
@@ -30,7 +29,7 @@ class RuleTest extends PHPUnit_Framework_TestCase
         $rule = new izzum\rules\FalseRule();
         $this->assertFalse($rule->applies());
 
-        $this->assertContains('False', $rule . '', '__toString');
+        $this->assertStringContainsString('False', $rule . '', '__toString');
     }
 
     public function testExceptionRule() {
@@ -49,84 +48,80 @@ class RuleTest extends PHPUnit_Framework_TestCase
      * assumptions can be made by the caller. For example when a rule returns a
      * NULL value the caller may asume that false is meant. The rule cannot
      * trust that the caller checks the boolean type so we will.
-     *
-     * @expectedException izzum\rules\Exception
-     * @expectedExceptionCode izzum\rules\Exception::CODE_NONBOOLEAN
      */
     public function testRuleNullResult()
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(['_applies'])
+                ->onlyMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
                 ->method('_applies')
-                ->will($this->returnValue(NULL));
+                ->willReturn(NULL);
 
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(Exception::CODE_NONBOOLEAN);
         $rule->applies();
     }
 
     /**
      * The same test as testRuleNullResult only in this case a string is
      * returned.
-     *
-     * @expectedException izzum\rules\Exception
-     * @expectedExceptionCode izzum\rules\Exception::CODE_NONBOOLEAN
      */
     public function testRuleStringResult()
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(['_applies'])
+                ->onlyMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
                 ->method('_applies')
-                ->will($this->returnValue('a string'));
+                ->willReturn('a string');
 
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(Exception::CODE_NONBOOLEAN);
         $rule->applies();
     }
 
     /**
      * The same test as testRuleNullResult only in this case an integer 0 is
      * returned.
-     *
-     * @expectedException izzum\rules\Exception
-     * @expectedExceptionCode izzum\rules\Exception::CODE_NONBOOLEAN
      */
     public function testRuleInt0Result()
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(['_applies'])
+                ->onlyMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
                 ->method('_applies')
-                ->will($this->returnValue(0));
+                ->willReturn(0);
 
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(Exception::CODE_NONBOOLEAN);
         $rule->applies();
     }
 
     /**
      * The same test as testRuleNullResult only in this case an integer 1 is
      * returned.
-     *
-     * @expectedException izzum\rules\Exception
-     * @expectedExceptionCode izzum\rules\Exception::CODE_NONBOOLEAN
      */
     public function testRuleInt1Result()
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(['_applies'])
+                ->onlyMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
                 ->method('_applies')
-                ->will($this->returnValue(1));
+                ->willReturn(1);
 
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(Exception::CODE_NONBOOLEAN);
         $rule->applies();
     }
 
@@ -136,20 +131,20 @@ class RuleTest extends PHPUnit_Framework_TestCase
      *
      * No boolean should be returned and expect an non boolean exception.
      *
-     * @expectedException izzum\rules\Exception
-     * @expectedExceptionCode izzum\rules\Exception::CODE_NONBOOLEAN
+     * Mocking a final method (`onlyMethods(['applies'])`) succeeds, but PHPUnit
+     * refuses to override the final method at call time - calling applies()
+     * directly invokes the real implementation, which delegates to the mocked
+     * (abstract, non-final) _applies(), which defaults to returning null.
      */
     public function testAppliesMethodIsFinal()
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(['applies', '_applies'])
+                ->onlyMethods(['applies', '_applies'])
                 ->getMock();
 
-        $rule->expects($this->any())
-                ->method('applies')
-                ->will($this->returnValue(true));
-
+        $this->expectException(Exception::class);
+        $this->expectExceptionCode(Exception::CODE_NONBOOLEAN);
         $rule->applies();
     }
 
@@ -282,12 +277,12 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(['_applies'])
+                ->onlyMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
                 ->method('_applies')
-                ->will($this->throwException(new Exception('not good')));
+                ->willThrowException(new Exception('not good'));
 
         $supressedrule = new izzum\rules\ExceptionSupressor($rule, false);
         $this->assertFalse($supressedrule->applies());
@@ -300,12 +295,12 @@ class RuleTest extends PHPUnit_Framework_TestCase
     {
         $rule = $this->getMockBuilder('izzum\rules\Rule')
                 ->disableOriginalConstructor()
-                ->setMethods(['_applies'])
+                ->onlyMethods(['_applies'])
                 ->getMock();
 
         $rule->expects($this->once())
                 ->method('_applies')
-                ->will($this->throwException(new Exception('not good')));
+                ->willThrowException(new Exception('not good'));
 
         $supressedrule = new izzum\rules\ExceptionSupressor($rule, true);
         $this->assertTrue($supressedrule->applies());

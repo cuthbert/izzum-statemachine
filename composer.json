@@ -23,5 +23,8 @@
     },
     "require-dev": {
         "rector/rector": "^2.6"
+    },
+    "scripts": {
+        "test": "codecept run unit --skip-group not-on-production"
     }
 }

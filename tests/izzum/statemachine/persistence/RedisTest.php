@@ -1,5 +1,8 @@
 <?php
 namespace izzum\statemachine\persistence;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\StateMachine;
 use izzum\statemachine\Context;
 use izzum\statemachine\Exception;
@@ -14,18 +17,13 @@ use izzum\statemachine\Transition;
  * a system that has been setup properly with that module and with an instance of
  * the redis server running
  *
- * @group persistence
- * @group loader
- * @group redis
- * @group not-on-production
  * @author rolf
  *
  */
-class RedisTest extends \PHPUnit_Framework_TestCase {
+#[Group('persistence', 'loader', 'redis', 'not-on-production')]
+class RedisTest extends TestCase {
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToLoadConfigurationAndTestSomeGettersAndSetters()
     {
         $redis = new Redis();
@@ -53,9 +51,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase {
 
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToLoadConfigurationFromSpecificConfigurationKey()
     {
         $redis = new Redis();
@@ -94,9 +90,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase {
 
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToStoreAndRetrieveData()
     {
         $redis = new Redis();
@@ -167,9 +161,7 @@ class RedisTest extends \PHPUnit_Framework_TestCase {
 
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldDoMoreTests()
     {
         $this->markTestIncomplete('need more tests for actual database contents');

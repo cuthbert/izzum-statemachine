@@ -1,4 +1,7 @@
 <?php
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\command\Command;
 use izzum\command\NullCommand;
 use izzum\command\Exception;
@@ -11,11 +14,11 @@ use izzum\command\IComposite;
  * This class tests the basic workings of the Core Command package.
  * Since all commands build upon the Core, these tests should cover all
  * public methods and workings
- * @group command
  * @author rolf
  *
  */
-class CommandTest extends PHPUnit_Framework_TestCase {
+#[Group('command')]
+class CommandTest extends TestCase {
 
 
     public function testCommand()
@@ -38,7 +41,7 @@ class CommandTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(2, count($list));
 
         $this->assertNotNull($command->toString());
-        $this->assertContains('AddToListCommand', $command . '', '__toString()');
+        $this->assertStringContainsString('AddToListCommand', $command . '', '__toString()');
     }
 
     public function testNullCommand()
@@ -183,9 +186,7 @@ class CommandTest extends PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowNormalAndCommandException()
     {
         //coverage test

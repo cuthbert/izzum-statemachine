@@ -1,15 +1,16 @@
 <?php
 namespace izzum\statemachine;
+use PHPUnit\Framework\TestCase;
+use Codeception\Attribute\Group;
 use izzum\statemachine\persistence\Memory;
 
 /**
- * @group statemachine
- * @group Context
  * 
  * @author rolf
  *        
  */
-class ContextTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'Context')]
+class ContextTest extends TestCase {
 
     /**
      * test the factory method with default parameters only
@@ -24,12 +25,12 @@ class ContextTest extends \PHPUnit_Framework_TestCase {
         // only mandatory parameters
         $o = new Context($identifier);
         $this->assertNotNull($o->toString());
-        $this->assertContains($entity_id, $o->getId());
-        $this->assertContains($machine, $o->getId());
-        $this->assertContains($entity_id, $o->getId(false));
-        $this->assertContains($machine, $o->getId(false));
-        $this->assertContains($entity_id, $o->getId(true));
-        $this->assertContains($machine, $o->getId(true));
+        $this->assertStringContainsString($entity_id, $o->getId());
+        $this->assertStringContainsString($machine, $o->getId());
+        $this->assertStringContainsString($entity_id, $o->getId(false));
+        $this->assertStringContainsString($machine, $o->getId(false));
+        $this->assertStringContainsString($entity_id, $o->getId(true));
+        $this->assertStringContainsString($machine, $o->getId(true));
         
         $this->assertEquals($entity_id, $o->getEntityId());
         $this->assertEquals($machine, $o->getMachine());
@@ -43,9 +44,9 @@ class ContextTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($o->getIdentifier(), $identifier);
         
         $this->assertTrue(is_string($o->toString()));
-        $this->assertContains($entity_id, $o->toString());
-        $this->assertContains($machine, $o->toString());
-        $this->assertContains('izzum\statemachine\Context', $o->toString());
+        $this->assertStringContainsString($entity_id, $o->toString());
+        $this->assertStringContainsString($machine, $o->toString());
+        $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());
         
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
     }
@@ -81,9 +82,9 @@ class ContextTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(is_string($o->getEntityId()));
         
         $this->assertTrue(is_string($o->toString()));
-        $this->assertContains($entity_id, $o->toString());
-        $this->assertContains($machine, $o->toString());
-        $this->assertContains('izzum\statemachine\Context', $o->toString());
+        $this->assertStringContainsString($entity_id, $o->toString());
+        $this->assertStringContainsString($machine, $o->toString());
+        $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());
         
         // even though we have a valid reader, the state machine does not exist.
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
@@ -134,9 +135,9 @@ class ContextTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue(is_string($o->getEntityId()));
         
         $this->assertTrue(is_string($o->toString()));
-        $this->assertContains($entity_id, $o->toString());
-        $this->assertContains($machine, $o->toString());
-        $this->assertContains('izzum\statemachine\Context', $o->toString());
+        $this->assertStringContainsString($entity_id, $o->toString());
+        $this->assertStringContainsString($machine, $o->toString());
+        $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());
         
         // even though we have a valid reader, the state machine does not exist.
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
@@ -146,6 +147,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase {
         // for coverage.
         $statemachine = new StateMachine($o);
         $this->assertNull($o->setStateMachine($statemachine));
-        $this->assertContains('Context', $o . '', '__toString()');
+        $this->assertStringContainsString('Context', $o . '', '__toString()');
     }
 }

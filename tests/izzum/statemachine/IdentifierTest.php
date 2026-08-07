@@ -1,19 +1,19 @@
 <?php
 namespace izzum\statemachine;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\persistence\Memory;
 
 /**
- * @group statemachine
- * @group Context
  * 
  * @author rolf
  *        
  */
-class IdentifierTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine', 'Context')]
+class IdentifierTest extends TestCase {
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBehave()
     {
         $entity_id = "123";
@@ -23,23 +23,23 @@ class IdentifierTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($machine, $identifier->getMachine());
         
         //getId
-        $this->assertContains('test', $identifier->getId(true));
-        $this->assertContains('test', $identifier->getId(false));
-        $this->assertContains($entity_id, $identifier->getId(false));
-        $this->assertContains($entity_id, $identifier->getId(true));
-        $this->assertContains('machine', $identifier->getId(true));
-        $this->assertContains('id', $identifier->getId(true));
-        $this->assertNotContains('machine', $identifier->getId(false));
-        $this->assertNotContains('id', $identifier->getId(false));
+        $this->assertStringContainsString('test', $identifier->getId(true));
+        $this->assertStringContainsString('test', $identifier->getId(false));
+        $this->assertStringContainsString($entity_id, $identifier->getId(false));
+        $this->assertStringContainsString($entity_id, $identifier->getId(true));
+        $this->assertStringContainsString('machine', $identifier->getId(true));
+        $this->assertStringContainsString('id', $identifier->getId(true));
+        $this->assertStringNotContainsString('machine', $identifier->getId(false));
+        $this->assertStringNotContainsString('id', $identifier->getId(false));
 
         //string representation
-        $this->assertContains($entity_id, $identifier->toString());
-        $this->assertContains($machine, $identifier->toString());
-        $this->assertContains('Identifier', $identifier->toString());
+        $this->assertStringContainsString($entity_id, $identifier->toString());
+        $this->assertStringContainsString($machine, $identifier->toString());
+        $this->assertStringContainsString('Identifier', $identifier->toString());
         //__toString
-        $this->assertContains($entity_id, $identifier . "");
-        $this->assertContains($machine, $identifier . "");
-        $this->assertContains('Identifier', $identifier . "");
+        $this->assertStringContainsString($entity_id, $identifier . "");
+        $this->assertStringContainsString($machine, $identifier . "");
+        $this->assertStringContainsString('Identifier', $identifier . "");
         
         
         $identifier->setEntityId('321');

@@ -1,5 +1,8 @@
 <?php
 namespace izzum\statemachine;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Codeception\Attribute\Group;
 use izzum\statemachine\Transition;
 use izzum\statemachine\Exception;
 use izzum\statemachine\Context;
@@ -10,23 +13,21 @@ use izzum\statemachine\builder\ModelBuilder;
 use izzum\statemachine\utils\Utils;
 
 /**
- * @group statemachine
  * 
  * @author rolf
  *        
  */
-class StateMachineTest extends \PHPUnit_Framework_TestCase {
+#[Group('statemachine')]
+class StateMachineTest extends TestCase {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         // clear in memory storage
         Memory::clear();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldWorkWhenInitialized()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -43,18 +44,16 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
             // echo $e->getMessage();
         }
         $this->assertNotNull($machine);
-        $this->assertContains('StateMachine', $machine . '', '__toString()');
-        $this->assertContains('transitions', $machine->toString(true));
-        $this->assertNotContains('transitions', $machine->toString(false));
+        $this->assertStringContainsString('StateMachine', $machine . '', '__toString()');
+        $this->assertStringContainsString('transitions', $machine->toString(true));
+        $this->assertStringNotContainsString('transitions', $machine->toString(false));
         //echo $machine->toString(false);
-        $this->assertContains('states', $machine->toString(true));
-        $this->assertNotContains('states', $machine->toString(false));
+        $this->assertStringContainsString('states', $machine->toString(true));
+        $this->assertStringNotContainsString('states', $machine->toString(false));
     }
 
-    /**
-     * @test
-     * @group regex
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldBeAbleToTransition()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -82,9 +81,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToUseAddTransitions()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -156,10 +153,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(State::STATE_NEW, $machine->getInitialState()->getName());
     }
 
-    /**
-     * @group regex
-     * @test
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldAddRegexFromState()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -193,10 +188,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertNull($machine->getTransition('done_to_a'), 'not defined');
     }
     
-    /**
-     * @group regex
-     * @test
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldAddRegexWithSelfTransitions()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -226,10 +219,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotNull($machine->getTransition('c_to_b'));
     }
     
-    /**
-     * @group regex
-     * @test
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldAddRegexWithoutSelfTransitions()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -258,10 +249,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotNull($machine->getTransition('c_to_b'));
     }
     
-    /**
-     * @group regex
-     * @test
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldAddState()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -284,10 +273,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertCount(3, $machine->getStates());
     }
     
-    /**
-     * @group guard
-     * @test
-     */
+    #[Group('guard')]
+    #[Test]
     public function shouldBeAbleToBlockTransitionInSubclass()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -307,10 +294,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($machine->transition('b_to_c'));
     }
     
-    /**
-     * @group regex
-     * @test
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldAddRegexToState()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -342,10 +327,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertNull($machine->getTransition('b_to_a'), 'not defined');
     }
     
-    /**
-     * @group regex
-     * @test
-     */
+    #[Group('regex')]
+    #[Test]
     public function shouldAddRegexToAndFromState()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -418,9 +401,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotEquals($sbbt1, $transition_2, 'no association, transition not on state');
     }
     
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldExecuteSimpleBenchmark()
     {
         $a = new State('a', State::TYPE_INITIAL);
@@ -450,9 +431,9 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @test
      * tests: handle, canHandle, hasEvent, __call
      */
+    #[Test]
     public function shouldBeAbleToUseEventHandlingMethods()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -484,9 +465,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotEquals('c', $machine->getCurrentState()->getName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToUseEventForMoreTransitionsInCurrentState()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -620,9 +599,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($machine->canTransition('c_to_d'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToSwitchContext()
     {
         $context_1 = new Context(new Identifier(1, Identifier::NULL_STATEMACHINE));
@@ -670,10 +647,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     * @group 3.1
-     */
+    #[Group('3.1')]
+    #[Test]
     public function shouldBeAbleToAddToPersistenceLayerAndsetStateWithAndWithoutMessage()
     {
         $identifier = new Identifier('123', 'test-machine');
@@ -711,10 +686,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     * @group 3.1
-     */
+    #[Group('3.1')]
+    #[Test]
     public function shouldBeAbleToGetCorrectStateAfterContextSwitch()
     {
         $c1 = new Context(new Identifier('123', 'test-machine'));
@@ -789,9 +762,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotNull($machine->toString());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToUseRunAndCanTransitionAndTestStateTypes()
     {
         $object = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
@@ -829,9 +800,7 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($machine->getCurrentState()->isFinal());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldThrowExceptionFromRuleOrCommand()
     {
         $context = new Context(new Identifier(54321, Identifier::NULL_STATEMACHINE));
@@ -865,11 +834,8 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    /**
-     * @test
-     * @group not-on-production
-     * @group plantuml
-     */
+    #[Group('not-on-production', 'plantuml')]
+    #[Test]
     public function shouldCreatePlantUmlStateDiagram()
     {
         $machine = 'order-flow';
@@ -963,17 +929,15 @@ class StateMachineTest extends \PHPUnit_Framework_TestCase {
     {
         $this->assertNotNull($result);
         $this->assertTrue(is_string($result));
-        $this->assertContains("@startuml", $result);
-        $this->assertContains("@enduml", $result);
-        $this->assertContains("new", $result);
-        $this->assertContains("rule", $result);
-        $this->assertContains("command", $result);
-        $this->assertContains("_to_", $result);
+        $this->assertStringContainsString("@startuml", $result);
+        $this->assertStringContainsString("@enduml", $result);
+        $this->assertStringContainsString("new", $result);
+        $this->assertStringContainsString("rule", $result);
+        $this->assertStringContainsString("command", $result);
+        $this->assertStringContainsString("_to_", $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function shouldBeAbleToUseCallablesOnEntity()
     {
         $model = new CallableHandler();
