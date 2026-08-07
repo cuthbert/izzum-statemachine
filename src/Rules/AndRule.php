@@ -20,7 +20,7 @@ class AndRule extends Rule {
 
     protected function _applies()
     {
-        return (boolean) $this->original->applies() && $this->other->applies();
+        return (bool) $this->original->applies() && $this->other->applies();
     }
 
     /**

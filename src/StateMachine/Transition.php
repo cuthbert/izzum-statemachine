@@ -238,7 +238,7 @@ class Transition implements \Stringable {
         //in case it is a guard callable we need to return true/false
         if($callable != self::CALLABLE_NULL){
             Utils::checkCallable($callable, $type, "transition: " . $this, $context);
-            return (boolean) call_user_func($callable, $context->getEntity());
+            return (bool) call_user_func($callable, $context->getEntity());
         }
         return true;
     }

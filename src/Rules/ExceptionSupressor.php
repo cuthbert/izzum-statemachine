@@ -31,7 +31,7 @@ class ExceptionSupressor extends Rule {
     public function _applies()
     {
         try {
-            $output = (boolean) $this->decoree->applies();
+            $output = (bool) $this->decoree->applies();
         } catch(Exception) {
             $output = $this->supressedResult;
         }

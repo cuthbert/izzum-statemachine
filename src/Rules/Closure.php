@@ -31,6 +31,6 @@ class Closure extends Rule {
 
     protected function _applies()
     {
-        return (boolean) call_user_func_array($this->closure, $this->arguments);
+        return (bool) call_user_func_array($this->closure, $this->arguments);
     }
 }

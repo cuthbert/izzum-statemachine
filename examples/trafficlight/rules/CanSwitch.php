@@ -27,7 +27,7 @@ class CanSwitch extends Rule {
      */
     protected function _applies() {
         echo $this->light->toString();
-        return (boolean) $this->light->isReadyToSwitch();
+        return (bool) $this->light->isReadyToSwitch();
     }
 }
 

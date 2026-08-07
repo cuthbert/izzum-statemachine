@@ -21,7 +21,7 @@ class NotRule extends Rule {
 
     public function _applies()
     {
-        return (boolean) !$this->original->applies();
+        return (bool) !$this->original->applies();
     }
 
     /**
