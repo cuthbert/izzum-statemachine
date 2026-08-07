@@ -70,7 +70,7 @@ class Identifier implements \Stringable {
      */
     public function setEntityId($entityId)
     {
-        $this->entity_id = trim("$entityId");
+        $this->entityId = trim("$entityId");
     }
 
     /**
@@ -81,7 +81,7 @@ class Identifier implements \Stringable {
      */
     public function getEntityId()
     {
-        return $this->entity_id;
+        return $this->entityId;
     }
 
     /**

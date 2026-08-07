@@ -171,7 +171,7 @@ class PDO extends Adapter implements Loader {
         $data = $this->getLoaderData($statemachine->getContext()->getMachine());
         // delegate to LoaderArray
         $loader = new LoaderArray($data);
-        $loader->load($statemachine);
+        return $loader->load($statemachine);
     }
 
     /**

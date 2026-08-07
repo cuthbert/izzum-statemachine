@@ -65,7 +65,7 @@ class YAML implements Loader, \Stringable {
     public function load(StateMachine $stateMachine)
     {
         //decode the json in a php object structure
-        $decoded = \yaml_parse($this->getYaml(), false);
+        $decoded = \yaml_parse($this->getYaml(), 0);
 
         //yaml decoding returns a php array.
         $name = $stateMachine->getContext()->getMachine();
