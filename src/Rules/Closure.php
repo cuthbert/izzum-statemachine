@@ -24,7 +24,7 @@ class Closure extends Rule {
         /**
          * an array of arguments to pass as parameters to the closure
          */
-        private $arguments = []
+        private array $arguments = []
     )
     {
     }

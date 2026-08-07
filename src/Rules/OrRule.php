@@ -33,7 +33,7 @@ class OrRule extends Rule {
      * @return string
      */
     #[\Override]
-    public function toString()
+    public function toString(): string
     {
         // includes the namespace
         $original = $this->original->toString();
@@ -47,7 +47,7 @@ class OrRule extends Rule {
      * @return array
      */
     #[\Override]
-    public function getResults()
+    public function getResults(): array
     {
         return array_merge($this->other->getResults(), $this->original->getResults());
     }

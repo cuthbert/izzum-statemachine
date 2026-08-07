@@ -23,10 +23,10 @@ interface IRule {
      *
      * @return bool
      */
-    public function applies();
+    public function applies(): bool;
 
     /**
      * gives a string representation of the instance
      */
-    public function toString();
+    public function toString(): string;
 }

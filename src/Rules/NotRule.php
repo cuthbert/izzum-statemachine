@@ -30,7 +30,7 @@ class NotRule extends Rule {
      * @return array
      */
     #[\Override]
-    public function getResults()
+    public function getResults(): array
     {
         return $this->original->getResults();
     }

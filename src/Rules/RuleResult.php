@@ -21,26 +21,26 @@ class RuleResult {
      * @param Rule $rule            
      * @param string $result            
      */
-    public function __construct(private readonly Rule $rule, private $result)
+    public function __construct(private readonly Rule $rule, private string $result)
     {
     }
 
     /**
      * get the rule for which this result applies
-     * 
+     *
      * @return Rule
      */
-    public function getRule()
+    public function getRule(): Rule
     {
         return $this->rule;
     }
 
     /**
      * get the result
-     * 
+     *
      * @return string
      */
-    public function getResult()
+    public function getResult(): string
     {
         return $this->result;
     }

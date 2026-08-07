@@ -24,7 +24,7 @@ class ExceptionSupressor extends Rule {
      *            what to return in case the decorated rule
      *            throws an error
      */
-    public function __construct(private readonly Rule $decoree, private $supressedResult = false)
+    public function __construct(private readonly Rule $decoree, private bool $supressedResult = false)
     {
     }
 

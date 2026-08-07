@@ -57,7 +57,7 @@ abstract class Rule implements IRule, \Stringable {
      * 
      * @var RuleResult[]
      */
-    private $result = [];
+    private array $result = [];
     
     /**
      * should we cache the result or not?
@@ -67,7 +67,7 @@ abstract class Rule implements IRule, \Stringable {
      * 
      * @var boolean
      */
-    private $useCaching = false;
+    private bool $useCaching = false;
     
     /**
      * if the result is cached, it will be put in this variable
@@ -75,7 +75,7 @@ abstract class Rule implements IRule, \Stringable {
      *
      * @var boolean|null
      */
-    private $cache;
+    private ?bool $cache = null;
 
     /**
      * A concrete rule should at least implement the _applies method and return
@@ -108,7 +108,7 @@ abstract class Rule implements IRule, \Stringable {
      * @return boolean
      * @throws Exception https://en.wikipedia.org/wiki/Template_method_pattern
      */
-    final public function applies()
+    final public function applies(): bool
     {
         try {
             if ($this->shouldReturnCache()) {
@@ -138,7 +138,7 @@ abstract class Rule implements IRule, \Stringable {
      * 
      * @param Exception $e            
      */
-    protected function handleException($e)
+    protected function handleException(Exception $e): void
     {
         // implement in subclass if needed
     }
@@ -150,7 +150,7 @@ abstract class Rule implements IRule, \Stringable {
      * @param Rule $other            
      * @return Rule
      */
-    final public function orRule(Rule $other)
+    final public function orRule(Rule $other): Rule
     {
         return new OrRule($this, $other);
     }
@@ -162,7 +162,7 @@ abstract class Rule implements IRule, \Stringable {
      * @param Rule $other            
      * @return Rule
      */
-    final public function xorRule(Rule $other)
+    final public function xorRule(Rule $other): Rule
     {
         return new XorRule($this, $other);
     }
@@ -174,7 +174,7 @@ abstract class Rule implements IRule, \Stringable {
      * @param Rule $other            
      * @return Rule
      */
-    final public function andRule(Rule $other)
+    final public function andRule(Rule $other): Rule
     {
         return new AndRule($this, $other);
     }
@@ -184,7 +184,7 @@ abstract class Rule implements IRule, \Stringable {
      *
      * @return Rule
      */
-    final public function not()
+    final public function not(): Rule
     {
         return new NotRule($this);
     }
@@ -193,7 +193,7 @@ abstract class Rule implements IRule, \Stringable {
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         // includes the namespace
         return static::class;
@@ -208,7 +208,7 @@ abstract class Rule implements IRule, \Stringable {
      *
      * @return RuleResult[]
      */
-    public function getResults()
+    public function getResults(): array
     {
         return $this->result;
     }
@@ -222,7 +222,7 @@ abstract class Rule implements IRule, \Stringable {
      * 
      * @param string $result            
      */
-    final protected function addResult($result)
+    final protected function addResult(string $result): void
     {
         $this->result [] = new RuleResult($this, $result);
     }
@@ -237,7 +237,7 @@ abstract class Rule implements IRule, \Stringable {
      * @see Rule::getResults()
      * @param string $expected            
      */
-    final public function containsResult($expected)
+    final public function containsResult(string $expected): bool
     {
         $output = false;
         $results = $this->getResults();
@@ -252,17 +252,17 @@ abstract class Rule implements IRule, \Stringable {
     /**
      * Clear the results
      */
-    private function clearResult()
+    private function clearResult(): void
     {
         $this->result = [];
     }
 
-    private function clearCache()
+    private function clearCache(): void
     {
         $this->cache = null;
     }
 
-    private function setCache($result)
+    private function setCache(bool $result): void
     {
         if ($this->getCacheEnabled()) {
             $this->cache = $result;
@@ -274,39 +274,38 @@ abstract class Rule implements IRule, \Stringable {
      *
      * @return boolean
      */
-    final public function hasResult()
+    final public function hasResult(): bool
     {
         return count($this->getResults()) !== 0;
     }
 
     /**
      * should we cache the result if the rule is applied more than once?
-     * 
-     * @param boolean $cached            
+     *
+     * @param boolean $cached
      */
-    final public function setCacheEnabled($cached = true)
+    final public function setCacheEnabled(bool $cached = true): void
     {
-        $cached = (bool) $cached;
         $this->useCaching = $cached;
         $this->clearCache();
     }
 
     /**
      * return the cached value
-     * 
+     *
      * @return boolean
      */
-    final protected function getCache()
+    final protected function getCache(): ?bool
     {
         return $this->cache;
     }
 
     /**
      * should we return a cached value?
-     * 
+     *
      * @return boolean
      */
-    private function shouldReturnCache()
+    private function shouldReturnCache(): bool
     {
         if ($this->getCacheEnabled()) {
             if ($this->cache !== null) {
@@ -320,7 +319,7 @@ abstract class Rule implements IRule, \Stringable {
      *
      * @return boolean
      */
-    final public function getCacheEnabled()
+    final public function getCacheEnabled(): bool
     {
         return $this->useCaching;
     }
