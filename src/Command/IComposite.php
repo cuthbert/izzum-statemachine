@@ -1,6 +1,5 @@
 <?php
 namespace Izzum\Command;
-use Izzum\Command\ICommand;
 
 /**
  * The Interface for a CompositeCommand aka.

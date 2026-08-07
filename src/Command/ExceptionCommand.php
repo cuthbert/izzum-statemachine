@@ -1,6 +1,5 @@
 <?php
 namespace Izzum\Command;
-use Izzum\Command\Command;
 
 /**
  * throws an exception

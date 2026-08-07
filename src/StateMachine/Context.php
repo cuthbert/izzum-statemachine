@@ -2,7 +2,6 @@
 namespace Izzum\StateMachine;
 use Izzum\StateMachine\Persistence\Adapter;
 use Izzum\StateMachine\Persistence\Memory;
-use Izzum\StateMachine\Exception;
 
 /**
  * Context is an object that holds all the contextual information for the

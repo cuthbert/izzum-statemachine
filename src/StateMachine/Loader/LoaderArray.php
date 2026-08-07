@@ -3,7 +3,6 @@ namespace Izzum\StateMachine\Loader;
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\State;
-use Izzum\StateMachine\Utils\Utils;
 use Izzum\StateMachine\Transition;
 use Izzum\StateMachine\Persistence\PDO;
 

@@ -1,10 +1,7 @@
 <?php
 namespace Izzum\StateMachine;
-use Izzum\Command\NullCommand;
 use Izzum\Rules\TrueRule;
-use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\Utils\Utils;
-use Izzum\StateMachine\Context;
 use Izzum\Rules\Rule;
 use Izzum\Rules\AndRule;
 use Izzum\Rules\Izzum\Rules;

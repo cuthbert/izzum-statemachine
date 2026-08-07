@@ -4,7 +4,6 @@ use Izzum\StateMachine\Loader\Loader;
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\Loader\LoaderArray;
-use Izzum\StateMachine\Loader\LoaderData;
 use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\Transition;
 use Izzum\StateMachine\State;

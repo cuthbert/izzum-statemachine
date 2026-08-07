@@ -2,14 +2,9 @@
 namespace Izzum\StateMachine\Persistence;
 use Izzum\StateMachine\Loader\Loader;
 use Izzum\StateMachine\StateMachine;
-use Izzum\StateMachine\Context;
-use Izzum\StateMachine\Loader\LoaderArray;
-use Izzum\StateMachine\Loader\LoaderData;
 use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\Identifier;
-use Izzum\StateMachine\Transition;
 use Izzum\StateMachine\Loader\JSON;
-use Izzum\StateMachine\State;
 /**
  * MongoDB (from humongous) is a cross-platform document-oriented database.
  * MongoDB is an open-source document database that provides high performance, high availability, and automatic scaling. 

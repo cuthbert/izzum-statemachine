@@ -1,9 +1,5 @@
 <?php
 namespace Izzum\Command;
-use Izzum\Command\Command;
-use Izzum\Command\ICommand;
-use Izzum\Command\IComposite;
-use Izzum\Command\Exception;
 
 /**
  * Command Pattern [GoF] implementation

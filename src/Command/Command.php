@@ -1,7 +1,5 @@
 <?php
 namespace Izzum\Command;
-use Izzum\Command\Exception;
-use Izzum\Command\ICommand;
 
 /**
  * Serves as base class for all other concrete commands.

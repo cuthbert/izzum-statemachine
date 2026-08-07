@@ -1,6 +1,5 @@
 <?php
 namespace Izzum\StateMachine\Loader;
-use Izzum\StateMachine\Loader\Loader;
 use Izzum\StateMachine\StateMachine;
 use Izzum\StateMachine\State;
 use Izzum\StateMachine\Transition;

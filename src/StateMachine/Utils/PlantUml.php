@@ -1,8 +1,6 @@
 <?php
 namespace Izzum\StateMachine\Utils;
 use Izzum\StateMachine\StateMachine;
-use Izzum\StateMachine\Transition;
-use Izzum\StateMachine\State;
 use Izzum\StateMachine\Exception;
 
 /**

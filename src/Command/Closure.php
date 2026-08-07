@@ -1,6 +1,5 @@
 <?php
 namespace Izzum\Command;
-use Izzum\Command\Command;
 
 /**
  * A Closure command allows the use of closure in a (composite) command.

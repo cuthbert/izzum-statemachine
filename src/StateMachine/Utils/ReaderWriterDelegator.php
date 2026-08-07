@@ -4,10 +4,8 @@ use Izzum\StateMachine\Persistence\Adapter;
 use Izzum\StateMachine\Loader\Loader;
 use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\Exception;
-use Izzum\StateMachine\State;
 use Izzum\StateMachine\Transition;
 use Izzum\StateMachine\StateMachine;
-use Izzum\StateMachine\Utils\Utils;
 
 /**
  * mix and match a loader (reader) and a persistance adapter (writer) by wrapping 

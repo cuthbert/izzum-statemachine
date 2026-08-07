@@ -1,6 +1,5 @@
 <?php
 namespace Izzum\Command;
-use Izzum\Command\Command;
 
 /**
  * Does absolutely nothing.

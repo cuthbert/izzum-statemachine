@@ -2,12 +2,8 @@
 namespace Izzum\StateMachine\Persistence;
 use Izzum\StateMachine\Loader\Loader;
 use Izzum\StateMachine\StateMachine;
-use Izzum\StateMachine\Context;
-use Izzum\StateMachine\Loader\LoaderArray;
-use Izzum\StateMachine\Loader\LoaderData;
 use Izzum\StateMachine\Exception;
 use Izzum\StateMachine\Identifier;
-use Izzum\StateMachine\Transition;
 use Izzum\StateMachine\Loader\JSON;
 /**
  * Redis is an open source advanced key-value (nosql database) cache and store using

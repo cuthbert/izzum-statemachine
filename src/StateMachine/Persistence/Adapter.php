@@ -2,7 +2,6 @@
 namespace Izzum\StateMachine\Persistence;
 use Izzum\StateMachine\Identifier;
 use Izzum\StateMachine\Exception;
-use Izzum\StateMachine\State;
 use Izzum\StateMachine\Transition;
 use Izzum\StateMachine\Utils\Utils;
 

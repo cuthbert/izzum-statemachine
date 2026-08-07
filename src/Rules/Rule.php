@@ -1,6 +1,5 @@
 <?php
 namespace Izzum\Rules;
-use Izzum\Rules\Exception;
 
 /**
  * Rules are used to encapsulate business rules/logic of the type where you ask

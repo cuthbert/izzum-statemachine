@@ -1,9 +1,6 @@
 <?php
 namespace Izzum\StateMachine;
 use Izzum\Command\ICommand;
-use Izzum\Command\NullCommand;
-use Izzum\StateMachine\Exception;
-use Izzum\Command\Composite;
 use Izzum\StateMachine\Utils\Utils;
 
 /**
