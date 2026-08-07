@@ -13,8 +13,7 @@
         
     ],
     "require": {
-        "php": "^8.4",
-        "codeception/codeception": "^5.3"
+        "php": "^8.4"
     },
     "autoload": {
         "psr-4": {
@@ -22,7 +21,8 @@
         }
     },
     "require-dev": {
-        "rector/rector": "^2.6"
+        "rector/rector": "^2.6",
+        "codeception/codeception": "^5.3"
     },
     "scripts": {
         "test": "codecept run unit --skip-group not-on-production"
