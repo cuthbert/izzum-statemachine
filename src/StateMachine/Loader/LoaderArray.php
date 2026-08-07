@@ -48,16 +48,16 @@ class LoaderArray implements Loader, \Stringable {
      *
      * @var Transition[]
      */
-    protected $transitions;
+    protected array $transitions;
 
     /**
      *
      * @param mixed[] $transitions
      *            the transitions to be loaded; each element is validated to be
-     *            a Transition (or subclass) at runtime, since this is not
-     *            enforced by a native type
+     *            a Transition (or subclass) at runtime, since PHP has no native
+     *            way to declare an array's element type
      */
-    public function __construct($transitions = [])
+    public function __construct(array $transitions = [])
     {
         $this->transitions = [];
         foreach ($transitions as $transition) {
@@ -71,7 +71,7 @@ class LoaderArray implements Loader, \Stringable {
     /**
      * {@inheritDoc}
      */
-    public function load(StateMachine $stateMachine)
+    public function load(StateMachine $stateMachine): int
     {
         $count = 0;
         $unsorted = $this->getTransitions();
@@ -103,7 +103,7 @@ class LoaderArray implements Loader, \Stringable {
      *
      * @param Transition $transition            
      */
-    public function add(Transition $transition)
+    public function add(Transition $transition): void
     {
         $this->transitions [$transition->getName()] = $transition;
     }
@@ -114,7 +114,7 @@ class LoaderArray implements Loader, \Stringable {
      *
      * @return Transition[]
      */
-    public function getTransitions()
+    public function getTransitions(): array
     {
         return $this->transitions;
     }
@@ -125,12 +125,12 @@ class LoaderArray implements Loader, \Stringable {
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return (int) count($this->transitions);
     }
 
-    public function toString()
+    public function toString(): string
     {
         return static::class;
     }

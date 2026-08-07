@@ -525,7 +525,7 @@ class Redis extends Adapter implements Loader {
      * the data is stored in redis in YAML or XML form for example.
      * You could use the ReaderWriterDelegator to use another source to load the configuration from.
      */
-    public function load(StateMachine $statemachine) {
+    public function load(StateMachine $statemachine): int {
         //use the JSON loader to load the configuration (see the json schema we expect in JSON::getJSONSchema)
         $key = $this->getConfigurationKey();
         $redis = $this->getRedis();
@@ -573,7 +573,7 @@ class Redis extends Adapter implements Loader {
     }
     
     #[\Override]
-    public function toString()
+    public function toString(): string
     {
         return static::class . ' redis://'. $this->host . ':' . $this->port . '/' . $this->database;
     }

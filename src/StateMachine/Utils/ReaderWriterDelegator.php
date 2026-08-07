@@ -62,7 +62,7 @@ class ReaderWriterDelegator extends Adapter implements Loader {
         return $this->writer;
     }
 
-    public function load(StateMachine $stateMachine)
+    public function load(StateMachine $stateMachine): int
     {
         return $this->reader->load($stateMachine);
     }
@@ -100,7 +100,7 @@ class ReaderWriterDelegator extends Adapter implements Loader {
     }
     
     #[\Override]
-    public function toString()
+    public function toString(): string
     {
         return parent::toString() . " [reader] " . $this->reader->toString() .  " [writer] " . $this->writer->toString();
     }

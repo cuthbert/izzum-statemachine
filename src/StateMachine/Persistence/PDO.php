@@ -167,7 +167,7 @@ class PDO extends Adapter implements Loader {
      * All other methods are actually implemented methods from the Adapter
      * class.
      */
-    public function load(StateMachine $statemachine)
+    public function load(StateMachine $statemachine): int
     {
         $data = $this->getLoaderData($statemachine->getContext()->getMachine());
         // delegate to LoaderArray

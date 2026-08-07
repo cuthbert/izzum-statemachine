@@ -26,7 +26,7 @@ class XML implements Loader, \Stringable {
         /**
          * an xml string
          */
-        private $xml
+        private string $xml
     )
     {
     }
@@ -37,7 +37,7 @@ class XML implements Loader, \Stringable {
      * @throws Exception
      * @return XML an instance of XML with the data from the file
      */
-    public static function createFromFile($filename)
+    public static function createFromFile($filename): self
     {
         if (!file_exists($filename)) {
             throw new Exception(sprintf('Failed to load xml from file %s. The file does not exist', $filename), Exception::BAD_LOADERDATA);
@@ -50,7 +50,7 @@ class XML implements Loader, \Stringable {
         return new self($xml);
     }
 
-    public function getXML()
+    public function getXML(): string
     {
         return $this->xml;
     }
@@ -59,7 +59,7 @@ class XML implements Loader, \Stringable {
      * gets the xsd used for the datastructure of the statemachine definitions
      * @return string
      */
-    public function getXSD()
+    public function getXSD(): string
     {
         $schema = '<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified"><xs:element name="machines"><xs:complexType><xs:sequence><xs:element type="xs:string" name="comment" minOccurs="0" /><xs:element name="machine" maxOccurs="unbounded" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="name"><xs:annotation><xs:documentation>The machine name</xs:documentation></xs:annotation><xs:simpleType><xs:restriction base="xs:token"><xs:pattern value="([a-z0-9])+((-)?([a-z0-9])+)*" /></xs:restriction></xs:simpleType></xs:element><xs:element type="xs:string" name="factory" minOccurs="0" /><xs:element type="xs:string" name="description" /><xs:element name="states"><xs:complexType><xs:sequence><xs:element name="state" maxOccurs="unbounded" minOccurs="2"><xs:complexType><xs:sequence><xs:element name="name"><xs:simpleType><xs:restriction base="xs:token"><xs:pattern value="([a-z0-9])+((-)?([a-z0-9])+)|(not-)?regex:(.*)*" /></xs:restriction></xs:simpleType></xs:element><xs:element name="type"><xs:simpleType><xs:restriction base="xs:string"><xs:enumeration value="initial" /><xs:enumeration value="normal" /><xs:enumeration value="final" /><xs:enumeration value="regex" /></xs:restriction></xs:simpleType></xs:element><xs:element type="xs:string" name="entry_command" minOccurs="0" /><xs:element type="xs:string" name="exit_command" minOccurs="0" /><xs:element type="xs:string" name="entry_callable" minOccurs="0" /><xs:element type="xs:string" name="exit_callable" minOccurs="0" /><xs:element type="xs:string" name="description" minOccurs="0" /></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element><xs:element name="transitions"><xs:complexType><xs:sequence><xs:element name="transitition" maxOccurs="unbounded" minOccurs="2"><xs:complexType><xs:sequence><xs:element name="state_from"><xs:simpleType><xs:restriction base="xs:token"><xs:pattern value="([a-z0-9])+((-)?([a-z0-9])+)*|(not-)?regex:(.*)" /></xs:restriction></xs:simpleType></xs:element><xs:element name="state_to"><xs:simpleType><xs:restriction base="xs:token"><xs:pattern value="([a-z0-9])+((-)?([a-z0-9])+)*|(not-)?regex:(.*)" /></xs:restriction></xs:simpleType></xs:element><xs:element name="event"><xs:simpleType><xs:restriction base="xs:token"><xs:pattern value="[a-zA-Z0-9]+" /></xs:restriction></xs:simpleType></xs:element><xs:element type="xs:string" name="rule" minOccurs="0" /><xs:element type="xs:string" name="command" minOccurs="0" /><xs:element type="xs:string" name="guard_callable" minOccurs="0" /><xs:element type="xs:string" name="transition_callable" minOccurs="0" /><xs:element type="xs:string" name="description" minOccurs="0" /></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element></xs:schema>';
         return $schema;
@@ -68,7 +68,7 @@ class XML implements Loader, \Stringable {
     /**
      * {@inheritDoc}
      */
-    public function load(StateMachine $stateMachine)
+    public function load(StateMachine $stateMachine): int
     {
         //load the xml in a php object structure. suppres warning with @ operator since we explicitely check the return value
         $xml = @simplexml_load_string($this->getXML());
@@ -110,7 +110,7 @@ class XML implements Loader, \Stringable {
         return $loader->load($stateMachine);
     }
 
-    public function toString()
+    public function toString(): string
     {
         return static::class;
     }

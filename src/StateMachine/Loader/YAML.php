@@ -30,7 +30,7 @@ class YAML implements Loader, \Stringable {
         /**
          * an undecoded yaml string
          */
-        private $yaml
+        private string $yaml
     )
     {
     }
@@ -41,7 +41,7 @@ class YAML implements Loader, \Stringable {
      * @return YAML an instance of YAML with the data read from the file
      * @throws Exception
      */
-    public static function createFromFile($filename)
+    public static function createFromFile($filename): self
     {
         if (!file_exists($filename)) {
             throw new Exception(sprintf('Failed to load yaml from file "%s". The file does not exist', $filename), Exception::BAD_LOADERDATA);
@@ -53,7 +53,7 @@ class YAML implements Loader, \Stringable {
         }
         return new self($yaml);
     }
-    public function getYAML()
+    public function getYAML(): string
     {
         return $this->yaml;
     }
@@ -62,7 +62,7 @@ class YAML implements Loader, \Stringable {
     /**
      * {@inheritDoc}
      */
-    public function load(StateMachine $stateMachine)
+    public function load(StateMachine $stateMachine): int
     {
         //decode the json in a php object structure
         $decoded = \yaml_parse($this->getYaml(), 0);
@@ -105,7 +105,7 @@ class YAML implements Loader, \Stringable {
         return $loader->load($stateMachine);
     }
 
-    public function toString()
+    public function toString(): string
     {
         return static::class;
     }

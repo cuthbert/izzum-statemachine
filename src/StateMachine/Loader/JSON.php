@@ -34,7 +34,7 @@ class JSON implements Loader, \Stringable {
         /**
          * an undecoded json string
          */
-        private $json
+        private string $json
     )
     {
     }
@@ -45,7 +45,7 @@ class JSON implements Loader, \Stringable {
      * @return JSON an instance of JSON with the data read from the file
      * @throws Exception
      */
-    public static function createFromFile($filename)
+    public static function createFromFile($filename): self
     {
         if (!file_exists($filename)) {
             throw new Exception(sprintf('Failed to load json from file %s. The file does not exist', $filename), Exception::BAD_LOADERDATA);
@@ -57,7 +57,7 @@ class JSON implements Loader, \Stringable {
         }
         return new self($json);
     }
-    public function getJSON()
+    public function getJSON(): string
     {
         return $this->json;
     }
@@ -66,7 +66,7 @@ class JSON implements Loader, \Stringable {
      * gets the json schema used for the datastructure of the statemachine definitions
      * @return string
      */
-    public function getJSONSchema()
+    public function getJSONSchema(): string
     {
         $schema = '{"$schema":"http://json-schema.org/draft-04/schema#","type":"object","title":"izzum statemachines definitions schema","description":"This is a json-schema for the statemachines as defined by the php izzum library. see http://jsonschemalint.com/draft4/# to validate your json definitions","required":["machines"],"properties":{"comment":{"type":["string","null"],"description":"comments for the description of the file contents can be placed here."},"machines":{"minItems":1,"uniqueItems":true,"type":"array","description":"All machines are defined here","items":{"required":["name","description","states","transitions"],"type":"object","description":"A full machine definition","properties":{"name":{"type":"string","description":"the name of the machine","pattern":"^([a-z0-9])+((-)?([a-z0-9])+)*$"},"factory":{"type":["string","null"],"description":"\\fully\\qualified\\Factory class name"},"description":{"type":["string","null"],"description":"a description of the machine"},"states":{"type":"array","description":"All state definitions for a machine go in this array","minItems":2,"uniqueItems":true,"items":{"type":"object","description":"A state definition","required":["name","type"],"properties":{"name":{"type":"string","description":"the state name","pattern":"^([a-z0-9])+((-)?([a-z0-9])+)*$|^(not-)?regex:(.*)$"},"type":{"enum":["initial","normal","final","regex"],"description":"the type of state: initial (1), normal(0..n), final (1..n) or regex (0..n)"},"entry_command":{"type":["string","null"],"description":"\\fully\\qualified\\Command (multiple can be comma seperated) that will be executed on entry of the state"},"exit_command":{"type":["string","null"],"description":"\\fully\\qualified\\Command name (multiple can be comma seperated) that will be executed on exit of the state"},"entry_callable":{"type":["string","null"],"description":"A php callable for state entry. can only be in form of fully\\qualified\\Class::staticMethod"},"exit_callable":{"type":["string","null"],"description":"A php callable for state exit. can only be in form of fully\\qualified\\Class::staticMethod"},"description":{"type":["string","null"],"description":"A description of the state"}}}},"transitions":{"type":"array","description":"A list of transitions, referring to the states","minItems":1,"uniqueItems":true,"items":{"type":"object","description":"A transition definition","required":["state_from","state_to","event"],"properties":{"state_from":{"type":"string","description":"the state from which the transition is made. this can be a regex.","pattern":"^([a-z0-9])+((-)?([a-z0-9])+)*$|^(not-)?regex:(.*)$"},"state_to":{"type":"string","description":"the state to which the transition is made. this can be a regex.","pattern":"^([a-z0-9])+((-)?([a-z0-9])+)*$|^(not-)?regex:(.*)$"},"event":{"type":["string","null"],"description":"an event name by which you can call this transition","pattern":"^[a-zA-Z0-9]+$"},"rule":{"type":["string","null"],"description":"\\fully\\qualified\\Rule name (multiple can be comma seperated) that will be checked as boolean guard logic before the transition"},"command":{"type":["string","null"],"description":"\\fully\\qualified\\Command name (multiple can be comma seperated) that will be executed as the transition logic"},"guard_callable":{"type":["string","null"],"description":"A php callable for guard logic. can only be in form of fully\\qualified\\Class::staticMethod"},"transition_callable":{"type":["string","null"],"description":"A php callable for transition logic. can only be in form of fully\\qualified\\Class::staticMethod"},"description":{"type":["string","null"],"description":"The description of the transition"}}}}}}}}}';
         return $schema;
@@ -75,7 +75,7 @@ class JSON implements Loader, \Stringable {
     /**
      * {@inheritDoc}
      */
-    public function load(StateMachine $stateMachine)
+    public function load(StateMachine $stateMachine): int
     {
         //decode the json in a php object structure
         $decoded = json_decode($this->getJSON(), false);
@@ -121,7 +121,7 @@ class JSON implements Loader, \Stringable {
         return $loader->load($stateMachine);
     }
 
-    public function toString()
+    public function toString(): string
     {
         return static::class;
     }
