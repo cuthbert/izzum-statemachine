@@ -33,8 +33,6 @@ class TransitionTest extends TestCase {
         $this->assertTrue(is_a($command, 'izzum\command\Composite'), $command::class);
         $this->assertTrue(is_a($rule, 'izzum\rules\AndRule'));
 
-        $this->assertNotNull($transition->toString());
-        $this->assertNotNull($transition->__toString());
 
         $this->assertEquals('', $transition->getDescription());
         $description = 'test description';
@@ -415,10 +413,10 @@ class TransitionTest extends TestCase {
         $this->assertEquals(2, CallableHelper::$id);
 
         //scenario 7: wrap an existing method in a closure (this is THE way to reuse an existing method)
-        function jo($entity) {
+        $jo = function($entity): void {
             $entity->setEntityId(($entity->getEntityId() +1));
-        }
-        $callable = function($context): void { jo($context); };
+        };
+        $callable = function($context) use ($jo): void { $jo($context); };
         $context->getIdentifier()->setEntityId('123');
         $t = new Transition($a, $b, $event, null, null, null, $callable);
         $this->assertEquals('123', $context->getEntityId());

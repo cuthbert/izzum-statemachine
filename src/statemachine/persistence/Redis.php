@@ -52,6 +52,7 @@ use izzum\statemachine\loader\JSON;
  *
  * @author Rolf Vreijdenberger
  *
+ * @mixin \Redis __call() proxies any method directly to the underlying phpredis connection
  */
 class Redis extends Adapter implements Loader {
 

@@ -3,8 +3,6 @@ namespace izzum\statemachine\utils;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\utils\EntityNull;
-use izzum\command\ExceptionCommand;
 use izzum\command\Command;
 use izzum\statemachine\builder\ModelBuilder;
 use izzum\statemachine\Transition;
@@ -12,9 +10,7 @@ use izzum\statemachine\State;
 use izzum\statemachine\StateMachine;
 use izzum\statemachine\Context;
 use izzum\statemachine\Identifier;
-use izzum\statemachine\Entity;
 use izzum\statemachine\Exception;
-use izzum\statemachine\loader\Loader;
 use izzum\statemachine\loader\LoaderArray;
 
 /**
@@ -59,8 +55,8 @@ class UtilsTest extends TestCase {
         $context = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($context);
         $loader->load($machine);
-        Utils::checkConfiguration($machine);
-        $this->assertTrue(true, 'basic machine will be configured correctly');
+        $exceptions = Utils::checkConfiguration($machine);
+        $this->assertCount(0, $exceptions, 'basic machine will be configured correctly');
 
     }
 
@@ -88,8 +84,8 @@ class UtilsTest extends TestCase {
         $context = new Context(new Identifier(Identifier::NULL_ENTITY_ID, Identifier::NULL_STATEMACHINE));
         $machine = new StateMachine($context);
         $loader->load($machine);
-        Utils::checkConfiguration($machine);
-        $this->assertTrue(true, 'basic machine with good callables will be configured correctly');
+        $exceptions = Utils::checkConfiguration($machine);
+        $this->assertCount(0, $exceptions, 'basic machine with good callables will be configured correctly');
 
     }
 
@@ -123,9 +119,6 @@ class UtilsTest extends TestCase {
         $loader->load($machine);
         $exceptions = Utils::checkConfiguration($machine);
         $this->assertEquals(7, count($exceptions));
-
-        $this->assertTrue(true, 'basic machine with bad callables will be configured incorrectly');
-
     }
     
     

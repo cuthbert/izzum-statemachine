@@ -3,17 +3,10 @@ namespace izzum\statemachine\loader;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\persistence\Memory;
-use izzum\statemachine\Transition;
-use izzum\statemachine\State;
 use izzum\statemachine\StateMachine;
 use izzum\statemachine\Context;
 use izzum\statemachine\Identifier;
-use izzum\statemachine\Entity;
 use izzum\statemachine\Exception;
-use izzum\statemachine\loader\Loader;
-use izzum\statemachine\loader\LoaderArray;
-use izzum\statemachine\utils\Utils;
 
 /**
  * 

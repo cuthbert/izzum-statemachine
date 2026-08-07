@@ -41,8 +41,6 @@ class RedisTest extends TestCase {
         $this->assertEquals(4, $count, 'expect 4 transitions to be loaded');
         $this->assertCount(4, $machine->getTransitions(), 'there is a regex transition that adds 2 transitions (a-c and b-c)');
         $this->assertCount(4, $machine->getStates());
-        $this->assertNotNull($redis->toString());
-        $this->assertNotNull($redis . '');
 
         $redis->setConfigurationKey("bogus");
         $this->assertEquals("bogus", $redis->getConfigurationKey());
@@ -70,8 +68,6 @@ class RedisTest extends TestCase {
         $this->assertEquals(4, $count, 'expect 4 transitions to be loaded');
         $this->assertCount(4, $machine->getTransitions(), 'there is a regex transition that adds 2 transitions (a-c and b-c)');
         $this->assertCount(4, $machine->getStates());
-        $this->assertNotNull($redis->toString());
-        $this->assertNotNull($redis . '');
         $this->assertFalse($redis->isPersisted($identifier));
         $this->assertTrue($machine->add('add to the backend'));
         $this->assertFalse($machine->add('add to the backend'), 'already added');

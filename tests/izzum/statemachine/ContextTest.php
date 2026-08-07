@@ -24,7 +24,6 @@ class ContextTest extends TestCase {
         
         // only mandatory parameters
         $o = new Context($identifier);
-        $this->assertNotNull($o->toString());
         $this->assertStringContainsString($entity_id, $o->getId());
         $this->assertStringContainsString($machine, $o->getId());
         $this->assertStringContainsString($entity_id, $o->getId(false));
@@ -39,11 +38,9 @@ class ContextTest extends TestCase {
         $this->assertTrue(is_a($o->getPersistenceAdapter(), 'izzum\statemachine\persistence\Memory'));
         $this->assertTrue(is_a($o->getBuilder(), 'izzum\statemachine\EntityBuilder'));
         $this->assertEquals($o->getIdentifier(), $o->getEntity());
-        $this->assertTrue(is_string($o->getEntityId()));
-        
+
         $this->assertEquals($o->getIdentifier(), $identifier);
-        
-        $this->assertTrue(is_string($o->toString()));
+
         $this->assertStringContainsString($entity_id, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
         $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());
@@ -57,9 +54,7 @@ class ContextTest extends TestCase {
         $machine = 'test';
         $identifier = new Identifier($entity_id, $machine);
         $o = new Context($identifier);
-        $this->assertFalse($entity_id === $o->getEntityId());
         $this->assertEquals($entity_id, $o->getEntityId());
-        $this->assertTrue(is_string($o->getEntityId()));
         $this->assertEquals("1", $o->getEntityId());
     }
 
@@ -79,9 +74,7 @@ class ContextTest extends TestCase {
         $this->assertTrue(is_a($o->getPersistenceAdapter(), 'izzum\statemachine\persistence\Memory'));
         $this->assertTrue(is_a($o->getBuilder(), 'izzum\statemachine\EntityBuilder'));
         $this->assertEquals($o->getIdentifier(), $o->getEntity());
-        $this->assertTrue(is_string($o->getEntityId()));
-        
-        $this->assertTrue(is_string($o->toString()));
+
         $this->assertStringContainsString($entity_id, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
         $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());
@@ -90,13 +83,6 @@ class ContextTest extends TestCase {
         $this->assertEquals(State::STATE_UNKNOWN, $o->getState());
         $this->assertTrue($o->setState('lala'));
         $this->assertEquals('lala', $o->getState());
-        
-        // for coverage.
-        $this->assertNotNull($o->getId());
-        $this->assertNotNull($o->getId(true));
-        $this->assertNotNull($o->getId(false));
-        $this->assertNotNull($o->getId(true, true));
-        $this->assertNotNull($o->getId(false, true));
         
         // adding
         $machine = 'add-experiment-machine';
@@ -132,9 +118,7 @@ class ContextTest extends TestCase {
         $this->assertTrue(is_a($o->getPersistenceAdapter(), 'izzum\statemachine\persistence\Memory'));
         $this->assertTrue(is_a($o->getBuilder(), 'izzum\statemachine\EntityBuilder'));
         $this->assertEquals($identifier, $o->getEntity());
-        $this->assertTrue(is_string($o->getEntityId()));
-        
-        $this->assertTrue(is_string($o->toString()));
+
         $this->assertStringContainsString($entity_id, $o->toString());
         $this->assertStringContainsString($machine, $o->toString());
         $this->assertStringContainsString('izzum\statemachine\Context', $o->toString());

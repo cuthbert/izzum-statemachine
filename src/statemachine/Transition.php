@@ -106,22 +106,22 @@ class Transition implements \Stringable {
      *
      * @param State $state_from
      * @param State $state_to
-     * @param string $event
+     * @param string|null $event
      *            optional: an event name by which this transition can be
      *            triggered
-     * @param string $rule
+     * @param string|null $rule
      *            optional: one or more fully qualified Rule (sub)class name(s)
      *            to check to see if we are allowed to transition.
      *            This can actually be a ',' seperated string of multiple rules
      *            that will be applied as a chained 'and' rule.
-     * @param string $command
+     * @param string|null $command
      *            optional: one or more fully qualified Command (sub)class
      *            name(s) to execute for a transition.
      *            This can actually be a ',' seperated string of multiple
      *            commands that will be executed as a composite.
-     * @param callable $callable_guard
+     * @param callable|null $callable_guard
      *            optional: a php callable to call. eg: "function(){echo 'closure called';};"
-     * @param callable $callable_transition
+     * @param callable|null $callable_transition
      *            optional: a php callable to call. eg: "izzum\MyClass::myStaticMethod"
      */
     public function __construct(State $state_from, State $state_to, $event = null, $rule = self::RULE_EMPTY, $command = self::COMMAND_EMPTY, $callable_guard = self::CALLABLE_NULL, $callable_transition = self::CALLABLE_NULL)
@@ -143,7 +143,7 @@ class Transition implements \Stringable {
 
     /**
      * the callable to call as part of the transition logic
-     * @param callable $callable
+     * @param callable|null $callable
      */
     public function setTransitionCallable($callable) {
         $this->callable_transition = $callable;
@@ -161,7 +161,7 @@ class Transition implements \Stringable {
 
     /**
      * the callable to call as part of the transition guard
-     * @param callable $callable
+     * @param callable|null $callable
      */
     public function setGuardCallable($callable) {
         $this->callable_guard = $callable;
@@ -297,7 +297,7 @@ class Transition implements \Stringable {
      * method will return a Composite command.
      *
      * @param Context $context
-     * @return izzum\command\ICommand
+     * @return \izzum\command\ICommand
      * @throws Exception
      */
     public function getCommand(Context $context)
@@ -361,9 +361,12 @@ class Transition implements \Stringable {
         return $this->command;
     }
 
+    /**
+     * @param string|null $command null is treated the same as self::COMMAND_EMPTY
+     */
     public function setCommandName($command)
     {
-        $this->command = trim($command);
+        $this->command = trim($command ?? self::COMMAND_EMPTY);
         return $this;
     }
 
@@ -372,9 +375,12 @@ class Transition implements \Stringable {
         return $this->rule;
     }
 
+    /**
+     * @param string|null $rule null is treated the same as self::RULE_EMPTY
+     */
     public function setRuleName($rule)
     {
-        $this->rule = trim($rule);
+        $this->rule = trim($rule ?? self::RULE_EMPTY);
         return $this;
     }
 
@@ -404,7 +410,7 @@ class Transition implements \Stringable {
      * In case the event name is null or an empty string, it defaults to the
      * transition name.
      *
-     * @param string $event
+     * @param string|null $event
      */
     public function setEvent($event)
     {

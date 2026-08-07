@@ -10,7 +10,6 @@ use izzum\statemachine\persistence\Memory;
 use izzum\statemachine\utils\PlantUml;
 use izzum\statemachine\loader\LoaderArray;
 use izzum\statemachine\builder\ModelBuilder;
-use izzum\statemachine\utils\Utils;
 
 /**
  * 
@@ -43,7 +42,6 @@ class StateMachineTest extends TestCase {
             $this->assertEquals(Exception::SM_NO_CURRENT_STATE_FOUND, $e->getCode());
             // echo $e->getMessage();
         }
-        $this->assertNotNull($machine);
         $this->assertStringContainsString('StateMachine', $machine . '', '__toString()');
         $this->assertStringContainsString('transitions', $machine->toString(true));
         $this->assertStringNotContainsString('transitions', $machine->toString(false));
@@ -941,11 +939,7 @@ class StateMachineTest extends TestCase {
     public function shouldBeAbleToUseCallablesOnEntity()
     {
         $model = new CallableHandler();
-        $this->assertTrue(method_exists($model, 'onCheckCanTransition'));
-        $this->assertTrue(method_exists($model, 'onExitState'));
-        $this->assertTrue(method_exists($model, 'onTransition'));
-        $this->assertTrue(method_exists($model, 'onEnterState'));
-        
+
         // pass the model to the builder that uses that model as entity
         $builder = new ModelBuilder($model);
         

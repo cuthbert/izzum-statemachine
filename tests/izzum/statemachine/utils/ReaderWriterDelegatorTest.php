@@ -9,11 +9,8 @@ use izzum\statemachine\State;
 use izzum\statemachine\StateMachine;
 use izzum\statemachine\Context;
 use izzum\statemachine\Identifier;
-use izzum\statemachine\Entity;
 use izzum\statemachine\Exception;
-use izzum\statemachine\loader\Loader;
 use izzum\statemachine\loader\XML;
-use izzum\statemachine\utils\Utils;
 
 /**
  * 

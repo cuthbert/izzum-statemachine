@@ -3,7 +3,6 @@ namespace izzum\statemachine;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\persistence\Memory;
 
 /**
  * 

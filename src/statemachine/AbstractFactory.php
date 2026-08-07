@@ -89,8 +89,8 @@ abstract class AbstractFactory {
      * machine to have access to all the same transitions, builders etc. of the
      * machine.
      *
-     * @param string $id
-     *            the entity id for the Identifier
+     * @param mixed $id
+     *            the entity id for the Identifier (converted internally to a string)
      * @return StateMachine a statemachine ready to go
      * @throws Exception
      * @link https://en.wikipedia.org/wiki/Abstract_factory_pattern

@@ -94,7 +94,7 @@ class Context implements \Stringable {
     /**
      * gets the associated statemachine (if a statemachine is associated)
      *
-     * @return StateMachine
+     * @return StateMachine|null
      */
     public function getStateMachine()
     {

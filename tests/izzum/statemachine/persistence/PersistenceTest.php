@@ -6,15 +6,10 @@ use Codeception\Attribute\Group;
 use izzum\statemachine\Context;
 use izzum\statemachine\EntityBuilder;
 use izzum\statemachine\State;
-use izzum\statemachine\Transition;
 use izzum\statemachine\Identifier;
 use izzum\statemachine\StateMachine;
 use izzum\statemachine\Exception;
-use izzum\statemachine\persistence\Adapter;
-use izzum\statemachine\persistence\StorageData;
-use izzum\statemachine\persistence\Session;
 use izzum\statemachine\utils\PlantUml;
-use izzum\statemachine\persistence\PDO;
 
 /**
  * @author rolf
@@ -29,7 +24,6 @@ class PersistenceTest extends TestCase {
         $machine = 'test';
         $id = 'testid1123';
         $state = 'done';
-        $state_from = 'some-state';
 
         //scenario:  constructor with all params
         $time = time();
@@ -78,14 +72,14 @@ class PersistenceTest extends TestCase {
         Memory::clear();
 
         //scenario
-        $this->assert_Add_GetEntityIds_Set($io);
+        $this->assertAddGetEntityIdsSet($io);
 
-        $this->assertStringContainsString('Memory' , $io . '', '__toSring()');
+        $this->assertStringContainsString('Memory' , $io . '', '__toString()');
 
 
     }
 
-    protected function assert_Add_GetEntityIds_Set(Adapter $io) {
+    protected function assertAddGetEntityIdsSet(Adapter $io) {
         $machine = 'a-machine';
         $id1 = '555';
         $id2 = '666';
@@ -98,23 +92,18 @@ class PersistenceTest extends TestCase {
         $state = $io->getState($object1);
         $this->assertEquals($state, State::STATE_UNKNOWN);
         $this->assertCount(0, $io->getEntityIds($machine));
-        $this->assertTrue(is_array($io->getEntityIds($machine)));
         $this->assertTrue($io->setState($object1, State::STATE_NEW),'first time added');
         $this->assertFalse($io->setState($object1, State::STATE_NEW),'already present');
 
         $this->assertCount(1, $io->getEntityIds($machine));
         $this->assertTrue(in_array($id1, $io->getEntityIds($machine)));
         $this->assertFalse(in_array($id2, $io->getEntityIds($machine)));
-        $this->assertTrue(is_array($io->getEntityIds($machine)));
         $this->assertCount(0, $io->getEntityIds('bogus'));
-        $this->assertTrue(is_array($io->getEntityIds('bogus')));
 
         $this->assertTrue($io->setState($object2, State::STATE_NEW),'first time added');
         $this->assertFalse($io->setState($object2, State::STATE_NEW),'already present');
         $this->assertCount(2, $io->getEntityIds($machine));
-        $this->assertTrue(is_array($io->getEntityIds($machine)));
         $this->assertCount(0, $io->getEntityIds('bogus'));
-        $this->assertTrue(is_array($io->getEntityIds('bogus')));
         $this->assertTrue(in_array($id1, $io->getEntityIds($machine)));
         $this->assertTrue(in_array($id2, $io->getEntityIds($machine)));
         $this->assertCount(2, $io->getEntityIds($machine, State::STATE_NEW));
@@ -165,7 +154,7 @@ class PersistenceTest extends TestCase {
         //I'm not sure how to test this in phpunit though..
         //$io = new Session('izzum', '123ab');
         $io = new Session();
-        $this->assert_Add_GetEntityIds_Set($io);
+        $this->assertAddGetEntityIdsSet($io);
         $this->assertEquals('izzum\statemachine\persistence\Session', $io->toString());
 
 
@@ -227,10 +216,8 @@ class PersistenceTest extends TestCase {
     /**
      * helper method for different backend adapters
      * that use a database (postgres, pdo)
-     * @param PDO $adapter
-     * @param string $machine
      */
-    protected function assertPersistenceAdapterPDO($adapter, $machine, $output_plant = false) {
+    protected function assertPersistenceAdapterPDO(PDO $adapter, string $machine, bool $output_plant = false): void {
 
         $type = $adapter->getType();
         echo PHP_EOL;
@@ -449,15 +436,16 @@ class PersistenceTest extends TestCase {
     }
 }
 
-namespace izzum\statemachine\persistence;
-use izzum\statemachine\Identifier;
 class MemoryEntityConcatenator extends Memory {
     /**
      * overriden implementation
+     *
+     * @return string deliberately deviates from the boolean contract documented
+     *         on Adapter::processSetState() to prove the hook can be overridden
      */
 
     #[\Override]
-    public function processSetState(Identifier $identifier, $state, $message = null){
+    public function processSetState(Identifier $identifier, $state, $message = null) {
         return $identifier->getMachine() . "_" .
         $identifier->getEntityId() . "_" .
         $state;
@@ -468,9 +456,6 @@ class MemoryEntityConcatenator extends Memory {
         return $identifier->getMachine() .  "_" . $identifier->getEntityId();
     }
 }
-namespace izzum\statemachine\persistence;
-use izzum\statemachine\Identifier;
-use izzum\statemachine\Exception;
 class MemoryException extends Memory {
     public function __construct(private $bool)
     {

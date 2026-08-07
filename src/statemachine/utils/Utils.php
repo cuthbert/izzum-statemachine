@@ -121,7 +121,7 @@ class Utils {
      * the Command will be configured with the 'reference' of the stateful
      * object
      *
-     * @param string $command_name
+     * @param string|null $command_name
      *            entry~,exit~ or transition command name.
      *            multiple commands can be split by a ',' in which case a
      *            composite command will be returned.

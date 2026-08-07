@@ -553,8 +553,8 @@ class StateMachine implements \Stringable {
     /**
      * get a state by name.
      *
-     * @param string $name            
-     * @return State or null if not found
+     * @param string $name
+     * @return State|null
      */
     public function getState($name)
     {
@@ -680,8 +680,7 @@ class StateMachine implements \Stringable {
      * the first time.
      *
      * @param boolean $allow_null optional
-     * @return State (or null or Exception, only when statemachine is improperly
-     *         loaded)
+     * @return State|null
      * @throws Exception if $allow_null is false an no inital state was found
      */
     public function getInitialState($allow_null = false)
@@ -713,7 +712,7 @@ class StateMachine implements \Stringable {
      *
      * @param string $name
      *            convention: <state_from>_to_<state_to>
-     * @return Transition or null if not found
+     * @return Transition|null
      */
     public function getTransition($name)
     {

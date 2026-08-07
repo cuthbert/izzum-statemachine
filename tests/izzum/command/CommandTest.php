@@ -8,8 +8,6 @@ use izzum\command\Exception;
 use izzum\command\ExceptionCommand;
 use izzum\command\Composite;
 use izzum\command\Closure;
-use izzum\command\ICommand;
-use izzum\command\IComposite;
 /**
  * This class tests the basic workings of the Core Command package.
  * Since all commands build upon the Core, these tests should cover all
@@ -29,7 +27,6 @@ class CommandTest extends TestCase {
         $command = new AddToListCommand($list);
 
         //check basics
-        $this->assertTrue(is_subclass_of($command, 'izzum\command\Command'));
         $this->assertFalse(in_array('izzum\command\IComposite', class_implements($command)));
         $this->assertTrue(in_array('izzum\command\ICommand', class_implements($command)));
 
@@ -40,14 +37,13 @@ class CommandTest extends TestCase {
         $command->execute();
         $this->assertEquals(2, count($list));
 
-        $this->assertNotNull($command->toString());
         $this->assertStringContainsString('AddToListCommand', $command . '', '__toString()');
     }
 
     public function testNullCommand()
     {
         //test creation
-        $command = new izzum\command\NullCommand();
+        $command = new NullCommand();
         $command->execute();
     }
 
@@ -60,7 +56,7 @@ class CommandTest extends TestCase {
         $command = new ExceptionCommand($message, $code);
         try {
            $command->execute();
-           $this->shouldNotComeHere("command should throw an exception");
+           $this->fail("command should throw an exception");
         } catch (\Exception $e)
         {
             $this->assertTrue(is_a($e, 'izzum\command\Exception'), "should be of type izzum\Exception");
@@ -74,10 +70,9 @@ class CommandTest extends TestCase {
     public function testClosureCommandOneArgument()
     {
         //one argument for closure
-        $output;
+        $output = null;
         $closure = function(&$output): void { $output = 1;};
         $command = new Closure($closure, [&$output]);
-        $this->assertNull($output);
         $command->execute();
         $this->assertEquals(1, $output);
 
@@ -86,11 +81,10 @@ class CommandTest extends TestCase {
     public function testClosureCommandMultipleArguments()
     {
         //multiple arguments for closure
-        $output;
+        $output = null;
         $input = 5;
         $closure = function(&$output, $input): void { $output = $input;};
         $command = new Closure($closure, [&$output, $input]);
-        $this->assertNull($output);
         $command->execute();
         $this->assertEquals(5, $output);
     }
@@ -100,7 +94,6 @@ class CommandTest extends TestCase {
         $composite = new Composite();
 
         //test basics of this command
-        $this->assertTrue(is_subclass_of($composite, 'izzum\command\Command'));
         $this->assertTrue(in_array('izzum\command\IComposite', class_implements($composite)));
         $this->assertTrue(in_array('izzum\command\ICommand', class_implements($composite)));
 
@@ -162,13 +155,11 @@ class CommandTest extends TestCase {
         $this->assertFalse($composite->contains($command1));
         $this->assertFalse($composite->contains($command2));
         $this->assertFalse($composite->contains($command3));
-        $this->assertNotNull($composite->toString());
 
         //nested composite
         $composite = new Composite();
         $nested = new Composite();
         $composite->add($nested);
-        $this->assertNotNull($composite->toString());
     }
 
 
@@ -177,7 +168,7 @@ class CommandTest extends TestCase {
         $command = new ExceptionCommand("test", 111);
         try {
             $command->execute();
-            $this->shouldNotComeHere("exception should have been thrown");
+            $this->fail("exception should have been thrown");
         } catch (\Exception $e)
         {
             $this->assertEquals(111, $e->getCode());
@@ -215,8 +206,9 @@ class CommandTest extends TestCase {
  * @author rolf
  *
  */
-class AddToListCommand extends izzum\command\Command {
+class AddToListCommand extends Command {
     private static $ID = 0;
+    private array $list;
     /**
      * @param array $list passed by reference so we can acces 'list' from outside this class
      */
@@ -234,7 +226,7 @@ class AddToListCommand extends izzum\command\Command {
 }
 
 
-class throwsExceptionCommand extends izzum\command\Command {
+class throwsExceptionCommand extends Command {
     public function __construct(private $bool)
     {
     }

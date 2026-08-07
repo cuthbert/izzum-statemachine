@@ -3,9 +3,6 @@ namespace izzum\statemachine;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
-use izzum\statemachine\utils\EntityNull;
-use izzum\command\ExceptionCommand;
-use izzum\command\Command;
 
 /**
  * 
@@ -21,7 +18,6 @@ class StateTest extends TestCase {
         $name = 'a';
         $type = State::TYPE_INITIAL;
         $state = new State($name, $type);
-        $this->assertNotNull($state);
         $this->assertCount(0, $state->getTransitions());
         $sb = new State('b');
         $sc = new State('c');

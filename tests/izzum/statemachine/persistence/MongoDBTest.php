@@ -5,10 +5,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Codeception\Attribute\Group;
 use izzum\statemachine\StateMachine;
 use izzum\statemachine\Context;
-use izzum\statemachine\Exception;
 use izzum\statemachine\Identifier;
-use izzum\statemachine\State;
-use izzum\statemachine\Transition;
 /**
  * this test makes use of an active mongod server instance on the localhost listening
  * on port 27017 (the defaults) and database izzum (which will be flused on each test).
@@ -92,10 +89,8 @@ class MongoDBTest extends TestCase {
         $ids = $adapter->getEntityIds('non-used-machine');
         $this->assertEquals(1, count($ids));
 
-        $this->assertNotNull($adapter->toString());
-        $this->assertNotNull($adapter . '');
-        $this->assertRegexp('|mongodb://localhost:27017|', $adapter->toString());
-        $this->assertRegexp('|mongodb://localhost:27017|', $adapter . '');
+        $this->assertMatchesRegularExpression('|mongodb://localhost:27017|', $adapter->toString());
+        $this->assertMatchesRegularExpression('|mongodb://localhost:27017|', $adapter . '');
 
     }
 
