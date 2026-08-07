@@ -3,7 +3,7 @@
 [![Latest Stable Version](https://poser.pugx.org/rolfvreijdenberger/izzum-statemachine/v/stable.svg)](https://packagist.org/packages/rolfvreijdenberger/izzum-statemachine) 
 [![License](https://poser.pugx.org/rolfvreijdenberger/izzum-statemachine/license.svg)](https://packagist.org/packages/rolfvreijdenberger/izzum-statemachine)
 
-### A superior, extensible and flexible statemachine library for php version >= 5.3 including php 7
+### A superior, extensible and flexible statemachine library for php 8.4 and up
 A [finite statemachine](https://en.wikipedia.org/wiki/Finite-state_machine "finite statemachine on wikipedia") is a model for the behaviour of a system that consists of a finite number of states, transitions between those states and guard~ and transition logic for those states and transitions. 
 
 see the [change log here](https://github.com/rolfvreijdenberger/izzum-statemachine/blob/master/CHANGELOG.md).
@@ -61,7 +61,7 @@ The context provides contextual information about the machine and as such holds 
 ```php
 $context = $machine->getContext();
 echo $context->getPersistenceAdapter();//echo works because of Memory::__toString()
-# Memory
+# Izzum\StateMachine\Persistence\Memory
 echo $context->getEntityId();//get the id for your domain model (entity)
 # 198442
 echo $context->getMachine();//get the name of the statemachine
@@ -95,7 +95,7 @@ Regular expression states take a [regular expression](https://en.wikipedia.org/w
 //action, or any state ending with 'ew'
 $regex = new State('regex:/action|.*ew$/', State::TYPE_REGEX);
 $pause = new State('pause');
-$machine->addTransition(new Transition($regex, $pause), 'pause');
+$machine->addTransition(new Transition($regex, $pause, 'pause'));
 //new->pause, action->pause
 ```
 
@@ -184,9 +184,9 @@ There are multiple ways to set guard conditions on transitions:
 * **hooks as event dispatchers**: by subclassing the statemachine you can implement your own event handling/dispatching library of choice.
 
 ### guard conditions 1. using callables: closures, static methods, instance methods
-A [callable comes in multiple forms in php](https://php.net/manual/en/language.types.callable.php). In the next example, a [closure, or anonymous function](https://php.net/manual/en/functions.anonymous.php), is used to evaluate the boolean expression by operating on any context variables it has in it's scope and by using the automatically provided arguments of $entity and $event. $entity is the domain model returned by the Context of the statemachine (via the EntityBuilder). The event is only set when the transition was initiated by an event. The guard can operate on the $entity (which defaults to the Identifier if no Builder is used) to calculate the boolean result.
+A [callable comes in multiple forms in php](https://php.net/manual/en/language.types.callable.php). In the next example, a [closure, or anonymous function](https://php.net/manual/en/functions.anonymous.php), is used to evaluate the boolean expression by operating on any context variables it has in it's scope and by using the automatically provided $entity argument. $entity is the domain model returned by the Context of the statemachine (via the EntityBuilder). The guard can operate on the $entity (which defaults to the Identifier if no Builder is used) to calculate the boolean result.
 
-In general, all callables will be passed the 2 arguments $entity and $event and should have a method signature of `[static] public function <name>($entity, $event = null): boolean`. 
+In general, all callables will be passed the single argument $entity and should have a method signature of `[static] public function <name>($entity): bool`. 
 
 If you define your transitions in a php script you have more options than when defining your transitions via configuration that you load via a file or a persistance backend.
 When loading the transition configurations you can only use the form `\fully\qualified\Class::staticMethod` for callables since you cannot define closures as a string in your configuration.
@@ -194,7 +194,7 @@ When loading the transition configurations you can only use the form `\fully\qua
 Check the example in `examples/inheritance` for using instance methods as callables. see `tests/izzum/statemachine/TransitionTest::shouldAcceptMultipleCallableTypes` for all possible implementations of callables in the izzum statemachine.
 ```php
 $forbidden = new State('forbidden');
-$closure = function($entity, $event){return false;};
+$closure = function($entity){return false;};
 $transition = new Transition($new, $forbidden, 'thoushaltnotpass', null, null, $closure);
 // or: $transition->setGuardCallable($closure);
 $machine->addTransition($transition);
@@ -229,7 +229,7 @@ echo $machine->hasEvent('thoushaltnotpass');
 echo $machine->handle('thoushaltnotpass');//transition will not be made
 # false
 echo $machine->transition('new_to_forbidden');
-#> false
+# false
 echo $machine->getCurrentState();//still in the same state
 # new
 ```
@@ -390,12 +390,12 @@ $machine->run();
 SQL based backends are abundantly available in most applications. the PDO adapter provides access to all backends made available via the PDO driver. There are full sql schemas in `assets/sql` for postgresql, mysql and sqlite available with full documentation about the design in `assets/sql/postgresql.sql`. Once you create those tables you and provide the right credentials to the PDO adapter you are ready to start storing your state in your database and you can also fully define your machines including states and transitions with their associated actions in the tables.
 The data is permanently stored, providing you with the history of all your machines and a way to keep track of all states without storing state in the tables for your domain objects.
 ```php
-$identifier('UUID-1234-ACD3-2156', 'data-migration-machine');
+$identifier = new Identifier('UUID-1234-ACD3-2156', 'data-migration-machine');
 $adapter = new PDO('pgsql:host=localhost;port=5432;dbname=izzum');
 //or for mysql
 $adapter = new PDO('mysql:host=localhost;dbname=izzum');
 //or for sqlite
-$adapter = new PDO('"sqlite:izzum.db"');
+$adapter = new PDO('sqlite:izzum.db');
 $context = new Context($identifier, $builder, $adapter);
 $statemachine = new StateMachine($context);
 $adapter->load($statemachine);//the adapter can also act as a loader
@@ -407,7 +407,7 @@ Redis is a nosql key/value database.
 It is schemaless and as such needs no configuration to start storing state and transition history.
 Redis provides the possibility to store full statemachine configurations in JSON format (see the Loader examples for more info).
 ```php
-$identifier('UUID-1234-ACD3-2156', 'data-migration-machine');
+$identifier = new Identifier('UUID-1234-ACD3-2156', 'data-migration-machine');
 $adapter = new Redis('127.0.0.1', 6379);
 $context = new Context($identifier, $builder, $adapter);
 $statemachine = new StateMachine($context);
@@ -443,7 +443,7 @@ $statemachine->runToCompletion();
 ```
 
 YAML example
-see `assets/json` for an example yaml file definition. The loader is `Izzum\StateMachine\Loader\YAML`.
+see `assets/yaml` for an example yaml file definition. The loader is `Izzum\StateMachine\Loader\YAML`.
 ```php
 $statemachine = new StateMachine(new Context(new Identifier('wolverine' , 'mutant-machine')));
 $file = __DIR__ . '/machines.yaml';
@@ -467,7 +467,7 @@ You should load the JSON data in the backend in a specific location.
 For Redis you would store the JSON string in the `<configurable-prefix>:configuration:<machine-name>` key if you want to use multiple configurations in different keys. Alternatively, you can store the JSON string in the `<configurable-prefix>:configuration` key if you want to store multiple configurations in one key. The adapter will automatically find the configuration by matching the machine name in the specific key and will fallback to the default key.
 
 It will be easier to maintain multiple machines if you put 1 machine definition in one JSON string.
-see the `tests\Izzum\StateMachine\Persistence\RedisTest` for some more details.
+see `tests/izzum/statemachine/persistence/RedisTest.php` for some more details.
 ```php
 $redis = new Redis('127.0.0.1', 6379);
 $machine = new StateMachine(new Context(new Identifier(1988442, 'crazy-machine'), null, $redis));
@@ -493,10 +493,10 @@ $delegator->load($machine);//loads from xml file
 $machine->run();//stores data in postgres
 ```
 
-###generating uml diagrams from a statemachine
+### generating uml diagrams from a statemachine
 TO DESCRIBE
 
-###installation
+### installation
 use [composer](https://getcomposer.org/) to install the project.
 Create a file called composer.json with these lines: 
 ```
@@ -513,7 +513,7 @@ composer install
 You will find the izzum package in ./vendor/rolfvreijdenberger/izzum-statemachine.
 You can also download it directly from github. The package should be included via an autoloader (provided by composer by default)
 
-###running unittests
+### running unittests
 you can run the testsuite with Codeception (installable via composer) from the project root.
 ```
 composer test
