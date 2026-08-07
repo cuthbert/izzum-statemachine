@@ -55,7 +55,7 @@ class JSON implements Loader, \Stringable {
         if (false === $json) {
             throw new Exception(sprintf('Failed to read json data from file %s. Unknown error (permissions?)', $filename), Exception::BAD_LOADERDATA);
         }
-        return new static($json);
+        return new self($json);
     }
     public function getJSON()
     {

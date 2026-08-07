@@ -51,7 +51,7 @@ class YAML implements Loader, \Stringable {
         if (false === $yaml) {
             throw new Exception(sprintf('Failed to read yaml data from file "%s". Unknown error (permissions?)', $filename), Exception::BAD_LOADERDATA);
         }
-        return new static($yaml);
+        return new self($yaml);
     }
     public function getYAML()
     {

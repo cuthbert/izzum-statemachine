@@ -47,7 +47,7 @@ class XML implements Loader, \Stringable {
         if (false === $xml) {
             throw new Exception(sprintf('Failed to read xml data from file %s. Unknown error (permissions?)', $filename), Exception::BAD_LOADERDATA);
         }
-        return new static($xml);
+        return new self($xml);
     }
 
     public function getXML()
